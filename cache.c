@@ -519,11 +519,11 @@ char* f;
 int size;
 {
     int i;
+    char *s = t; /* save for pass 2 */
+
+    /* Pass 1 to decode coded bytes (which might be character fragments - so 1 pass is wrong) */
     for (i = size; i--; ) {
-	if (AT_GREY_SPACE(f)) {
-	    while (i && *++f && AT_GREY_SPACE(f)) i--, size--;
-	    *t++ = ' ';
-	} else if (*f == '=' && f[1] == '?') {
+	if (*f == '=' && f[1] == '?') {
 	    char* q = index(f+2,'?');
 	    char ch = (q && q[2] == '?')? q[1] : 0;
 	    char* e;
@@ -544,11 +544,8 @@ int size;
 		    else
 			len = b64_decodestring(t, q);
 		    *e = '?';
+		    t += len;
 		    size += len;
-		    for ( ; len--; t++) {
-			if (AT_GREY_SPACE(t))
-			    *t = ' ';
-		    }
 		}
 		else
 		    *t++ = *f++;
@@ -564,6 +561,8 @@ int size;
 	t--, size--;
     *t = '\0';
 
+    /* Pass 2 to clear out "control" characters */
+    dectrl(s);
     return size;
 }
 

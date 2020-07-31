@@ -1,4 +1,5 @@
 /* datasrc.c
+ * vi: set sw=4 ts=8 ai sm noet :
  */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
@@ -677,6 +678,22 @@ char* groupname;
     return nullstr;
 }
 
+char *
+clear_out_grey_space(s)
+char *s;
+{
+    for (s++; *s && *s != '\n';) {
+	int w = byte_length_at(s);
+	if (AT_GREY_SPACE(s)) {
+	    int i;
+	    for (i = 0; i < w; i += 1)
+		s[i] = ' ';
+	}
+	s += w;
+    }
+    return s;
+}
+
 int
 srcfile_open(sfp, filename, fetchcmd, server)
 SRCFILE* sfp;
@@ -802,10 +819,7 @@ char* server;
 	    strcpy(buf+keylen+1, s);
 	    s = buf+keylen+1;
 	}
-	for (s++; *s && *s != '\n'; s++) {
-	    if (AT_GREY_SPACE(s))
-		*s = ' ';
-	}
+	s = clear_out_grey_space(s);
 	linelen = s - buf + 1;
 	if (*s != '\n') {
 	    if (linelen == sizeof buf) {
@@ -878,10 +892,7 @@ int keylen;
 	strcpy(bp+keylen+1, s);
 	s = bp+keylen+1;
     }
-    for (s++; *s && *s != '\n'; s++) {
-	if (AT_GREY_SPACE(s))
-	    *s = ' ';
-    }
+    s = clear_out_grey_space(s);
     linelen = s - bp + 1;
     if (*s != '\n') {
 	*s++ = '\n';
