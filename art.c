@@ -29,6 +29,7 @@
 #include "env.h"
 #include "util.h"
 #include "util2.h"
+#include "utf.h"
 #include "sw.h"
 #include "kfile.h"
 #include "decode.h"
@@ -97,7 +98,10 @@ do_article()
 #ifdef ULSMARTS
     bool under_lining = FALSE;		/* are we underlining a word? */
 #endif
-    register char* bufptr = art_line;	/* pointer to input buffer */
+#ifndef USE_UTF_HACK
+    register
+#endif
+    char* bufptr = art_line;		/* pointer to input buffer */
     register int outpos;		/* column position of output */
     static char prompt_buf[64];		/* place to hold prompt */
     bool notesfiles = FALSE;		/* might there be notesfiles junk? */
@@ -403,16 +407,28 @@ do_article()
 			else {
 #ifdef CHARSUBST
 			    register int i;
+#ifdef USE_UTF_HACK
+			    i = put_char_adv(&bufptr);
+			    bufptr--;
+#else /* !USE_UTF_HACK */
 			    i = putsubstchar(*bufptr, tc_COLS - outpos, outputok);
+#endif /* USE_UTF_HACK */
 			    if (i < 0) {
 				outpos += -i - 1;
 				break;
 			    }
 			    outpos += i;
 #else
+#ifdef USE_UTF_HACK
+			    if (outputok) {
+				outpos += put_char_adv(&bufptr);
+				bufptr--;
+			    }
+#else /* !USE_UTF_HACK */
 			    if (outputok)
 				putchar(*bufptr);
 			    outpos++;
+#endif /* USE_UTF_HACK */
 #endif /* CHARSUBST */
 			}
 			if (*tc_UC && ((highlight==artline && marking == STANDOUT)

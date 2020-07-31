@@ -1,7 +1,10 @@
 /* util.h
+ * vi: set sw=4 ts=8 ai sm noet :
  */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
+
+#include "utf.h"
 
 EXT bool waiting INIT(FALSE);  	/* waiting for subprocess (in doshell)? */
 EXT bool nowait_fork INIT(FALSE);
@@ -12,8 +15,8 @@ EXT bool export_nntp_fds INIT(FALSE);
 EXT int len_last_line_got INIT(0);
 EXT MEM_SIZE buflen_last_line_got INIT(0);
 
-#define AT_GREY_SPACE(s) ((*(Uchar*)(s) & 0x7F) <= ' ' || *(s) == '\177')
-#define AT_NORM_CHAR(s)  ((*(Uchar*)(s) & 0x7F) >= ' ' && *(s) != '\177')
+#define AT_GREY_SPACE(s) !at_norm_char(s)
+#define AT_NORM_CHAR(s)  at_norm_char(s)
 
 /* is the string for makedir a directory name or a filename? */
 

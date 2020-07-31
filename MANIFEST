@@ -227,6 +227,8 @@ univ.ih            Private info regarding univ.c.
 url.c              Fetches strn files given a Uniform Resource Locator
 url.h              Public info regarding url.c
 url.ih             Private info regarding url.c
+utf.c              Utility routines to handle UTF-8.
+utf.h              Public info regarding utf.c.
 util.c             Utility routines.
 util.h             Public info regarding util.c.
 util.ih            Private info regarding util.c.

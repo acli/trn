@@ -1,4 +1,5 @@
 /* cache.c
+ * vi: set sw=4 ts=8 ai sm noet :
  */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
@@ -35,6 +36,7 @@
 #include "env.h"
 #include "util.h"
 #include "util2.h"
+#include "utf.h"
 #include "INTERN.h"
 #include "cache.h"
 #include "cache.ih"
@@ -569,9 +571,15 @@ void
 dectrl(str)
 char* str;
 {
-    for ( ; *str; str++) {
-	if (AT_GREY_SPACE(str))
-	    *str = ' ';
+    for ( ; *str;) {
+	int w = byte_length_at(str);
+	if (AT_GREY_SPACE(str)) {
+	    register int i;
+	    for (i = 0; i < w; i += 1) {
+		str[i] = ' ';
+	    }
+	}
+	str += w;
     }
 }
 

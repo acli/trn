@@ -1,4 +1,5 @@
 /* term.c
+ * vi: set sw=4 ts=8 ai sm noet :
  */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
@@ -39,6 +40,7 @@
 #include "INTERN.h"
 #include "term.h"
 #include "term.ih"
+#include "utf.h"
 
 #ifdef u3b2
 #undef TIOCGWINSZ
@@ -1579,7 +1581,10 @@ print_lines(what_to_print,hilite)
 char* what_to_print;
 int hilite;
 {
-    register char* s;
+#ifndef USE_UTF_HACK
+    register
+#endif
+    char* s;
     register int i;
 
     for (s=what_to_print; *s; ) {
@@ -1603,8 +1608,10 @@ int hilite;
 	for (i = 0; i < tc_COLS; i++) {
 	    if (!*s)
 		break;
-	    if (AT_NORM_CHAR(s))
-		putchar(*s);
+	    if (AT_NORM_CHAR(s)) {
+		i += put_char_adv(&s) - 1;
+		s--;
+	    }
 	    else if (*s == '\t') {
 		putchar(*s);
 		i = ((i+8) & ~7) - 1; 
