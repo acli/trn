@@ -1,0 +1,7 @@
+/* list.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void def_init_node _((LIST*,LISTNODE*));

@@ -1,0 +1,22 @@
+/* addng.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+static int addgroup_cnt;
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static int addng_cmp _((char*,int,HASHDATUM));
+static int build_addgroup_list _((int,HASHDATUM*,int));
+static void process_list _((int));
+#ifdef SUPPORT_NNTP
+static void new_nntp_groups _((DATASRC*));
+#endif
+static void new_local_groups _((DATASRC*));
+static void add_to_hash _((HASHTABLE*,char*,int,char_int));
+static void add_to_list _((char*,int,char_int));
+static int list_groups _((int,HASHDATUM*,int));
+static void scanline _((char*,bool_int));
+static int agorder_number _((ADDGROUP**,ADDGROUP**));
+static int agorder_groupname _((ADDGROUP**,ADDGROUP**));
+static int agorder_count _((ADDGROUP**,ADDGROUP**));

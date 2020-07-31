@@ -1,0 +1,90 @@
+#startup script for trntk
+
+#XXX Later have some automatic directory?
+if [info exists env(DOTDIR) ] {
+  set script_dir $env(DOTDIR)/.trn
+} else {
+   set script_dir ~/.trn
+}
+
+set win_pos_file $script_dir/tkwinpos
+
+set tcl_interactive 0
+
+############### REQUIRED ###############
+set ttk_keymod 0
+#Required procedures ttk_addkey and ttk_finalize
+#Add the key to the trn input if it has an ASCII code.
+proc ttk_addkey {akey codekey} {
+    global ttk_keys ttk_keymod
+    if {$codekey == "120"} {
+	append ttk_keys "n"
+    } elseif {$akey != "{}"} {append ttk_keys $akey}
+}
+
+#quasi-replacement for idle handlers.
+#Count is for debugging--to make sure I'm not spinning wildly...
+set ttk_idlepending_cnt 0
+set ttk_idlepending_list {}
+#Use the dolist copy so that items can reschedule themselves
+proc ttk_idlepending {} {
+    global ttk_idlepending_cnt ttk_idlepending_list ttk_idle_flag
+    incr ttk_idlepending_cnt
+    set dolist $ttk_idlepending_list
+    set ttk_idlepending_list {}
+    set ttk_idle_flag 0
+    foreach val $dolist {
+	eval $val
+    }
+}
+
+proc ttk_idle_add {cmd} {
+    global ttk_idlepending_list ttk_idle_flag
+    lappend ttk_idlepending_list $cmd
+    set ttk_idle_flag 1
+}
+
+
+#Called just before deleting the TCL interpreter
+#Later?: add a procedure that is called a little before the very end.
+proc ttk_finalize {} {
+     global win_pos_file
+#    puts "Bye from Tk!"
+     catch {TrnModule_savesizes $win_pos_file}
+}
+
+#Default debug procedure: does nothing, is overridden if debug is sourced
+proc dbg {txt} { }
+############# END REQUIRED #############
+
+#Default behavior, add ASCII code to trn input stream.
+#Consider key_handled variable--if set to eventID, no other handlers
+#for the key will be called.
+bind all <Any-KeyPress> {ttk_addkey "%A" "%k"}
+
+#Don't show the default toplevel window
+wm withdraw .
+
+#object-oriented setup
+source $script_dir/obtcl.tcl
+source $script_dir/TrnModule.tcl
+
+#Show debug window
+#source $script_dir/debug.tcl
+
+#Old article tree (*incompatable with object-oriented version*)
+#source $script_dir/atree.tcl
+
+#New article tree (with object-oriented stuff)
+source $script_dir/objatree.tcl
+
+#New score display (object-oriented)
+#source $script_dir/ScoreBar.tcl
+#ScoreBar .scorebar -toplevel 1
+
+#load and set old window sizes--to disable, comment the next 3 commands
+TrnModule_loadsizes $win_pos_file
+#Give the window manager a chance to create decorations...
+update
+#...and then set the window positions and sizes
+TrnModule_setsizes

@@ -1,0 +1,132 @@
+/* opt.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+static char yes_or_no[] = "yes/no";
+static char selector_commands[] = "<Last-page-cmd><Other-page-cmd>";
+
+INI_WORDS options_ini[] = {
+    { 0, "OPTIONS", 0 },
+
+    { 0, "*Display Options", 0 },
+    { 0, "Terse Output", yes_or_no },
+    { 0, "Pager Line-Marking", "standout/underline/no" },
+    { 0, "Erase Screen", yes_or_no },
+    { 0, "Erase Each Line", yes_or_no },
+    { 0, "Muck Up Clear", yes_or_no },
+    { 0, "Background Spinner", yes_or_no },
+    { 0, "Charset", "<e.g. patm>" },
+    { 0, "Filter Control Characters", yes_or_no },
+
+    { 0, "*Selector Options", 0 },
+    { 0, "Use Universal Selector", yes_or_no },
+    { 0, "Universal Selector Order", "natural/points" },
+    { 0, "Universal Selector article follow", yes_or_no },
+    { 0, "Universal Selector Commands", selector_commands },
+    { 0, "Use Newsrc Selector", yes_or_no },
+    { 0, "Newsrc Selector Commands", selector_commands },
+    { 0, "Use Addgroup Selector", yes_or_no },
+    { 0, "Addgroup Selector Commands", selector_commands },
+    { 0, "Use Newsgroup Selector", yes_or_no },
+    { 0, "Newsgroup Selector Order", "natural/group/count" },
+    { 0, "Newsgroup Selector Commands", selector_commands },
+    { 0, "Newsgroup Selector Display Styles", "<e.g. slm=short/long/med>" },
+    { 0, "Use News Selector", "yes/no/<# articles>" },
+    { 0, "News Selector Mode", "threads/subjects/articles" },
+    { 0, "News Selector Order", "[reverse] date/subject/author/groups/cnt/points" },
+    { 0, "News Selector Commands", selector_commands },
+    { 0, "News Selector Display Styles", "<e.g. lms=long/medium/short>" },
+    { 0, "Option Selector Commands", selector_commands },
+    { 0, "Use Selector Numbers", yes_or_no },
+    { 0, "Selector Number Auto-Goto", yes_or_no },
+
+    { 0, "*Newsreading Options", 0 },
+    { 0, "Use Threads", yes_or_no },
+    { 0, "Select My Postings", "subthread/parent/thread/no" },
+    { 0, "Initial Article Lines", "no/<# lines>" },
+    { 0, "Article Tree Lines", "no/<# lines>" },
+    { 0, "Word-Wrap Margin", "no/<# chars in margin>" },
+    { 0, "Auto-Grow Groups", yes_or_no },
+    { 0, "Compress Subjects", yes_or_no },
+    { 0, "Join Subject Lines", "no/<# chars>" },
+    { 0, "Line Num for Goto", "<# line (1-n)>" },
+    { 0, "Ignore THRU on Select", yes_or_no },
+    { 0, "Read Breadth First", yes_or_no },
+    { 0, "Background Threading", yes_or_no },
+    { 0, "Scan Mode Count", "no/<# articles>" },
+    { 0, "Header Magic", "<[!]header,...>" },
+    { 0, "Header Hiding", "<[!]header,...>" },
+
+    { 0, "*Posting Options", 0 },
+    { 0, "Cited Text String", "<e.g. '>'>" },
+#if 0
+    { 0, "Attribute string", "<e.g. ...>" },
+    { 0, "Reply To", "<e.g. ...>" },
+#endif
+
+    { 0, "*Save Options", 0 },
+    { 0, "Save Dir", "<directory path>" },
+    { 0, "Auto Savename", yes_or_no },
+    { 0, "Default Savefile Type", "norm/mail/ask" },
+
+    { 0, "*Mouse Options", 0 },
+    { 0, "Use XTerm Mouse", yes_or_no },
+    { 0, "Mouse Modes", "<e.g. acjlptwK>" },
+    { 0, "Universal Selector Mousebar", "<e.g. [PgUp]< [PgDn]> Z [Quit]q>" },
+    { 0, "Newsrc Selector Mousebar", "<e.g. [PgUp]< [PgDn]> Z [Quit]q>" },
+    { 0, "Addgroup Selector Mousebar", "<e.g. [Top]^ [Bot]$ [ OK ]Z>" },
+    { 0, "Newsgroup Selector Mousebar", "<e.g. [ OK ]Z [Quit]q [Help]?>" },
+    { 0, "News Selector Mousebar", "<e.g. [KillPg]D [Read]^j [Quit]Q>" },
+    { 0, "Option Selector Mousebar", "<e.g. [Save]S [Use]^I [Abandon]q>" },
+    { 0, "Article Pager Mousebar", "<e.g. [Next]n J [Sel]+ [Quit]q>" },
+
+    { 0, "*MIME Options", 0 },
+    { 0, "Multipart Separator", "<string>" },
+    { 0, "Auto-View Inline", yes_or_no },
+
+    { 0, "*Misc Options", 0 },
+    { 0, "Check for New Groups", yes_or_no },
+    { 0, "Restriction Includes Empty Groups", yes_or_no },
+    { 0, "Append Unsubscribed Groups", yes_or_no },
+    { 0, "Initial Group List", "no/<# groups>" },
+    { 0, "Restart At Last Group", yes_or_no },
+    { 0, "Eat Type-Ahead", yes_or_no },
+    { 0, "Verify Input", yes_or_no },
+    { 0, "Fuzzy Newsgroup Names", yes_or_no },
+    { 0, "Auto Arrow Macros", "regular/alternate/no" },
+    { 0, "Checkpoint Newsrc Frequency", "<# articles>" },
+    { 0, "Default Refetch Time", "never/<1 day 5 hours 8 mins>" },
+    { 0, "Novice Delays", yes_or_no },
+    { 0, "Old Mthreads Database", yes_or_no },
+
+#ifdef SCAN_ART
+    { 0, "*Article Scan Mode Options", 0 },
+    { 0, "Follow Threads", yes_or_no },
+    { 0, "Fold Subjects", yes_or_no },
+    { 0, "Re-fold Subjects", yes_or_no },
+    { 0, "Mark Without Moving", yes_or_no },
+    { 0, "VI Key Movement Allowed", yes_or_no },
+    { 0, "Display Item Numbers", yes_or_no },
+    { 0, "Display Article Number", yes_or_no },
+    { 0, "Display Author", yes_or_no },
+    { 0, "Display Score", yes_or_no },
+    { 0, "Display Subject Count", yes_or_no },
+    { 0, "Display Subject", yes_or_no },
+    { 0, "Display Summary", yes_or_no },
+    { 0, "Display Keywords", yes_or_no },
+#endif
+
+#ifdef SCORE
+    { 0, "*Scoring Options", 0 },
+    { 0, "Verbose scoring", yes_or_no },
+#endif
+    { 0, 0, 0 }
+};
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static char* hidden_list _((void));
+static char* magic_list _((void));
+static void set_header_list _((int,int,char*));
+static int parse_mouse_buttons _((char**,char*));
+static char* expand_mouse_buttons _((char*,int));

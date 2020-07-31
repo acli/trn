@@ -1,0 +1,8 @@
+# Xgif tends to load much faster than xv, so use it for .gif files.
+image/gif; xgif %s; description="A gif image"
+image/*; xv %s; description="A jpeg image"
+
+# Some other examples
+application/postscript; lpr %s; description="A Postscript File"
+application/applefile; recieveAppleSingle %s; compose="sendAppleSingle %s"; \
+	description="An Apple Macintosh file in AppleSingle format"

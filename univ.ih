@@ -1,0 +1,19 @@
+/* univ.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void univ_free_data _((UNIV_ITEM*));
+static int univ_DoMatch _((char*,char*));
+static bool univ_use_file _((char*,char*,char*));
+static bool univ_include_file _((char*));
+static void univ_do_line_ext1 _((char*,char*));
+static bool univ_do_line _((char*));
+static char* univ_edit_new_userfile _((void));
+static void univ_vg_addart _((ART_NUM));
+static void univ_vg_addgroup _((void));
+static int univ_order_number _((UNIV_ITEM**,UNIV_ITEM**));
+#ifdef SCORE
+static int univ_order_score _((UNIV_ITEM**,UNIV_ITEM**));
+#endif

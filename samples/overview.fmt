@@ -1,0 +1,16 @@
+## overview.fmt: the format of the news overview database.
+## Each line is either:
+##      <header>
+## or   <header>:full
+##
+## <header> is a news article header.  If ":full" appears, the header
+## name will be prepended.  ** Line-order is important! **
+Subject:
+From:
+Date:
+Message-ID:
+References:
+Bytes:
+Lines:
+## Many newsreaders get better performance if Xref is present.
+Xref:full

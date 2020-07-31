@@ -1,0 +1,45 @@
+#### default_topic "top" topic file
+## To install this file as the default topic file, do the following:
+#
+# 1.  Read the comments in the topic file below, and change entries as
+#     appropriate.
+#
+# 2.  Move this file ("default_topic") to the trn library directory
+#     (the same directory which contains the INIT and newsnews files).
+#     This will be done by "make install.full" or "make install.strn"
+#     if the library directory does not have a default_topic file.
+#
+## Users can override the default hierarchy by setting SCANGROUPS
+## to point elsewhere, or by creating a ~/News/scangroups/top file.
+## The easiest way to do this is to enter group scan mode, and select
+## "Create a personalized top file for group scan mode" from the menu.
+## Users can then add items to their own "top" file.
+
+###Start of the default topic file
+
+## Probably a good idea to start with this newsgroup--the user can always
+## unsubscribe if s/he wishes.
+news.announce.newusers
+# Include an easy way to get to all the newsgroups
+"All newsgroups" *
+
+#A neat way to introduce the net to newbies...
+"Newsgroups by hierarchies" %X/hier_groups
+
+## Use a line like the following to make local newsgroups more obvious.
+#"Widget Factory local news" widget.*
+
+# Change the following line to point to any local hierarchy structures.
+#"Default Hierarchy" /foo/bar/lib/strn/top
+
+## If users write useful hierarchies, they can be shared by adding links
+## to them.  For instance, the following would link to some of Mary's topics:
+#"Mary's computer hierarchy" ~mary/News/scangroups/comp/main
+
+## Any other shared topics/hierarchies can be added here.
+
+##This entry will point to the user's hotlist.strn file.
+"Personal Hotlist" @%p/hotlist.strn
+
+#Uncomment the following for WWW stuff (not fully supported yet).
+#"Strn WWW home page." URL:http://www.digex.net/~caadams/strn/strn.top

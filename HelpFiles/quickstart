@@ -1,0 +1,33 @@
+Trn Quickstart:
+   An introduction for people who don't like reading documentation.
+
+This document is a very minimal introduction to most of the new
+features of trn.  ** This is very preliminary! **
+
+General:
+ +  Use the arrow keys to move around.
+ +  When you see a list of selections, use the letter/number keys
+    to choose things, then press RETURN.
+ +  Typing 'q' will almost always exit what you are currently doing,
+    even various command prompts.
+ +  Type 'h' (almost) anywhere to get help.  In most places you'll
+    enter the help selector, where you can read the trn documentation.
+ +  Type 'H' (almost) anywhere to get help on the current commands.
+
+Options:
+ +  Type '&' and a RETURN to enter the option selector.
+ +  Once you use the 'S'ave command, you'll have a ~/.trn/trnrc
+    file that contains the current state of the options.  Trn
+    uses this file in preference to your TRNINIT variable _unless_
+    you modify the trnrc file manually to tell it to use both
+    (or remove the trnrc file).
+
+Multiple News Servers:
+ +  Create an access file in your ~/.trn directory -- see the
+    Sample Files for a starting point.
+ +  Use Ctrl-N and Ctrl-P to switch news servers from the newsgroup
+    selector of the newsgroup browser (ala rn).
+ +  Optionally, turn on the Newsrc Selector to select a news source
+    as you start trn (change the option, save, and restart trn).
+
+...More stuff to come later...

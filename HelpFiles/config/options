@@ -1,0 +1,457 @@
+OPTIONS
+
+Trn has a nice set of options to allow you to tailor the interaction to
+your liking.  (You might like to know that the author swears by "-x6ms +e
+-mu -S -XX -N -B -p".)  These options may be set on the command line, via
+the TRNINIT environment variable, via a file pointed to by the TRNINIT
+variable, or from within trn via the & command.  Options may generally be
+unset by typing "+switch".
+
+Most of these options can also (and more easily) be set using the Option
+Selector.  The corresponding items from the Option Selector are listed
+next to the options below.
+
+You can set and change options from within trn with the "&" command
+followed by the option.  For example, to enable debug output during a trn
+session, use "&-D".
+
+Options include:
+
+     -a  (Background Threading)
+          causes trn to always thread the unread articles on
+          entry to a group.  Without this option trn may enter a
+          group in a partially-threaded state and process the
+          unthreaded articles in the background.  The down side
+          of this is that the tree display may not be complete
+          when it is first displayed and you may start out at an
+          odd position in the first thread's article tree.
+
+     -A  (Auto Arrow Macros)
+          tells trn to attempt to create some default macros
+          that will map your arrow keys to useful trn functions
+          (this is the default).  Use +A to turn this behavior
+          off.
+
+     -b  (Read Breadth First)
+          will force trn to read each thread in a breadth-first
+          order, rather than depth-first.
+
+     -B  (Background Spinner)
+          will turn on a spinner that twirls when trn is doing
+          background article-processing.  A gizmo for those
+          interested in what's going on behind the scenes.
+
+     -c   checks for news without reading news.  If a list of
+          newsgroups is given on the command line, only those
+          newsgroups will be checked; otherwise all
+          subscribed-to newsgroups are checked.  Whenever the -c
+          switch is specified, a non-zero exit status from trn
+          means that there is unread news in one of the checked
+          newsgroups.  The -c switch does not disable the
+          printing of newsgroups with unread news; this is
+          controlled by the -s switch.  (The -c switch is not
+          meaningful when given via the & command.)
+
+     -C<number>  (Checkpoint Newsrc Frequency)
+          tells trn how often to checkpoint the .newsrc, in
+          articles read.  Actually, this number says when to
+          start thinking about doing a checkpoint if the
+          situation is right.  If a reasonable check-pointing
+          situation doesn't arise within 10 more articles, the
+          .newsrc is check-pointed willy-nilly.
+
+     -d<directory name>  (Save Dir)
+          sets your private news directory to something other
+          than ~/News.  The directory name will be globbed (via
+          csh) if necessary (and if possible).  The value of
+          SAVEDIR (where articles are saved) is initially set to
+          this directory, but is often manipulated via the -/
+          option or by manipulating SAVEDIR directly (perhaps
+          via the memorized commands (the KILL file) for a
+          group.  Any KILL files (see the K command in the
+          Article Selection section) also reside in this
+          directory and its subdirectories, by default.  In
+          addition, shell escapes leave you in this directory.
+
+     -D<flags>
+          enables debugging output.  See common.h for the full
+          list of flag values.  Most commonly useful is -D16,
+          which produces an NNTP protocol trace.  Using no flag
+          enables general debug output.  Shut off debug output
+          with +D.  Using any debug output requires that trn be
+          compiled with debug support.  Warning: normally trn
+          attempts to restore your .newsrc when an unexpected
+          signal or internal error occurs.  This is disabled
+          when any debugging flags are set.
+
+     -e   causes each page within an article to be started at
+          the top of the screen, not just the first page.  (It
+          is similar to the -c switch of more(1).)  You never
+          have to read scrolling text with this switch.  This is
+          helpful especially at certain baud rates because you
+          can start reading the top of the next page without
+          waiting for the whole page to be printed.  It works
+          nicely in conjunction with the -m switch, especially
+          if you use half-intensity for your highlight mode.
+          See also the -L switch.
+
+     -E<name>=<val>
+          sets the environment variable <name> to the value
+          specified.  Within trn, "&-ESAVENAME=%t" is similar to
+          "setenv SAVENAME '%t'" in csh, or "SAVENAME='%t';
+          export SAVENAME" in sh.  Any environment variables set
+          with -E will be inherited by subprocesses of trn.
+
+     -f  (Novice Delays)
+          will make trn avoid various sleep calls and the prompt
+          after the processing of the memorized commands that
+          are intended to allow you time to read a message
+          before the screen clears.  This allows the advanced
+          user to cruise along a little faster at the expense of
+          readability.  The -t (terse) option turns on -f by
+          default, but you can override this by specifying +f
+          after the -t option.
+
+     -F<string>  (Cited Text String)
+          sets the prefix string for the 'F' follow-up command
+          to use in prefixing each line of the quoted article.
+          For example, "-F<tab>" inserts a tab on the front of
+          each line (which will cause long lines to wrap around,
+          unfortunately), "-F>>>>" inserts ">>>>" on every line,
+          and "-F" by itself causes nothing to be inserted, in
+          case you want to reformat the text, for instance.  The
+          initial default prefix is ">".
+
+     -g<line>  (Line Num for Goto)
+          tells trn which line of the screen you want
+          searched-for strings to show up on when you search
+          with the 'g' command within an article.  The lines are
+          numbered starting with 1.  The initial default is
+          "-g1", meaning the first line of the screen.  Setting
+          the line to less than 1 or more than the number of
+          lines on the screen will set it to the last line of
+          the screen.
+
+     -G  (Fuzzy Newsgroup Names)
+          selects the "fuzzy" processing on the go command when
+          you don't type in a valid group name.  With this
+          option on trn will attempt to find the group you
+          probably meant to type, but it can be a little slow
+          about it, so it's not on by default.
+
+     -h<string>  (Header Hiding)
+          hides (disables the printing of) all header lines
+          beginning with string.  For instance, -hx- will
+          disable the printing of all "X-Foo:" headers.  Case is
+          not significant.  The default for unrecognized headers
+          can be set with the -hunrecognized option.
+          Alternately you could use -h (no string) to disable
+          all headers except the Subject line and then use +h to
+          select only those lines you want to see.  You may wish
+          to use the baud-rate switch modifier below to hide
+          more lines at lower baud rates.
+
+     -H<string>  (Header Magic)
+          works just like -h except that instead of setting the
+          hiding flag for a header line, it sets the magic flag
+          for that header line.  Certain header lines have magic
+          behavior that can be controlled this way.  At present,
+          the following actions are caused by the flag for the
+          particular line: the Date line prints the date in
+          local time if the group is threaded; the From line
+          will only print the commented portion of the user
+          name; the Newsgroups line will only print when there
+          are multiple newsgroups; the Subject line will be
+          underlined and (when threaded) the keyword 'Subject:'
+          is replaced by its subject number (e.g.  [1]); and the
+          Expires line will always be suppressed if there is
+          nothing on it.  In fact, all of these actions are the
+          default, and you must use +H to undo them.
+
+     -i=<number>  (Initial Article Lines)
+          specifies how long (in lines) to consider the initial
+          page of an article -- normally this is determined
+          automatically depending on baud rate.  (Note that an
+          entire article header will always be printed
+          regardless of the specified initial page length.  If
+          you are working at low baud rate and wish to reduce
+          the size of the headers, you may hide certain header
+          lines with the -h switch.)
+
+     -I  (Append Unsubscribed Groups)
+          tells trn to append all new, unsubscribed groups to
+          the end of the .newsrc.
+
+     -j  (Filter Control Characters)
+          forces trn to leave control characters unmolested in
+          messages.
+
+     -J{<number>}  (Join Subject Lines)
+          causes trn to join similar subjects into a common
+          thread if they are the same up to the indicated number
+          of characters (the default is 30).  You can turn this
+          on and off for specific groups by putting the
+          following lines into your kill file for the group(s):
+
+          &-J30
+          X&+J
+
+     -k  (Ignore THRU on Select)
+          tells trn to ignore the THRU line when processing
+          selection searches (i.e. searches with a command por-
+          tion that starts with a '+' or a '.') in the memorized
+          commands (aka kill files).  This is turned on by
+          default, so use +k if you want to turn it off.
+
+     -K  (Auto-Grow Groups)
+          is used to keep a trn from checking for new news while
+          you're in the group.  Use this when your kill-file
+          processing is so slow that you don't want the group
+          to expand while you're reading.  If you only want
+          specific groups to be affected, put these lines into
+          your kill file for the group(s):
+
+          &-K
+          X&+K
+
+     -l  (Erase Screen)
+          disables the clearing of the screen at the beginning
+          of each article, in case you have a bizarre terminal.
+
+     -L  (Erase Each Line)
+          tells trn to leave information on the screen as long
+          as possible by not blanking the screen between pages,
+          and by using clear to end-of-line.  (The more(1)
+          program does this.)  This feature works only if you
+          have the requisite termcap capabilities.  The switch
+          has no effect unless the -e switch is set.
+
+     -m=<mode>  (Pager Line-Marking)
+          enables the marking of the last line of the previous
+          page printed, to help the user see where to continue
+          reading.  This is most helpful when less than a full
+          page is going to be displayed.  It may also be used in
+          conjunction with the -e switch, in which case the page
+          is erased, and the first line (which is the last line
+          of the previous page) is highlighted.  If -m=s is
+          specified, the standout mode will be used, but if -m=u
+          is specified, underlining will be used.  If neither =s
+          or =u is specified, standout is the default.  Use +m
+          to disable highlighting.
+
+     -M  (Default Savefile Type)
+          forces mailbox format in creating new save files.
+          Ordinarily you are asked which format you want.
+
+     -N  (Default Savefile Type)
+          forces normal (non-mailbox) format in creating new
+          save files.  Ordinarily you are asked which format you
+          want.
+
+     -o   will act like old versions of trn and not junk cross-
+          referenced articles when using thread commands to junk
+          articles in the current group (such as the selector's
+          'X' command).
+
+     -O<mode>{<order>}  (News Selector Mode / News Selector Order)
+          specifies the selector's mode and (optionally) the
+          sort order.  The modes are 'a'rticle, 's'ubject, or
+          't'hread.  The orders are 'd'ate, 's'ubject, 'a'uthor,
+          article 'c'ount per group, 'n'umeric, subject-date
+          'g'roups, or 'p'oints.  The order can be capitalized
+          to reverse the indicated order.  For example, to
+          choose the article selector in subject order specify
+          "-Oas".
+
+     -p{opt}  (Select My Postings)
+          tells trn to auto-select your postings and their
+          replies as it encounters them in the various groups
+          you read.  The optional parameter is either a '.',
+          'p', or '+' (it defaults to '.' if omitted) and
+          affects what command trn should execute when it
+          encounters your postings.  The default is to execute
+          the command "T."  on each of your postings which tells
+          trn to memorize the auto-selection of this article and
+          all its replies.  Using -pp tells trn to use the same
+          command, but start the selection with the parent
+          article, so that you see any other replies to the same
+          article.  Using -p+ tells trn to select the whole
+          thread that contains your reply.
+
+     -q  (Check for New Groups)
+          bypasses the automatic check for new newsgroups when
+          starting trn.
+
+     -Q<set>  (Charset)
+          defines the set of available charset conversions.
+          This can be useful to restrict the available
+          conversions to those your terminal can handle and/or
+          to specify an alternate default.  The first element of
+          this set is taken as default for each article.
+
+     -r  (Restart At Last Group)
+          causes trn to restart in the last newsgroup read
+          during a previous session with trn.  It is equivalent
+          to starting up normally and then getting to the
+          newsgroup with a g command.
+
+     -s  (Initial Group List)
+          with no argument suppresses the initial listing of
+          newsgroups with unread news, whether -c is specified
+          or not.  Thus -c and -s can be used together to test
+          "silently" the status of news from within your .login
+          file.  If -s is followed by a number, the initial
+          listing is suppressed after that many lines have been
+          listed.  Presuming that you have your .newsrc sorted
+          into order of interest, -s5 will tell you the 5 most
+          interesting newsgroups that have unread news.  This is
+          also a nice feature to use in your .login file, since
+          it not only tells you whether there is unread news,
+          but also how important the unread news is, without
+          having to wade through the entire list of unread
+          newsgroups.  If no -s switch is given -s5 is assumed,
+          so just putting "rn -c" into your .login file is
+          fine.
+
+     -S<number>
+          causes trn to enter subject search mode (^N)
+          automatically whenever an unthreaded newsgroup is
+          started up with <number> unread articles or more.
+          Additionally, it causes any 'n' typed while in subject
+          search mode to be interpreted as '^N' instead.  (To
+          get back out of subject search mode, the best command
+          is probably '^'.) If <number> is omitted, 3 is
+          assumed.
+
+     -t  (Terse Output)
+          puts trn into terse mode.  This is more cryptic but
+          useful for low baud rates.  (Note that your system
+          administrator may have compiled trn with either
+          verbose or terse messages only to save memory.)  You
+          may wish to use the baud-rate switch modifier below to
+          enable terse mode only at lower baud rates.
+
+     -T  (Eat Type-Ahead)
+          allows you to type ahead of trn.  Ordinarily trn will
+          eat typeahead to prevent your autorepeating space bar
+          from doing a very frustrating thing when you
+          accidentally hold it down.  If you don't have a
+          repeating space bar, or you are working at low baud
+          rate, you can set this switch to prevent this
+          behavior.  You may wish to use the baud-rate switch
+          modifier below to disable typeahead only at lower baud
+          rates.
+
+     -u  (Compress Subjects)
+          sets the unbroken-subject-line mode in the selector,
+          which simply truncates subjects that are too long
+          instead of dumping the middle portion prior to the
+          last two words of the subject.
+
+     -U   tells trn to not write the .newsrc file out after
+          visiting each group.  While this is "unsafe" it can be
+          faster if you have a really huge .newsrc.
+
+     -v  (Verify Input)
+          sets verification mode for commands.  When set, the
+          command being executed is displayed to give some
+          feedback that the key has actually been typed.  Useful
+          when the system is heavily loaded and you give a
+          command that takes a while to start up.
+
+     -V   will output trn's version number and quit.
+
+     -x{<number>}{<list>}  (Use Threads / Article Tree Lines /
+                            Newsgroup Selector Display Styles)
+          Enable the extended (threaded) features of trn beyond
+          the rn compatibility mode (this may be the default on
+          your system, use +x if you yearn for the good ol'
+          days).  The <number> is the maximum number of
+          article-tree lines (from 0 to 11) you want displayed
+          in your header.  Use the <list> to choose which thread
+          selector styles you like ('s'hort, 'm'edium, or
+          'l'ong), and in what order they are selected with the
+          'L' command.  For example, use -xms to start with the
+          medium display mode and only switch between it and the
+          short mode.  You can omit either or both of the
+          parameters, in which case a default of -x6lms is
+          assumed.
+
+     -X{<number>}{<commands>}  (News Selector Commands)
+          If you like using the selector, you'll probably want
+          to use this option to make the selector command (+)
+          the default when a newsgroup is started up with at
+          least <number> unread articles.  (Your installer may
+          have chosen to make -X0 the default on your system.)
+          It is also used to select which commands you want to
+          be the defaults while using the thread selector.  For
+          example, -X2XD will make the thread selector the
+          default command for entering a newsgroup with at least
+          2 unread articles, and set the default command for the
+          LAST page of the thread selector to be the X command
+          and the default command for all other pages to be the
+          D command.  Either or both parameters can be omitted,
+          as well as the second default command (e.g.  -XX would
+          change the default newsgroup entry to use the selector
+          and the default command for the last page of the
+          selector to be 'X').  The default is -X0Z> if just -X
+          is specified.  To set the default selector commands
+          without having '+' be the default entry into a
+          newsgroup, specify a high number, like 9999.
+
+     -z  (Default Refetch Time)
+          sets the minimum number of minutes that must elapse
+          before the active file is refetched to look for new
+          articles.  A value of 0 or using +z turns this off.
+
+     -Z  (Old Mthreads Database)
+          is used to select what style of database you want trn
+          to access.  Use -Zt for thread files, -Zo for overview
+          files, and +Z for none.  The default is whatever your
+          newsadmin compiled into trn, and can be -Zot to try to
+          access either one.
+
+     -/  (Save Dir / Auto Savename)
+          sets SAVEDIR to "%p/%c" and SAVENAME to "%a", which
+          means that by default articles are saved in a
+          subdirectory of your private news directory
+          corresponding to the name of the the current
+          newsgroup, with the filename being the article
+          number.  +/ sets SAVEDIR to "%p" and SAVENAME to
+          "%^C", which by default saves articles directly to
+          your private news directory, with the filename being
+          the name of the current newsgroup, first letter
+          capitalized.  (Either +/ or -/ may be default on your
+          system, depending on the feelings of your news
+          administrator when he, she or it installed trn.)  You
+          may, of course, explicitly set SAVEDIR and SAVENAME to
+          other values -- see discussion in the environment
+          section.
+
+Any switch may be selectively applied according to the current baud-rate.
+Simply prefix the switch with +speed to apply the switch at that speed or
+greater, and -speed to apply the switch at that speed or less.  Examples:
+-1200-hposted suppresses the Posted line at 1200 baud or less; +9600-m
+enables marking at 9600 baud or more.  You can apply the modifier
+recursively to itself also: +300-1200-t sets terse mode from 300 to 1200
+baud.
+
+Similarly, switches may be selected based on terminal type:
+
+          -=vt100+T      set +T on vt100
+          -=tvi920-ETERM=mytvi     get a special termcap entry
+          -=tvi920-ERNMACRO=%./.rnmac.tvi
+                         set up special key-mappings
+          +=paper-v      set verify mode if not hardcopy
+
+Some switch arguments, such as environment variable values, may require
+spaces in them.  Such spaces should be quoted via ", ', or \ in the
+conventional fashion, even when passed via TRNINIT or the & command.
+
+
+
+
+
+
+
+

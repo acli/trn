@@ -1,0 +1,11 @@
+/* kfile.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void mention _((char*));
+static bool kfile_junk _((char*,int));
+static int write_local_thread_commands _((int,HASHDATUM*,int));
+static int write_global_thread_commands _((int,HASHDATUM*,int));
+static int age_thread_commands _((int,HASHDATUM*,int));

@@ -1,0 +1,18 @@
+#!/usr/bin/perl -- -*- Perl -*-
+
+require 5;
+require "Score.pl";
+
+$debug = $ENV{FILTER_DEBUG};
+
+if ($debug) {
+    open (LOG, ">/tmp/filter.log");
+    select LOG; $| = 1; select STDOUT;
+    print LOG "filter process starting\n";
+}
+
+do "$FILTERDIR/global";
+
+&thwack;
+
+$debug && close LOG;

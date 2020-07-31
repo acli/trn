@@ -1,0 +1,13 @@
+c0x.obj+
+trn-artc.obj+
+nntpinit.obj+
+nntpclient.obj+
+nntpauth.obj+
+util2.obj+
+util3.obj
+trn-artc.exe
+trn-artc.map
+DPMI16+
+EMUX+
+CWL
+trn-artc.def

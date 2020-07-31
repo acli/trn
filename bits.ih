@@ -1,0 +1,12 @@
+/* bits.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static bool yank_article _((char*,int));
+static bool check_chase _((char*,int));
+static int chase_xref _((ART_NUM,int));
+#ifdef VALIDATE_XREF_SITE
+static bool valid_xref_site _((ART_NUM,char*));
+#endif

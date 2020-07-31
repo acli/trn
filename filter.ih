@@ -1,0 +1,9 @@
+/* filter.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void filter_restart _((void));
+static int filter_send _((char*));
+static char* filter_recv _((char*));

@@ -1,0 +1,140 @@
+.\" Rnmail.1
+.\"
+.\" This software is copyrighted as detailed in the LICENSE file.
+.\"
+.de Sh
+.br
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.\" unbreakable dash.
+.tr \(*W-|\(bv\*(Tr
+.ie n \{\
+.ds -- \(*W-
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+.ds L' '
+.ds R' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds L' `
+.ds R' '
+'br\}
+.TH RNMAIL 1 LOCAL
+.SH NAME
+Rnmail - a program for replying via mail
+.SH SYNOPSIS
+.B Rnmail destination_list
+.br
+  or
+.br
+.B Rnmail -h headerfile [oldarticle]
+.br
+  or
+.br
+.B Rnmail
+.SH DESCRIPTION
+Rnmail is a friendly interface for mailing replies to news articles.
+It will ask several questions, then allow you to enter your letter,
+and then mail it off.
+If you type h and a carriage return at any point,
+.I Rnmail
+will tell you what it wants to know.
+.PP
+If you put a
+.I .signature
+file in your home directory, Rnmail will append it
+to your message after you are done editing it.
+If you prefer to see your signature while you are editing, rename your
+\&.signature file to be .mail_sig and it will be appended before you
+begin to edit.
+Note that both .mail_sig and .signature obey the setting of DOTDIR unless
+Rnmail was modified to take the .signature appending out of Rnmail's control
+and that if both files exist you get two signatures appended.
+.PP
+The -h form is used when invoked from
+.I trn
+or
+.IR rn .
+If your editor can edit multiple files, and you want the article to which
+you are replying to show up as an alternate file, define the environment
+variable MAILPOSTER as \*(L"Rnmail -h %h %A\*(R".
+You can also modify the the MAILHEADER environment variable to change the
+header file that
+.I [t]rn
+passes to Rnmail.
+.SH ENVIRONMENT
+.IP DOTDIR 8
+If defined, specifies a place other than your home directory where 'dot' files
+may be stored.
+This is primarily for accounts which are shared by more than one person.
+.Sp
+Default: $HOME
+.IP EDITOR 8
+The editor you want to use, if VISUAL is undefined.
+.Sp
+Default: whatever your news administrator installed, usually vi.
+.IP HOME 8
+Your home directory.
+.Sp
+Default: $LOGDIR
+.IP LOGDIR 8
+Your home directory if HOME is undefined.
+.IP LOGNAME 8
+Your login name, if USER is undefined.
+.Sp
+Default: value of \*(L"whoami\*(R".
+.IP MAILRECORD 8
+If defined, contains the name of a file to which the finished message will
+be appended.
+.Sp
+Default: message not saved
+.IP NEWSORG 8
+Either the name of your organization, or the name of a file containing the
+name of your organization. (For use at organizations where the ORGANIZATION
+environmental variable is in use for other purposes). If both NEWSORG and 
+ORGANIZATION are set, NEWSORG will override ORGANIZATION.
+.Sp
+Default: whatever your news administrator chose.
+.IP ORGANIZATION 8
+Either the name of your organization, or the name of a file containing the
+name of your organization.
+.Sp
+Default: whatever your news administrator chose.
+.IP REPLYTO 8
+The contents of a \*(L"Reply-To:\*(R" header line to insert into your message.
+.Sp
+Default: header line not inserted.
+.IP USER 8
+Your login name.
+.Sp
+Default: $LOGNAME
+.IP VISUAL 8
+The editor you want to use.
+.Sp
+Default: $EDITOR
+.SH FILES
+$DOTDIR/.letter
+.br
+$DOTDIR/.signature
+.br
+$DOTDIR/.mail_sig
+.br
+~/dead.letter
+.SH SEE ALSO
+trn(1), rn(1), Pnews(1), mail(1)
+.SH DIAGNOSTICS
+.SH BUGS
+Uses /bin/mail in the absence of sendmail.

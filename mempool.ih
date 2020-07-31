@@ -1,0 +1,8 @@
+/* mempool.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static int mp_alloc_frag _((void));
+static void mp_free_frag _((int));

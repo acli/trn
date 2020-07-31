@@ -1,0 +1,14 @@
+c0x.obj+
+inews.obj+
+env.obj+
+nntpinit.obj+
+nntpclient.obj+
+nntpauth.obj+
+util2.obj+
+util3.obj
+inews.exe
+inews.map
+DPMI16+
+EMUX+
+CWL
+inews.def

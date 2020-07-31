@@ -1,0 +1,162 @@
+case $CONFIG in
+    '') . ./config.sh ;;
+esac
+echo "Extracting Speller (with variable substitutions)"
+$spitshell >Speller <<!GROK!THIS!
+$startsh
+#	Speller - a script to disassemble a posting; use ispell to spell-
+#	check the body along with the Subject, Keywords, and Summary lines;
+#	and put it all back together again.
+#
+#	Written by Eric Schnoebelen, (eric@cirr.com)
+#					Fri May 14 20:33:48 CDT 1993
+
+export PATH || (echo "OOPS, this isn't sh.  Desperation time.  I will feed myself to sh."; sh \$0; kill \$\$)
+
+# what pager you use--if you have kernal paging use cat
+pager="\${PAGER-$pager}"
+# either the ispell program or "none"
+ispell=$ispell_prg
+ispell_options=$ispell_options
+test=${test-test}
+sed=${sed-sed}
+echo=${echo-echo}
+cat=${cat-cat}
+awk=${awk-awk}
+rm=${rm-rm}
+mv=${mv-mv}
+diff=${diff-diff}
+ed=${ed-ed}
+spell=${spell-spell}
+basename=${basename-basename}
+!GROK!THIS!
+$spitshell >>Speller <<'!NO!SUBS!'
+
+tmpdir="${TMPDIR-/tmp}"
+
+# get us some temporary files.
+hdrs=$tmpdir/sp$$hdr
+body=$tmpdir/sp$$body
+sig=$tmpdir/sp$$sig
+mine=$tmpdir/sp$$mine
+quoted=$tmpdir/sp$$quoted
+bad=$tmpdir/sp$$bad
+
+Cmdname=`$basename $0`
+
+if $test "X$1" = X; then
+    $echo "$Cmdname: insufficent arguments" >&2
+    $echo "$Cmdname: usage: $Cmdname <filename>" >&2 
+    exit 1
+fi
+
+trap "$rm -f $hdrs $body $body~ $sig $mine $quoted $bad; exit 1" 0 1 2 15
+
+while $test "X$1" != X; do
+
+    # create the files, so that cat is quiet later..
+    >$hdrs
+    >$body
+    >$sig
+    >$mine
+    >$quoted
+
+    # tear the wanted headers out and toss them at body, leaving the 
+    # the remainder to be put back in later.
+
+    $awk 'BEGIN { inhdr = 1; keephdr = 0; insig = 0 } 
+	/^$/		{
+			    inhdr = 0;
+			}
+	/^-- $/		{
+			    if (!inhdr) {
+				insig = 1;
+				print $0 > Sig;
+				next;
+			    }
+			}
+	/^(Subject|Keywords|Summary): /	{
+			    if (inhdr) { 
+				keephdr = 1;
+				print $0 > Body;
+				next;
+			    }  
+			}
+	/^[ \t]/	{
+			    if (inhdr) {
+				if (keephdr) {
+				    print $0 > Body;
+				} else {
+				    print $0 > Hdrs;
+				}
+				next;
+			    }
+			}
+	/^.*$/		{
+			    if (insig) {
+				print $0 > Sig;
+			    }
+			    else if (inhdr) { 
+				keephdr = 0;
+				print $0 > Hdrs;
+			    }
+			    else {
+				print $0 > Body;
+			    }
+			    next;
+			} 
+    ' Body=$body Hdrs=$hdrs Sig=$sig $1
+
+    # now rip out the quoted text from the article, so we only
+    # spell check our own pristine prose..
+
+    if $test "X$QUOTECHARS" = X ; then
+	$mv $body $mine
+    else
+	$sed -e "/^$QUOTECHARS/d" $body >$mine
+	$diff -e $mine $body > $quoted
+    fi
+
+    # OK, we've torn everything asunder, now lets spell check
+    # the guts of the article...
+
+    if $test "X$ispell" = "Xnone"; then
+	$spell $ispell_options $mine > $bad
+	if $test -s $bad ; then
+	    ($echo ---- misspelled words -------------------------------------
+	     #$cat $bad | fmt
+	     $cat $bad | pr -t -4
+	     $echo -----------------------------------------------------------
+	    ) | $pager
+	else
+	    $echo 'No misspelled words.'
+	fi
+    else
+	$ispell $ispell_options $mine
+    fi
+
+    if $test $? -ne 0; then
+	$echo "$Cmdname: error returned, leaving message untouched"
+
+	# don't want to mess with this file again, either
+	shift
+	continue
+    fi
+
+    # resurrect the body of the article..
+    if $test -s $quoted ; then
+	($cat $quoted; $echo w $body; $echo q) | $ed - $mine
+    else
+	$mv $mine $body
+    fi
+
+    # ..and re-assemble the article.
+    $cat $hdrs $body $sig >$1
+
+    # move to the next filename!
+    shift
+
+done
+!NO!SUBS!
+$eunicefix Speller
+chmod 755 Speller

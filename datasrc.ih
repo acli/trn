@@ -1,0 +1,62 @@
+/* datasrc.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+#ifdef SUPPORT_NNTP
+# ifdef I_UTIME
+#   include <utime.h>
+# else
+  struct utimbuf {
+      time_t actime;
+      time_t modtime;
+  };
+# endif
+#endif
+
+#define SRCFILE_CHUNK_SIZE (32*1024)
+
+#define DI_NNTP_SERVER	1
+#define DI_ACTIVE_FILE	2
+#define DI_ACT_REFETCH	3
+#define DI_SPOOL_DIR	4
+#define DI_THREAD_DIR	5
+#define DI_OVERVIEW_DIR	6
+#define DI_ACTIVE_TIMES	7
+#define DI_GROUP_DESC	8
+#define DI_DESC_REFETCH	9
+#define DI_AUTH_USER	10
+#define DI_AUTH_PASS	11
+#define DI_AUTH_COMMAND	12
+#define DI_XHDR_BROKEN	13
+#define DI_XREFS	14
+#define DI_OVERVIEW_FMT	15
+#define DI_FORCE_AUTH	16
+
+INI_WORDS datasrc_ini[] = {
+    { 0, "DATASRC", 0 },
+    { 0, "NNTP Server", 0 },
+    { 0, "Active File", 0 },
+    { 0, "Active File Refetch", 0 },
+    { 0, "Spool Dir", 0 },
+    { 0, "Thread Dir", 0 },
+    { 0, "Overview Dir", 0 },
+    { 0, "Active Times", 0 },
+    { 0, "Group Desc", 0 },
+    { 0, "Group Desc Refetch", 0 },
+    { 0, "Auth User", 0 },
+    { 0, "Auth Password", 0 },
+    { 0, "Auth Command", 0 },
+    { 0, "XHDR Broken", 0 },
+    { 0, "Xrefs", 0 },
+    { 0, "Overview Format File", 0 },
+    { 0, "Force Auth", 0 },
+    { 0, 0, 0 }
+};
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static char* dir_or_none _((DATASRC*,char*,int));
+static char* file_or_none _((char*));
+static int srcfile_cmp _((char*,int,HASHDATUM));
+static int check_distance _((int,HASHDATUM*,int));
+static int get_near_miss _((void));

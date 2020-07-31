@@ -1,0 +1,47 @@
+# feed this into perl
+	eval 'exec perl -S $0 ${1+"$@"}'
+		if $running_under_some_shell;
+# mhactive
+# Used to create an imitation "active" file for MH mail folders so that
+# trn can read them.  To use this, create a news source like the following
+# in your .trn/access file and reference the mail ID in a group:
+#
+# [mail]
+# Active File = %`mhactive ~/Mail/active`
+# Spool Dir = ~/Mail
+# Active Times = none
+#
+# [group 2]
+# ID = mail
+# Newsrc = ~/Mail/mh.newsrc
+#
+# Adapted from Joe Edelman, 12 May 1995 by Raphael Manfredi
+
+open(TTY, '>/dev/tty');
+select((select(TTY), $| = 1)[0]);
+print TTY "Building MH active file...";
+
+($active) = @ARGV;
+$active =~ s/^~/$ENV{'HOME'}/;
+die "Usage: mhactive active-file\n" unless $active;
+
+open(FILE, ">$active") || die "mhactive: can't create $active: $!\n";
+
+foreach $folder (`folders -fast`) {
+	chop($folder);
+	opendir FOLDER, "$ENV{'HOME'}/Mail/$folder";
+	$first = 100000; $last = 0;
+  MSG:
+	foreach (readdir FOLDER) {
+		/^\d*$/ or next MSG;
+		$first = $_ if $_ < $first;
+		$last = $_ if $_ > $last;
+	}
+	next if $last == 0;
+	($group = $folder) =~ s|/|.|g;
+	print FILE "$group $last $first n\n";
+}
+
+close FILE;
+print "$active\n";
+print TTY "Done\n";

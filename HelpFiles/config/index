@@ -1,0 +1,10 @@
+"Environment Variables" &environment
+"Options" &options
+"Macros" &macros
+"Sample Config Files" :../samples/index
+"Your Config Files" ->yours
+
+>:yours
+"Your trnrc file" &%+/trnrc
+"Your access file" &%+/access
+"Your macros file" &%{TRNMACRO-%+/macros}

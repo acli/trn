@@ -1,0 +1,26 @@
+#!/bin/sh
+# trnkill - shell script to apply trn KILL files in the background
+# 14 Mar 89  created for rn by Jim Olsen <olsen@XN.LL.MIT.EDU>
+# 10 Sep 93  modified for trn 3 (or 2) by Wayne Davison <davison@borland.com>
+# Options: -d	debug mode -- you see all gory action as it happens.
+
+# Visit all newsgroups (if trn asks about anything else, just say no)
+export TRNMACRO RNMACRO TERM
+TRNMACRO=/tmp/trnkill$$
+TERM=dumb
+# support for trn 2.x
+RNMACRO=$TRNMACRO
+OPTIONS='-q -s -T -t -x +X ++'
+trap 'rm -f $TRNMACRO; exit' 1 2 3 15
+cat >$TRNMACRO <<'EOF'
+z  %(%m=[nf]?.q^J:n)^(z^)
+^m ^(z^)
+^j ^(z^)
+EOF
+if test X$1 = X-d; then
+	echo "z" | trn $OPTIONS
+else
+	echo "z" | trn $OPTIONS >/dev/null 2>&1
+fi
+rm -f $TRNMACRO
+exit 0

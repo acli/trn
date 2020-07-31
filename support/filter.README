@@ -1,0 +1,249 @@
+1 Oct 1996
+------------------------------
+
+This file describes how to enable modular article filtering in
+trn.  This is scanty documentation, and you will probably have
+questions that can be answered only by asking me or looking in the
+code.
+
+The code that's provided allows you to filter and score articles
+using Perl 5.000 and up.  Some code for filtering articles in Tcl
+is also supplied.  It's important to note, however, that using a
+different language to filter articles is a very simple matter, and
+requires no additional changes to the trn source.  Technical
+details on how trn communicates with an external filtering process
+are at <URL:http://www.newsreaders.com/misc/twpierce/news/filter.html>.
+
+  1. Before compiling, make sure that USE_FILTER is #defined in
+     common.h and that you've told Configure that you want strn's
+     scan and score features (define at least SCORE in your
+     config.h file).  These are presently turned on by default in
+     trn4.  Defining FILTER_DEBUG will produce voluminous
+     diagnostic output in /tmp/filter.log, so don't do this unless
+     you are really convinced you need to monitor the internal
+     machinations of the filtering engine.  If you go ahead and
+     define this for some peculiar reason, you will have to remove
+     /tmp/filter.log very frequently, since trn will never remove
+     it on its own.
+
+  2. Compile trn.
+
+  3. If using the Perl filter script, make sure that
+     support/Score.pl is somewhere in your Perl library path.  (No
+     such library is needed if you are using the Tcl filter.)
+
+  4. Copy support/filter (or support/filter.tcl) into your ~/.trn
+     directory, make sure the interpreter's path is in the #!
+     line, and make sure the script is executable.  Trn will run
+     this script in a subprocess when necessary and use it to
+     calculate scores.  The FILTER environment variable allows you
+     to override the location of this script if you don't like the
+     default (of %+/filter).
+
+You're all set.  Now you'll need to write code to tell trn how you
+want articles to be scored.  The rest of this document assumes
+that you are using Perl.  The Tcl filter follows the same general
+model, however, so if you can follow this description you
+shouldn't have much trouble writing Tcl code.
+
+
+		 HOW TO WRITE FILTER SUBROUTINES
+		 -------------------------------
+
+When trn calls upon the filter script to filter articles for,
+say, megabozo.general, the script checks your ~/News/Filters
+directory for a `megabozo.general' file containing filtering
+commands.  That file should contain the following code:
+
+	@local_hdrs = qw( subject from xref );	# the article headers we want
+
+	sub init {
+		# initialization code
+		...
+	}
+
+	sub local_score {
+		# calculate a score for articles in megabozo.general
+		...
+	}
+
+	sub done {
+		# cleanup code
+		...
+	}
+
+The only real requirement is that the subroutine
+`local_score' must be defined.  Everything else is optional.
+
+When trn needs a score for an article in megabozo.general, your
+filter script will call `local_score' with one argument: a
+reference to a hash containing the overview data for that
+article.  `local_score' should calculate a score for this article,
+and record that score via calls to these routines:
+
+	score_art (ARTICLE, SCORE)
+
+	    ARTICLE is an article object (the argument passed to
+	    local_score and global_score).  SCORE is added to the
+	    current running score for the ARTICLE.  E.g. the
+	    following calls would result in assigning a score of
+	    +150 to $article:
+
+		score_art ($article, +200);
+		score_art ($article, -50);
+
+	select_art ARTICLE
+
+	    Set the current score for ARTICLE to an obscenely high
+	    value.  Presently 10,000 (this should be adjustable).
+	    Obliterates whatever score ARTICLE previously held.
+
+	junk_art ARTICLE
+
+	    Set the current score for ARTICLE to an obscenely
+	    dismal value.  Presently 10,000.  Obliterates whatever
+	    score ARTICLE previously held.
+
+In each case, ARTICLE is a reference to a hash which contains the
+overview data for that article.  When `local_score' is called, it
+is passed a reference to this hash; you should use this reference
+whenever referring to the article.
+
+These functions may be called as many times as you like on the
+same article.  No effects are permanent until local_score exits.
+
+If you know in advance that the code for a particular newsgroup
+will score articles based on only one or two headers, put the
+names of those headers in the @local_hdrs variable, like so:
+
+	@local_hdrs = qw( subject xref );
+
+Doing so will speed up the filtering mechanism.  If you don't do
+this, trn will simply supply you with the complete overview record
+for each article.
+
+Here is an example.  Suppose you want to filter comp.lang.c like
+so:
+
+	* Any article crossposted to more than three groups gets a
+          score of -50.
+
+	* Any article crossposted to a non-comp.* group *also*
+	  gets a score of -50.
+
+This code would do that.  Create this file and call it
+`~/News/Filters/comp.lang.c':
+
+	# What headers are we interested in?
+	@local_hdrs = qw( xref );
+
+	sub local_score {
+
+	    my ($article) = @_;
+	    my (@newsgroups);
+
+	    # Get a list of newsgroups from the Xref: header.
+
+	    @newsgroups = split (/\s+/, $article->{xref});
+	    shift @newsgroups;
+
+	    # Articles crossposted to more than three groups get
+	    # -50.
+
+	    if (@newsgroups > 3) {
+		score_art ($article, -50);
+	    } else {
+
+		# Check each group in the @newsgroups array: if it's
+		# not a comp.* group, score the article -50 then, too.
+
+		foreach $n (@newsgroups) {
+		    next if $n =~ /^comp\./;
+		    score_art ($article, -50);
+		    last;
+		}
+	    }
+	}
+
+When you enter comp.lang.c, the scoring process will read the
+comp.lang.c file and call this `local_score' subroutine each time
+it scores an article.
+
+The `init' and `done' subroutines will be called upon newsgroup
+entry and exit, respectively.  This makes it convenient to write
+filtering code that requires some kind of initialization or
+cleanup: for example, turning debugging on and off selectively for
+a particular group, or opening and closing DBM files referenced by
+your code.
+
+You can implement global scoring with `~/News/Filters/global':
+
+	@global_hdrs = qw( subject from );	# headers wanted for every art
+
+	sub global_score {
+		# global scoring code here
+	}
+
+The `global_score' subroutine will be called to calculate a score
+for every article you read.
+
+The location of these filtering scripts is defined by your
+FILTERDIR environment variable -- if this variable is not set,
+~/News/Filters will be assumed.  Note that percent escapes will
+*not* be honored by the FILTERDIR variable.  (The reason is that
+percent escapes are all handled internally by the trn executable,
+but the local score files are managed independently by an external
+Perl process.  Permitting the process to understand percent
+escapes is conceivable, but would be very complicated.)
+
+
+		     TCL FILTER DOCUMENTATION
+		     ------------------------
+
+The mechanism for writing Tcl subroutines to filter your articles
+follows pretty much the same structure as the supplied Perl
+filter.  The `filter.tcl' script defines the following procedures
+to make article scoring convenient:
+
+	subject ARTICLE REGEXP
+	from ARTICLE REGEXP
+	date ARTICLE REGEXP
+	message-id ARTICLE REGEXP
+	references ARTICLE REGEXP
+	bytes ARTICLE REGEXP
+	lines ARTICLE REGEXP
+	xref ARTICLE REGEXP
+
+	    Each of these fetches a header from the specified
+	    ARTICLE.  If the optional argument REGEXP is supplied,
+	    it is matched against the contents of the desired
+	    header (case-insensitively), and 1 or 0 is returned
+	    depending on whether a match was found.  If no REGEXP
+	    argument is supplied, the procedure merely returns the
+	    content of the header.
+
+	header STRING ARTICLE
+
+	    Fetches the header whose name is STRING from the
+	    ARTICLE.  For example, `subject $article' is the same
+	    thing as saying `header subject $article'.
+
+	score_art ARTICLE SCORE
+	select_art ARTICLE
+	junk_art ARTICLE
+
+	    As in the Perl versions of these functions.
+
+For example, ~/News/Filters/news.software.readers might include
+code like the following:
+
+	proc local_score { article } {
+
+	    if { [subject $article "rfc *1036"] &&
+		 ! [from $article "nick knight"] } {
+
+		select_art $article
+
+	    }
+	}
+

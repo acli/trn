@@ -1,0 +1,10 @@
+/* respond.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void follow_it_up _((void));
+#if 0
+static bool cut_line _((char*));
+#endif

@@ -1,0 +1,483 @@
+This file will acquaint you with the user-visible changes in trn 4.x.
+
+If you're upgrading from trn 2.x see the discussion of the -a option,
+the 't' command (newsgroup selection level), and the 'T' command
+(article level & in kill files) for slight incompatibilities between
+trn 2.5 and later versions of trn.
+
+Changes from trn 3.6 to trn 4.0:
+
+   o	Added a newsgroup selector to make choosing news groups easier
+	(use the ++ option to turn it off).
+   o	In the selector '\' now is used to execute a command, so if
+	you had 'c' in your SELECTCHARS, you could still catch-up a
+	group via \c.  It also lets you enter the normal newsgroup
+	commands from the newsgroup selector, such as unsubscribe
+	(\u) and goto group (\g).  If the command letter is both a
+	selector command and a newsgroup command, use '\\' to get
+	the newsgroup command (such as \\O or \\h).  Use ':' to apply
+	a (limited set) of commands to more than one group, such as
+	":u" (unsubscribe) or ":c" (catchup).
+   o	Use "\v" from any selector to see the current trn version.
+   o	Use the backtick (`) command to switch back and forth between
+	the newsgroup selector and the rn-style newsgroup browser.
+	You can also type backtick from inside a newsgroup to exit
+	back to the newsgroup selection level.
+   o	Use the '=' command in the newsgroup selector to refresh the
+	article counts (possibly refetching the active file).
+   o	Use the Ctrl-G command in the selector to go to a letter
+	without affecting it (e.g. "Ctrl-G b" would go to letter 'b').
+   o	Added an addgroup selector to ease the arrival of new groups.
+   o	Strn's article scan/scoring is now present in trn.
+   o	** Describe the universal selector once it settles down **
+   o	Enabled trn to use both nntp and local news sources, either
+	separately or at the same time.  Create a .trn/access file to
+	customize this (start with a copy of <trnlib>/access.def).
+   o	Changed the format of trn's option files.  Trn will create a
+	.trn/trnrc file for you using your old trn options as soon as
+	you edit and save them using the on-line option editor.  Once
+	this happens, the old TRNINIT variable is ignored.
+   o	When you specify a news source in the active file, you can
+	tell trn to keep a local copy of the server's active and
+	newsgroups files, and either re-grab them at regular intervals
+	(however often you like), update them with new information
+	we glean while running, or leave them alone (which is useful
+	for an NFS mounted active file).
+   o	Added a newsrc selector to choose among the news sources and
+	newsrc options in your .trn/access file.
+   o	Alternately, use Ctrl-N and Ctrl-P in the newsgroup selector
+	or newsgroup browser to change from news source to news source.
+   o	Added an on-line option editor (type '&' <RETURN>).  Use the
+	search command (/erase) to find the option you're looking for.
+   o	Much improved xterm mouse handling now lets you define a
+	"mouse bar" of buttons to press, as well as allowing you to
+	click on the tree nodes in the article tree display.  Use
+	the option selector to turn it on and customize it.  See
+	the <trnlib>/INIT file for an example of how to make the
+	mouse code conditional on your terminal type.  You can
+	even double-click in the selector to start reading and
+	select a range with click-drag-release.
+   o	Enhanced the mime code so that trn now knows how to handle
+	basic mime types, and farm out the ones it doesn't understand.
+	!!Not finished yet!!
+   o	Use the 'a' (attachments) command to view an article's
+	attachments, including a uuencoded picture in a picture
+	group.  Even works with multi-part pieces if you use 'a'
+	on all the parts (in any order).  Use ":a" to view a
+	group of selected articles (handy from the selector).  Of
+	course, "::a" affects all unselected articles.
+   o	The header hiding code now hides more headers by default,
+	and can un-hide any header (prior trns could only hide
+	known header names plus all unknown headers in a group).
+   o	You can now specify a custom IP port for an NNTP connection
+	in your .trn/access file or the NNTPSERVER variable.
+   o	A bargraph (for percent done) pops up on slow tasks (such
+	as fetching the active file over a slow link).
+   o	Changed the default "auto arrows" (-A) to be more web-
+	browser-like in the selectors.  Set option "Auto Arrow
+	Macros" to "old-style" if you like the old style better.
+   o	A client ("mini") inews is now included with trn that is
+	compatible with other news readers and a bit more functional.
+   o	Macro writers: each selector has a different mode letter (see
+	the %m discussion in the man page for a list), but there's
+	now an easy way to write a macro that affects all selectors
+	test the "general mode": %g=s.  See the man page for the other
+	general modes.
+   o	Fixed the type-ahead eating to never eat just part of a macro
+	sequence (such as a keypad key or a mouse click).
+   o	Trn now use X-Newsgroups instead of Newsgroups in mailed replies.
+	It also uses X-Also-Posted-To when Cc'ing people while posting.
+   o	In-Reply-To lines are now used for threading as well as
+	References lines, which makes reading gatewayed mailing lists a
+	lot easier.
+
+Changes from trn 3.5 to trn 3.6:
+
+   o	Added support for slow network connections by: (1) making use
+	of the LIST ACTIVE <group.name> extension (if available),
+	(2) beginning to display the received article as it is received
+	from nntp, and (3) making the Pnews (posting) script query the
+	group info more efficiently.
+   o	Changed nntplist's command-line syntax slightly so that it is
+	more orthoganal and so that it can pass an argument to LIST
+	ACTIVE or LIST NEWSGROUPS.  ** If you use nntplist in your own
+	scripts you'll need to switch them over to using the -o (output)
+	option. **
+   o	Added :p command to post from the selector.
+   o	Added the Ctrl-E command to display the end of the current article.
+   o	Enhanced the ':' command to operate on non-selected thread/articles
+	(use ::cmd) or to operate on just the current thread (use :.cmd or
+	::.cmd).
+   o	Added a 't' modifier for the search command to start the search
+	at the top of the group.  E.g.:  /subject string/t:+
+	The default for searches in the selector has always been the top
+	of the group, so this only affects the command while reading
+	articles.
+   o	Improved the catchup command to allow you to specify an article
+	count to leave unread in the group.
+   o	Added a new sort order for the article selector -- by 'n'umber.
+   o	Enhanced the %( arg = regex ? : ) syntax to allow a % expansion
+	in the regex portion of the comparison.
+   o	Enhanced xref code to not go sub-optimal on C news's single-group
+	xref lines.
+   o	Added support for generic authentification (available in the
+	reference NNTP 1.5.12 and INN 1.5).
+   o	Fixed an elusive crash bug that would not let some people run
+	trn from cron.
+   o	Other misc. bug fixes.
+
+Changes from trn 3.4.1 to trn 3.5:
+
+   o	Enhanced the -p option to allow you to select how you'd like
+	your postings to be selected.  The default (which works the same
+	as before) is -p (select your posting and its replies).  Also
+	available is -p+ (select all postings in the thread) and -pp
+	(select the *parent* article and its replies).
+   o	Added the forward (^F) command to forward an article via mail.
+   o	Improved the tab command (skip cited text) to skip empty lines
+	and choose the quotation character more intelligently.
+   o	You can now junk an article in just the current group via
+	a search command using 'x'.  E.g.  /subject/:x
+   o	Included some code from Olaf Titz <uknf@rz.uni-karlsruhe.de>
+	that allows you to tell trn to transform high-bit characters
+	into their 7-bit ascii equivilents.  See the _C command and
+	the -Q option.
+   o	Added the back-scroll command: 'B'.
+   o	Added the -J<n> option to allow you to join truncated subjects
+	into a common thread.  The default for -J is 30 chars, not counting
+	the Re: portion.  I have the lines "&-J27" and "X&+J" in my Babylon
+	5 kill file to join all the Genie posts that get truncated into the
+	proper thread.
+   o	Added the -K option to keep a group static (no new articles) while
+	you read it.  Useful for people who have a really slow kill file
+	for a group -- use "&-K" and "X&+K" in such a kill file to make
+	only that group stop growing until you exit the group and re-enter.
+   o	Added optional mouse support in an xterm window.
+   o	Added a new intrp (%q) to get the value of the last quoted input
+	(%").  Useful for using elm for forwarding articles as it needs
+	the answer to the question "To?" on the command line:
+		-EFORWARDPOSTER="elm -i %h -s '%'[subject]' %q"
+	(though you may wish to redefine the FORWARDHEADER variable too).
+   o	Fixed bugs in the handling of thread kills in partially-threaded
+	groups (Tj now works even if the -a option wasn't specified) and
+	and in the handling of the subject-kill command (Aj).
+   o	New files, HINTS.TRN is like HINTS but in a better format.
+	(I renamed it to avoid conflicts with the directory "hints").
+   o	Portability enhancements to Configure and the support scripts.
+   o	Some fairly major and minor bugs fixed.
+
+Changes from trn 3.3 to trn 3.4.1:
+
+   o	Made the kill-file handling more consistent in how it
+	deals with the THRU line.  It now only ignores the THRU
+	line for all selection commands.  You can turn off this
+	exception (and thus make all commands obey the THRU line)
+	by turning off the -k option (using +k).  You can also
+	specify the 'I' modifier or the 'N' modifier to killfile
+	searches to have them either ignore or not-ignore the
+	THRU line, respectively.
+   o	Changed the %'s interp to not supply the leading and
+	trailing single quotes to make it more useful.
+   o	The NNTP trn attempts to reconnect to the news server
+	after it times out.  If it is successful, trn continues.
+   o	The command /subj/M no longer assumes you meant /subj/r:M.
+   o	Automatically-generated killfile commands (e.g. the 'K'
+	command) now escape a '/' that occurs in the subject string.
+   o	The _+ command (select whole thread) now starts reading
+	the thread from the first unread article.
+   o	The -p self-matching code was improved to match a user's
+	name more exactly so that people with short login names
+	don't get improper matches.
+   o	Pnews was enhanced to deal with Followup-To: poster better
+	when you choose to post anyway -- it now puts the user's
+	address into the Cc: header and automatically corrects the
+	Newsgroups: line.
+   o	Pnews returns to the prompt after an inews error instead of
+	aborting.  You can still choose to 'a'bort, if you like.
+   o	Speller now passes the ispell_options from Configure to
+	spell, and Configure has been enhanced to prompt you for
+	the options if either ispell or (new!) vspell can't be
+	found.
+   o	Added the file Policy.sh.SH that puts your policy choices
+	from the config.sh file into hints/Policy.sh.  This allows
+	you to use the Policy.sh file to prime the Configure choices
+	on multiple machines or in the mthreads package without
+	machine-specific selections getting in the way.
+   o	Upgraded Configure to the latest metaconfig release.
+   o	Fixed some MIME bugs and made the handling a little smarter.
+   o	Nested comment warnings removed from various include files.
+   o	Fixed several crash bugs and several nusiance bugs, including:
+	   *	the problem with the NNTP trn mangling the date of
+		new news groups (which caused either groups to get missed
+		or groups to be re-offered).
+	   *	the problem with the NNTP trn that caused it to think
+		certain lines that begin with a '.' are the end of the
+		list marker and quit when it got confused.
+	   *	and lots more...
+
+Changes from trn 3.2 to trn 3.3:
+
+   o	Newsetup now looks for NEWSLIB/subscriptions for a default list
+	of groups to subscribe the user to.  If the file doesn't exist
+	the NNTP version will attempt to grab it via the LIST SUBSCRIPTIONS
+	command (available in INN and some nntp patches).
+	[HINT:  if you want your subscription file to default to all
+	groups in the active file, link your subscription file to your
+	active file -- trn will strip the info past the first space
+	when it processes the .newsrc.]
+   o	The file newsnews will now default to a simple version update
+	message instead of a welcome-to trn message (which is now provided
+	by the newsetup file when creating a new .newsrc for a user).
+	I still encourage you to install your own custom newsnews
+	when trn is updated (and trn still doesn't install newsnews
+	automatically -- you have to make this decision for your self).
+   o	Redirected and disabled groups (marked by '=' or 'x' in the active
+	file) are now handled better, allowing you to read any remaining
+	articles after a group gets redirected or disabled and warning you
+	to either start using the new group name or that the group will
+	not be receiving any new news.
+   o	Mime support is now prompted for in Configure and your system's
+	display/store commands are remembered.  We also handle a continued
+	Content-Type header correctly now.
+   o	The tick (') interp modifier will generate a tick-quoted string
+	with all ticks inside the string quoted.  For example, %'s might
+	generate (INCLUDING the "'"s)  'Ticks aren\'t a problem.'
+   o	If the environment variable FAST_PNEWS == y Pnews skips the "Are
+	you sure?" question and the "include file" prompt.  You can put
+	-EFAST_PNEWS=y in the global INIT file, if you so desire.
+   o	Various bug fixes.
+
+Changes from trn 3.1 to trn 3.2:
+
+   o	Configure and the include file structure has been improved to
+	install easier on more systems.
+   o	Fixed some non-portable test statements in Pnews.
+   o	Added the -Z option to allow you to turn on/off support for the
+	two different database formats (-Zt, -Zo, -Zot, or +Z).
+   o	Configure now allows you set the default database support to
+	thread files, overview files, both or none.
+   o	Trn and its support scripts handle ~/dirs in the newslib or
+	rnlib better.
+   o	Various bug fixes.
+
+Changes from trn 3.0 to trn 3.1:
+
+   o	Added a new header-searching syntax:  /string/Hheader:cmd.
+	This allows you to match a string on any header that trn
+	knows about and is faster on the NNTP side than full-header
+	matching.  Example:  /: .../Hlines:j  would junk all postings
+	longer than 99 lines.
+   o	Two new commands can be put into a group's kill file: *j
+	(kill all articles from THRU to the end of the group) and *X
+	(kill all unselected articles from THRU to the end of the group).
+   o	Pnews (using artcheck) now checks the active file as well as
+	the newsgroups file for each group on the Newsgroups line.  This
+	lets you know whenever you specify a group that doesn't exist.
+	Also, the NNTP version has been fixed to provide full checking.
+   o	Pnews/Rnmail have been modified to allow you to type either upper
+	or lower case for the response letters, and use "sp*ell" in addition
+	to "c*heck" for the spelling checker ("s*end" is unchanged).
+   o	Pnews/Rnmail each have a pre-edit signature appending option.
+	If you use the file DOTDIR/.news_sig INSTEAD of .signature Pnews
+	will append your signature before you edit the file.  Rnmail uses
+	the file DOTDIR/.mail_sig.  Note also that the names may be
+	customized with the environment variables NEWSSIGNATURE and
+	MAILSIGNATURE, if desired (allowing a per-group signature).
+   o	Added the modifiers '>' and ')' to interpreted strings.  For
+	example:  %>f gives you the address only on the From line,
+	while %)f gives you the real name portion.
+   o	Added the 'O' command (newsgroup level) that works just like 'o'
+	except that it does not visit empty groups.
+   o	The killfile is fully saved before manual editing with Ctrl-K
+	(message-id commands used to be saved only on exit from the group).
+   o	The screen is now refreshed when the window size changes.
+   o	Trn now makes use of stdlib.h, unistd.h (if available) and does a
+	more intelligent inclusion of time.h & sys/time.h (as needed).
+   o	Trn doesn't loop through the current thread if unread articles
+	still exist in it.  Also fixed various problems with '>' & 'P'.
+   o	The 'D' command in the selector no longer jumps back to the top.
+   o	The NNTP version has a different new-article aquisition strategy.
+	Your nntp server must send up-to-date information in response to
+	the GROUP command (INN's nnrpd does) for a group to expand while
+	you're in it.  Also, you can now set the minimum time for trn to
+	wait (see -z) before it refetches the active file at the end of
+	the newsgroups.  The default is 5 minutes.
+   o	Optional metamail support pauses between the headers and the
+	metamail-interpreted article.  Also, the 'v' command displays the
+	raw article without metamail processing.
+   o	Numerous portability changes and bug fixes.
+
+Changes from trn 2.5 to trn 3.0:
+
+   o	Trn is now capable of reading more news database formats.  It
+	currently supports news overview (.overview files), mthreads
+	(.thread files), and direct threading of the articles.  The
+	NNTP version supports the XTHREAD and XOVER NNTP extensions.
+	If you compile trn with support for both formats it will figure
+	out which groups (or which server) has which type of data and
+	act accordingly.
+   o	Mthreads is now a separate package from trn since not everyone
+	will need to use it.  Look for it in the same place you found
+	trn.
+   o	Trn attempts to build some useful default macros for your
+	terminal's arrow keys.  On the article level they move around
+	in the thread; in the selector they change pages (left/right)
+	and switch selections (up/down); on the newsgroup level they
+	move by group (up/down) and enter a group (right).  If you
+	don't like this, turn it off with the +A option.
+   o	There's a new search scope -- the from line.  For example:
+	use /author/f+ to search for and select 'author's articles.
+   o	The thread selector has been extended to be a subject and
+	article selector.  Use the 'S'et selector command to change
+	modes or use '=' to toggle between the article selector and
+	the subject/thread selector (whichever was last in use).
+   o	The selector can now be sorted in a variety of ways:  by date,
+	subject, author, article count (in the subject/thread selector),
+	or a combination of subject and date (in the article selector).
+	The default is date order of the oldest unread article in a thread.
+	Use the 'O'rder command to pick a new one or use 'R' to reverse
+	the sort.  See also the "-O<mode><order>" option to set your
+	favorite mode and order.  You can even put a "&-Oas" command (for
+	example) into a group's kill file to set a per-group default.
+   o	The selector allows you to exclude all the non-selected articles
+	from the display (i.e. narrow it) -- use 'E' to toggle this mode.
+   o	The selector has two new selection commands:  '*' is used to select
+	(or deselect) the current item and all other items with the same
+	subject (useful in the article selector); '#' is used to make an
+	overriding selection that immediately reads the current item
+	ignoring all other selections.
+   o	You can now type 'M' in the selector to mark the current item's
+	articles as read-but-returning and press 'Y' to yank back and
+	select these articles before exiting the group.
+   o	Selections via searches are article-oriented (/subj/+) or
+	thread-/subject-oriented (/subj/++).  The article selector's
+	default command is "+", while the thread/subject selector's is
+	"++".  In other words doing a "/subj" search with no specified
+	command selects whatever type of object you're looking at in the
+	selector.
+   o	If you specify the "-p" option, your postings and any replies to
+	them are auto-selected whenever trn encounters them.
+   o	The '+' command in a non-threaded group visits the subject selector.
+	You can also use "_a", "_s", "_t" or "_T" to force the article,
+	subject, thread, or thread-but-I'll-settle-for-subject selector.
+   o	The selector displays subjects/threads that are partially-selected
+	with a '*'.  Fully-selected items are marked with a '+', as before.
+	Use the article selector (possibly with 'E'xclusive set) to see
+	which articles are selected in a partially-selected group (or just
+	read them).
+   o	The selector remembers which subjects you selected (and didn't kill)
+	and marks any newly-arriving articles in these subjects as selected
+	until you exit the group.
+   o	The medium display mode of the thread selector has been improved
+	to make it more readable.
+   o	The selector will leave out the middle portion of a subject that is
+	too long to display the last two words of the subject.  If you don't
+	like this, use the -u option to leave them unbroken.
+   o	'T'hread KILL commands now use message-ids to either junk
+	or select articles.  The 'T' command has been extended to be
+	more flexible on the article level and has been added to the
+	selector.
+   o	Another new command 'A'dds selection or kill commands to the KILL
+	file, and works from both the article level and the selector.
+   o	The tree display has been updated to display unread-but-not-
+	selected articles as <x>.  Other unread articles are still [x],
+	while read articles still display as (x).
+   o	Trn can enter a group without thread information available and
+	thread it in the background while you read.  Articles that have
+	references that may or may not exist show up as "(?)".  If you
+	visit an article like this and wait there, the screen will update
+	when we know for sure one way or the other (after processing more
+	of the group).
+   o	The -a option is used to tell trn to thread all of the
+	articles on entry to the group.  If you don't specify this
+	option a group may have a few (or many) articles that get
+	threaded in the background and won't show up on the tree
+	display until trn processes them.
+   o	Pressing "_+" on the article level will select the entire thread
+	associated with the current article -- useful if you've selected
+	individual articles and wish to read the rest of the discussion.
+	Use "_-" to deselect the current thread.
+   o	The commands _N and _P move to the next and previous article
+	in numberical (arrival) order (article level).  Thus, you can
+	use the command "._P" on the newsgroup level to start reading
+	a group from the very last article to arrive.
+   o	The 't' command on the newsgroup level now turns OFF reading a
+	group with threads (this setting is stored in the .newsrc file,
+	so it is remembered from session to session).  Trn 2.x used this
+	to force threading to be turned ON, but it wasn't usually needed
+	for normal operation.  To temporarily turn threads on once inside
+	a non-threaded group, use the 't' or "_t" commands (article level)
+	or the "St" command (selector).
+   o	Trn now checks for the environment variable TRNMACRO on startup
+	(which defaults to DOTDIR/.trnmac) before checking for the usual
+	RNMACRO (DOTDIR/.rnmac) file.  If you're running trn in its rn-
+	compatible mode, only RNMACRO is tried.
+   o	The threaded and non-threaded data in a group has been unified,
+	resulting in more cached information on the non-threaded side
+	(such as the from line) and more efficient handling of missing
+	articles, just to name two benefits.
+   o	The newsgroup information is freed when we enter a new group,
+	not when we exit the current group.  This means that if you
+	quit out of a group (even accidentally), you can go back in
+	and everything is still there except the selections, which
+	get cleared on group exit.
+   o	KILL file processing will now ignore the THRU line as much as
+	possible without slowing down the handling of KILL files.
+	If you have really slow searches (header or article searches)
+	or you use trn without a database it will use the THRU line
+	to only search an article one time (as it would in rn).  This
+	means that if you have subject-oriented selection commands you
+	don't have to worry about missing articles if you don't read all
+	of them the first time you enter a group after they arrive.  This
+	also means that you won't have to edit your local kill file to
+	remove the THRU line to force a re-scan -- this is now unnecessary.
+   o	Header parsing is now done in-memory, making threading and
+	caching of articles much faster.  This especially helps out
+	NNTP users because trn used to write a tmp file for every
+	header parse.
+   o	Several new mode letters (accessed by %m in macros) were added.
+	The most significant are 'f' for the end (Finis) of the newsgroup
+	selection level (instead of 'n') and 'e' for the end of the article
+	reading level (instead of 'a').
+   o	A new % modifier has been introduced: "%:FMTx".  This allows you
+	to apply a printf-style column format to a regular %x expansion.
+	For example, %:-50.50s would left-justify the subject into 50
+	characters, exactly.
+   o	The -f option will make trn go a little faster by getting rid of the
+	delay/prompt after kill file processing, printing the "skipping
+	article" message, and printing the "Depositing KILL command" message.
+	This is the default if -t (terse) is specified, but can be overriden
+	by specifying +f after the -t option.
+   o	A new option for the gadget-conscious (-B) displays a spinner when
+	trn is processing articles in the background.
+   o	Added the -G option to make the newsgroup 'g'o command look for
+	near matches (for those typing mistakes).
+   o	New newsgroups that are left unsubscribed are not appended to the
+	.newsrc unless you use the -I option or you're running an NNTP
+	version that does not use the NEWGROUPS code.
+   o	Support for metamail's mime handling is now built into the code --
+	see the METAMAIL define in common.h.
+   o	Pnews does more checking of your article before posting, has a
+	spelling-check option, and allows the Cc: header to be used to
+	send mail while posting the article.
+
+Changes from trn 1.0.3 to trn 2.5:
+
+   o	Added the '(' and ')' commands (article level) to move to an
+	article's previous/next sibling, including "cousin" siblings.
+   o	The 'A'bandon command (newsgroup level) forgets all changes to the
+	current newsgroup since you first started trn.
+   o	The thread selector now allows you type type 'c'/'y' to catchup
+	the group without chasing cross-references.
+   o	Added 'z' and 'Z' commands (article level) supersede the current
+	article ('Z' also including the original text).
+   o	The g command (newsgroup level) will go to a newsgroup by number
+	where the the number corresponds to that shown in the 'L'ist
+	command.
+   o	Added the "-o" option to use the old method of junking articles in
+	the thread commands (they didn't chase cross-references in trn 1.x)
+   o	Added the "-b" option to read articles in a breadth-first descent
+	of the article tree.  You can specify this command at runtime to
+	switch from breadth-first (type "&-b") to depth-first ("&+b).
+   o	Added the "-j" option to tell trn to pass control characters through
+	the pager unharmed.

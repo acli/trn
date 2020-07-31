@@ -1,0 +1,72 @@
+/* rt-mt.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+#define DB_VERSION	2
+
+typedef Uchar	BYTE;
+typedef short	WORD;
+#ifndef __alpha
+typedef long	LONG;
+#else
+typedef int	LONG;
+#endif
+
+#define ROOT_ARTICLE	0x0001		/* article flag definitions */
+#define HAS_XREFS	0x0004		/* article has an xref line */
+
+struct packed_root {
+    LONG root_num;
+    WORD articles;
+    WORD article_cnt;
+    WORD subject_cnt;
+    WORD pad_hack;
+};
+
+struct packed_article {
+    LONG num;
+    LONG date;
+    WORD subject, author;
+    WORD flags;
+    WORD child_cnt;
+    WORD parent;
+    WORD padding;
+    WORD sibling;
+    WORD root;
+};
+
+struct total {
+    LONG first, last;
+    LONG string1;
+    LONG string2;
+    WORD root;
+    WORD article;
+    WORD subject;
+    WORD author;
+    WORD domain;
+    WORD pad_hack;
+};
+
+struct bmap {
+    BYTE l[sizeof (LONG)];
+    BYTE w[sizeof (WORD)];
+    BYTE version;
+    BYTE pad_hack;
+};
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static char* mt_name _((char*));
+static int read_authors _((void));
+static int read_subjects _((void));
+static int read_roots _((void));
+static SUBJECT* the_subject _((int));
+static char* the_author _((int));
+static ARTICLE* the_article _((int,int));
+static int read_articles _((void));
+static int read_ids _((void));
+static void tweak_data _((void));
+static int read_item _((char**,MEM_SIZE));
+static void mybytemap _((BMAP*));
+static void wp_bmap _((WORD*,int));
+static void lp_bmap _((LONG*,int));

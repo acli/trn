@@ -1,0 +1,6 @@
+To use Tktrn after you compile with USE_TK enabled, you need to put
+all the files from this dir (except this README) into your ~/.trn dir.
+This install process should probably be improved somehow...
+
+You must link the trn executable to the name tktrn and run that to try
+the tk extensions.

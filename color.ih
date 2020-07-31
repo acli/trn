@@ -1,0 +1,17 @@
+/* color.ih - Color handling for trn 4.0.
+ */
+/* This software is copyrighted as detailed in the LICENSE file, and
+ * this file is also Copyright 1995 by Gran Larsson <hoh@approve.se>. */
+
+struct color_obj {
+    char* name;
+    char* fg;
+    char* bg;
+    int attr;
+};
+
+#define STACK_SIZE 16
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void output_color _((void));

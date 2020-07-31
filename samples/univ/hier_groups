@@ -1,0 +1,235 @@
+#	This file is mostly a demo, but it could become more usable later.
+#Suggestions for improvement are welcome.
+
+#Last update: 12/06/93
+
+begin group
+"All newsgroups" *
+"alt       (alternative newsgroups)" ->alt
+"comp      (computer-related)" ->comp
+"misc      (miscellaneous topics)" ->misc
+"news      (USENET maintenance/discussion)" ->news
+"rec       (recreational/hobby)" ->rec
+"sci       (science)" ->sci
+"soc       (social)" ->soc
+"talk      (controversial/political topics)" ->talk
+"bionet    (biology related)" ->bionet
+"bit       (BITNET)" ->bit
+"biz       (business)" ->biz
+"clari     (Clarinet: newswire feeds)" ->clari
+"gnu       (GNU project software and discussion)" ->gnu
+"info      (mostly moderated mailing lists)" ->info
+"k12       (Kindergarten--12th grade education)" ->k12
+"vmsnet    (VAX/VMS interests)" ->vmsnet
+"Regional hierarchies" ->regional
+"Other hierarchies" ->other_hier
+
+>:alt
+"alt.*" alt.*
+"alt.bbs.*       (Bulletin Board Systems)" alt.bbs.*
+"alt.binaries.*  (mostly picture or sound files)" alt.binaries.*
+"alt.books.*" alt.books.*
+"alt.comics.*" alt.comics.*
+"alt.comp.*      (an altnet imitation of comp.*)" alt.comp.*
+"alt.culture.*   (cultures, organized geographically)" alt.culture.*
+"alt.cyberpunk.*, alt.cyberspace" alt.cyberpunk alt.cyberpunk.* alt.cyberspace
+"alt.fan.*       (for fans and anti-fans)" alt.fan.*
+"alt.flame.*     (heated discussions)" alt.flame alt.flame.*
+"alt.folklore.*  (stories and legends in various areas)" alt.folklore.*
+"alt.games.*" alt.games.*
+"alt.internet.*  (information about internet services)" alt.internet.*
+"alt.music.*" alt.music.*
+"alt.personals.* (personal ads)" alt.personals.*
+"alt.politics.*" alt.politics.*
+"alt.pub.*       (virtual gathering places)" alt.pub.*
+"alt.religion.*  (mostly humorous groups)" alt.religion.*
+"alt.rock-n-roll.*" alt.rock-n-roll*
+"alt.sex.*" alt.sex alt.sex.*
+"alt.society.*" alt.society.*
+"alt.sources.*   (source code for computer programs)" alt.sources.*
+"alt.sport.*, alt.sports.*" alt.sport.* alt.sports.*
+"alt.support.*   (support groups)" alt.support alt.support.*
+"alt.sys.*       (computer systems)" alt.sys.*
+"alt.tv.*        (television shows)" alt.tv.*
+"Other alt.* groups" alt.* !alt.bbs.* !alt.binaries.* !alt.books.* !alt.comics.* !alt.comp.* !alt.culture.* !alt.cyberpunk !alt.cyberpunk.* !alt.cyberspace !alt.fan.* !alt.flame !alt.flame.* !alt.folklore.* !alt.games.* !alt.internet.* !alt.music.* !alt.personals.* !alt.politics.* !alt.pub.* !alt.religion.* !alt.rock-n-roll.* !alt.sex !alt.sex.* !alt.society.* !alt.sources.* !alt.sport.* !alt.sports.* !alt.support !alt.support.* !alt.sys.* !alt.tv.*
+
+>:comp
+"comp.*" comp.*
+"comp.ai.*          (Artificial Intelligence)" comp.ai comp.ai.*
+"comp.binaries.*    (binary files for specific systems)" comp.binaries.*
+"comp.databases.*" comp.databases comp.databases.*
+"comp.dcom.*        (data communications)" comp.dcom.*
+"comp.graphics.*" comp.graphics comp.graphics.*
+"comp.infosystems.* (WWW,wais,gopher,etc...)" comp.infosystems.*
+"comp.lang.*        (languages)" comp.lang.*
+"comp.mail.*        (electronic mail)" comp.mail.*
+"comp.org.*         (computer related organizations)" comp.org.*
+"comp.os.*          (operating systems)" ->comp.os
+"comp.protocols.*   (communications protocols)" comp.protocols.*
+"comp.security.*" comp.security.*
+"comp.society.*" comp.society.*
+"comp.soft-sys.*    (software systems)" comp.soft-sys.*
+"comp.sources.*     (source code postings)" comp.sources.*
+"comp.std.*         (standards)" comp.std.*
+"comp.sys.*         (systems by hardware (PC,Mac,Sun,...))" ->comp.sys
+"comp.text.*        (text processing)" comp.text comp.text.*
+"comp.theory.*" comp.theory comp.theory.*
+"comp.unix.*        (UNIX(tm) operating system topics)" comp.unix.*
+"comp.windows.*     (windowing systems)" comp.windows.*
+"Other comp.* groups" comp.* !comp.ai !comp.ai.* !comp.binaries.* !comp.databases !comp.databases.* !comp.dcom.* !comp.graphics !comp.graphics.* !comp.infosystems.* !comp.lang.* !comp.mail.* !comp.org.* !comp.os.* !comp.protocols.* !comp.security.* !comp.society.* !comp.soft-sys.* !comp.sources.* !comp.std.* !comp.sys.* !comp.text !comp.text.* !comp.theory !comp.theory.* !comp.unix.* !comp.windows.*
+>:comp.os
+"comp.os.*" comp.os.*
+"comp.os.386bsd.*      (free BSD UNIX topics)" comp.os.386bsd.*
+"comp.os.linux.*       (free UNIX by Linus T.)" comp.os.linux comp.os.linux.*
+"comp.os.ms-windows.*  (Microsoft Windows and NT)" comp.os.ms-windows.*
+"comp.os.msdos.*       (other PC operating systems)" comp.os.msdos.*
+"comp.os.os2.*         (IBM's OS/2)" comp.os.os2.*
+"Other comp.os.* groups" comp.os.* !comp.os.386bsd.* !comp.os.linux !comp.os.linux.* !comp.os.ms-windows.* !comp.os.msdos.* !comp.os.os2.*
+>:comp.sys
+"comp.sys.*" comp.sys.*
+"comp.sys.acorn.*" comp.sys.acorn comp.sys.acorn.*
+"comp.sys.amiga.*" comp.sys.amiga.*
+"comp.sys.apple2.*" comp.sys.apple2.*
+"comp.sys.atari.*" comp.sys.atari.*
+"comp.sys.dec.*     (Digital Equipment Corporation)" comp.sys.dec comp.sys.dec.micro
+"comp.sys.hp.*      (Hewlett-Packard)" comp.sys.hp comp.sys.hp.*
+"comp.sys.ibm.*     (IBM PC and clones)" comp.sys.ibm.*
+"comp.sys.mac.*     (Apple Macintosh)" comp.sys.mac.*
+"comp.sys.newton.*  (Apple Newton)" comp.sys.newton.*
+"comp.sys.next.*    (NeXT machines/software)" comp.sys.next.*
+"comp.sys.sgi.*     (Silicon Graphics)" comp.sys.sgi.*
+"comp.sys.sun.*     (Sun Microsystems)" comp.sys.sun.*
+"Other comp.sys.* groups" comp.sys.* !comp.sys.acorn !comp.sys.acorn.* !comp.sys.amiga.* !comp.sys.apple2.* !comp.sys.atari.* !comp.sys.dec !comp.sys.dec.* !comp.sys.hp !comp.sys.hp.* !comp.sys.ibm.* !comp.sys.mac.* !comp.sys.next.* !comp.sys.sgi.* !comp.sys.sun.*
+
+>:misc
+"misc.*" misc.*
+"misc.consumers.*" misc.consumers misc.consumers.*
+"misc.forsale.*" misc.forsale misc.forsale.*
+"misc.invest.*" misc.invest misc.invest.*
+"misc.jobs.*" misc.jobs misc.jobs.*
+"misc.legal.*" misc.legal misc.legal.*
+"Other misc.* groups" misc.* !misc.consumers.* !misc.forsale !misc.forsale.* !misc.invest !misc.invest.* !misc.jobs !misc.jobs.* !misc.legal !misc.legal.*
+
+>:news
+"news.*" news.*
+"news.admin.*     (USENET administration)" news.admin.*
+"news.announce.*  (important information)" news.announce.*
+"news.software.*  (USENET software)" news.software.*
+"Other news.* groups" news.* !news.admin.* !news.announce.* !news.software.*
+
+>:rec
+"rec.*" rec.*
+"rec.arts.*" ->rec.arts
+"rec.audio.*" rec.audio rec.audio.*
+"rec.autos.*     (automobiles)" rec.autos rec.autos.*
+"rec.aviation.*" rec.aviation.*
+"rec.bicycles.*" rec.bicycles.*
+"rec.crafts.*" rec.crafts.*
+"rec.food.*      (food and drink)" rec.food.*
+"rec.games.*" ->rec.games
+"rec.humor.*" rec.humor rec.humor.*
+"rec.models.*" rec.models.*
+"rec.motorcycles.*" rec.motorcycles rec.motorcycles.*
+"rec.music.*" rec.music.*
+"rec.pets.*" rec.pets rec.pets.*
+"rec.radio.*" rec.radio.*
+"rec.sport.*" rec.sport.*
+"rec.travel.*" rec.travel rec.travel.*
+"rec.video.*" rec.video rec.video.*
+"Other rec.* groups" rec.* !rec.arts.* !rec.arts.* !rec.audio !rec.audio.* !rec.autos !rec.autos.* !rec.aviation.* !rec.bicycles.* !rec.crafts.* !rec.food.* !rec.games.* !rec.humor !rec.humor.* !rec.models.* !rec.models.* !rec.motorcycles !rec.motorcycles.* !rec.music.* !rec.pets !rec.pets.* !rec.radio.* !rec.sport.* !rec.travel !rec.travel.* !rec.video !rec.video.*
+>:rec.arts
+"rec.arts.*" rec.arts.*
+"rec.arts.anime.*" rec.arts.anime rec.arts.anime.*
+"rec.arts.comics.*" rec.arts.comics.*
+"rec.arts.sf.*        (Science Fiction)" rec.arts.sf.*
+"rec.arts.startrek.*" rec.arts.startrek.*
+"Other rec.arts.* groups" rec.arts.* !rec.arts.anime !rec.arts.anime.* !rec.arts.comics.* !rec.arts.sf.* !rec.arts.startrek.*
+>:rec.games
+"rec.games.*" rec.games.*
+"rec.games.frp.*    (Fantasy Role Playing)" rec.games.frp.*
+"rec.games.mud.*    (Multi-User Dungeons)" rec.games.mud.*
+"rec.games.video.*" rec.games.video.*
+"Other rec.games.* groups" rec.games.* !rec.games.frp.* !rec.games.mud.* !rec.games.video.*
+
+>:sci
+"sci.*" sci.*
+"sci.astro.*    (astronomy)" sci.astro sci.astro.*
+"sci.bio.*      (biology)" sci.bio sci.bio.*
+"sci.engr.*     (engineering)" sci.engr sci.engr.*
+"sci.geo.*      (geography)" sci.geo sci.geo.*
+"sci.math.*     (mathematics)" sci.math sci.math.*
+"sci.med.*      (medicine)" sci.med sci.med.*
+"sci.physics.*  (physics)" sci.physics sci.physics.*
+"sci.space.*" sci.space sci.space.*
+"sci.stat.*     (statistics)" sci.stat.*
+"Other sci.* groups" sci.* !sci.astro !sci.astro.* !sci.bio !sci.bio.* !sci.engr !sci.engr.* !sci.geo !sci.geo.* !sci.math !sci.math.* !sci.med !sci.med.* !sci.physics !sci.physics.* !sci.space !sci.space.* !sci.stat.*
+
+>:soc
+"soc.*" soc.*
+"soc.college.*" soc.college.*
+"soc.culture.* (cultures, mostly by country)" soc.culture.*
+"soc.religion.*" soc.religion.*
+"Other soc.* groups" soc.* !soc.college.* !soc.culture.* !soc.religion.*
+
+>:talk
+"talk.*" talk.*
+"talk.politics.*" talk.politics.*
+"talk.religion.*" talk.religion.*
+"Other talk.* groups" talk.* !talk.politics.* !talk.religion.*
+
+>:bionet
+"bionet.*" bionet.*
+"bionet.molbio.*" bionet.molbio.*
+"bionet.software.*" bionet.software bionet.software.*
+"Other bionet.* groups" bionet.* !bionet.molbio.* !bionet.software !bionet.software.*
+
+>:bit
+bit.*
+
+>:biz
+biz.*
+
+>:clari
+clari.*
+
+>:gnu
+"gnu.*" gnu.*
+"gnu.emacs.*" gnu.emacs.*
+"gnu.g++.*    (C++ compiler)" gnu.g++.*
+"gnu.gcc.*    (ANSI C compiler)" gnu.gcc.*
+"Other gnu.* groups" gnu.* !gnu.emacs.* !gnu.g++.* !gnu.gcc.*
+
+>:info
+info.*
+
+>:k12
+k12.*
+
+>:vmsnet
+vmsnet.*
+
+>:regional
+"aus       (Australia)" ->aus.
+"de        (Germany regional)" ->de.
+"fj        (From Japan)" ->fj.
+"fr        (France)" ->fr.
+"relcom    (Russian-language groups)" ->relcom.
+"uk        (United Kingdom)" ->uk.
+>:aus.
+aus.*
+>:de.
+de.*
+>:fj.
+fj.*
+>:fr.
+france
+>:relcom.
+"relcom.*" relcom.*
+"relcom.commerce.*" relcom.commerce.*
+"Other relcom.* groups" relcom.* !relcom.commerce.*
+>:uk.
+uk.*
+
+>:other_hier
+* !alt.* !comp.* !misc.* !news.* !rec.* !sci.* !soc.* !talk.* !bionet.* !bit.* !biz.* !clari.* !gnu.* !info.* !k12.* !vmsnet.* !aus.* !de.* !fj.* !fr.* !relcom.* !uk.*
+end group

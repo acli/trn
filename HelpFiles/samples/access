@@ -1,0 +1,143 @@
+# This is a sample ~/.trn/access file.
+
+#   This section defines the available news sources and gives them an
+# easy-to-use [ID] name.  The always-present ID, "default", can also be
+# overriden here, if you so desire.
+#   When defining an NNTP server, set "NNTP Server" to the domain name of
+# your server.  If you need to use a non-standard port number, append ";119"
+# (for example) to the name.  If you want to cache a local copy of the
+# active file, set "Active File" to the appropriate name.  If you want
+# the file refetched after certain intervals, set "Active File Refetch"
+# to the appropriate interval (e.g. "1 day, 5 hours, 3 minutes").
+#   When defining a local news source (even NFS mounted), set "Active File"
+# and "Spool Dir".
+#   Specify "none" for "Overview Dir" and/or "Thread Dir" to disable support
+# for that database type, omit or leave blank for the default access (either
+# "Spool Dir" for local or XOVER/XTHREAD for remote), or enter a custom
+# hierarchy path name.
+#   Specify "none" for "Active Times" if the host has no new-group support,
+# leave it blank for the default (either active + ".times" for local access
+# or the NEWGROUPS command for remote), or enter a custom file name for your
+# active.times file.
+#   Specify "none" for "Group Desc" if you don't have a file with newsgroup
+# descriptions, leave it blank for the default (NEWSLIB/newsgroups for local
+# access or the XGTITLE/LIST_NEWSGROUPS command for remote), or enter a
+# custom file name for your newsgroups file.  If this is an NNTP source
+# you can also set "Group Desc Refetch" to a time value when the file
+# expires (something like "7 days" might be good).
+#   Set Auth User and Auth Password if you need to specify them to use a
+# news server.  On the other hand, if you're using the "generic
+# authentication" system, use the Auth Command setting instead.
+#   If the server is poorly behaved and doesn't ask you for your
+# authentication, you can set Force Auth to "yes" to have trn force the
+# info onto the server.
+#   Add "XHDR Broken = y" if your server doesn't properly respond to
+# XHDR requests (articles vanish unexpectedly).
+
+#[ID]
+#NNTP Server =
+#Active File =
+#Active File Refetch =
+#Spool Dir =
+#Thread Dir =
+#Overview Dir =
+#Overview Format File =
+#Active Times =
+#Group Desc =
+#Group Desc Refetch =
+#Auth User =
+#Auth Password =
+#Auth Command =
+#Force Auth =
+#XHDR Broken =
+
+[local1]
+Active File = /usr/lib/news/active
+Spool Dir = /usr/spool/news
+
+[local2]
+Active File = /usr/lib/news/active
+Spool Dir = /usr/spool/news
+Thread Dir = none
+
+[local3]
+Active File = /usr/lib/news/active
+Spool Dir = /usr/spool/news
+Thread Dir = none
+Overview Dir = /usr/spool/news/.nov
+Overview Format File = /usr/lib/news/overview.fmt
+Active Times = /usr/lib/news/acttimes.custom
+Group Desc = /usr/lib/news/newsgroups.custom
+
+[remote1]
+NNTP Server = remote.com
+Auth User = joesmoe
+Auth Password = OpenSezMe
+
+[remote2]
+NNTP Server = remote.com;2119		# use custom port number 2119
+Overview Dir = none
+
+[rem3]
+NNTP Server = rem.ote.com
+Spool Dir = /usr/tmp
+Active File = /client/lib/active
+Active File Refetch = 12 hours
+Thread Dir = /client/threads
+Overview Dir = none
+Active Times = /client/lib/active.times
+Group Desc = /client/lib/newsgroups
+Group Desc Refetch = 7 days
+
+# This illustrates how to set different default news sources via the
+# machine's hostname.  Always put the unqualified version last.
+
+[default] %H = nfshost.domain.com
+NNTP Server = server.domain.com
+Active File = /nfs/lib/news/active
+
+[default] %H = server.domain.com
+Active File = /usr/lib/news/active
+Spool Dir = /usr/spool/news
+
+[default]
+NNTP Server = server.domain.com
+
+# This section tells trn what newsrc groups you want to use.  If you
+# define multiple entries with the same group number, all of the .newsrcs
+# are combined and used together.  The first entry encountered will be
+# the first group that trn will open.  Otherwise the numbers dictate the
+# presentation order (see Ctrl-N and Ctrl-P).  You can have multiple
+# .newsrc's from the same server or different servers, however you like.
+# The ID name "default" always exists with your compiled-in defaults.
+
+# If you leave off the newsrc name, the default is supplied.  If you
+# don't want any groups added to an rc, specify "no" in the "Add Groups"
+# field.  If you don't want new-group checking but want to manually
+# add groups, specify "manual".  The default is "yes".
+
+#[Group 1]
+#ID = default
+#Newsrc = ~/.newsrc
+#Add Groups = yes/no/manual
+
+[Group 1]
+ID = default
+
+[Group 2]
+ID = rem
+Newsrc = ~/.smallrc
+Add Groups = manual
+
+[Group 2]
+ID = rem2
+Newsrc = ~/.newsrc2
+
+[Group 3]
+ID = local3
+Newsrc = ~/.mynewsrc
+
+[Group 4]
+ID = rem
+Newsrc = ~/.remrc
+Add Groups = no

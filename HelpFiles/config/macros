@@ -1,0 +1,62 @@
+AUTOMATIC MACROS
+
+On startup trn attempts to build a set of macros that map your keypad
+arrow keys to useful functions.  These default actions are mentioned in
+the prior description of each level's commands.  If you don't like this
+(or trn gets it wrong), you can disable the automatic macros by using the
+-A option.
+
+CUSTOM MACROS
+
+When trn starts up it looks for a file containing macro definitions (see
+environment variables TRNMACRO and RNMACRO).  Any sequence of commands
+may be bound to any sequence of keys, so you could re-map your entire
+keyboard if you desire.  Blank lines or lines beginning with # in the
+macro file are considered comments; otherwise trn looks for two fields
+separated by white space.  The first field gives the sequence of
+keystrokes that trigger the macro, and the second field gives the
+sequence of commands to execute.  Both fields are subject to %
+interpolation, which will also translate backslash and caret sequences.
+(The keystroke field is interpreted at startup time, but the command
+field is interpreted at macro execution time so that you may refer to %
+values in a macro.)  For example, if you want to reverse the roles of
+carriage return and space in trn
+
+     ^J   \040
+     ^M   \040
+     \040 ^J
+
+will do just that.  By default, all characters in the command field are
+interpreted as the canonical trn characters, i.e. no macro expansion is
+done.  Otherwise the above pair of macros would cause an infinite loop.
+To force macro expansion in the command field, enclose the macro call
+with ^( ... ^) thusly:
+
+     @s   |mysavescript
+     @w   w^(@s^)
+
+You can use the %() conditional construct to construct macros that work
+differently under different circumstances.  In particular, the current
+mode (%m) of trn could be used to make a command that only works at a
+particular level.  This is particularly vital for the selector which uses
+most of the lower-case letters to select the associated item in its
+display.  For example,
+
+     a    %(%m=t?a:s art.hold\n)
+
+will return the original letter (a) in the selector, and the command "s
+art.hold\n" everywhere else.
+
+     %(%{TERM}=vt100?^[[O)    /^J
+
+will do the binding only if the terminal type is vt100, though if you
+have many of these it would be better to have separate files for each
+terminal.
+
+If you want to bind a macro to a function key that puts a common garbage
+character after the sequence (such as the carriage return on the end of
+Televideo 920 function sequences), DO NOT put the carriage return into
+all the sequences or you will waste a CONSIDERABLE amount of internal
+storage.  Instead of "^AF^M", put "^AF+1", which indicates to trn that it
+should gobble up one character after the F.
+

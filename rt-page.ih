@@ -1,0 +1,13 @@
+/* rt-page.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void sel_page_init _((void));
+static int count_subject_lines _((SUBJECT*,int*));
+static int count_thread_lines _((SUBJECT*,int*));
+static void display_article _((ARTICLE*,int,int));
+static void display_subject _((SUBJECT*,int,int));
+static void display_univ _((UNIV_ITEM*));
+static void display_group _((DATASRC*,char*,int,int));

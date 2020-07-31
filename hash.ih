@@ -1,0 +1,27 @@
+/* hash.ih
+ */
+
+#define BADTBL(tbl)	((tbl) == NULL || (tbl)->ht_magic != HASHMAG)
+
+#define HASHMAG  ((char)0257)
+
+struct hashent {
+    HASHENT* he_next;		/* in hash chain */
+    HASHDATUM he_data;
+    int he_keylen;		/* to help verify a match */
+};
+
+struct hashtable {
+    HASHENT** ht_addr;		/* array of HASHENT pointers */
+    unsigned ht_size;
+    char ht_magic;
+    int (*ht_cmp) _((char*,int,HASHDATUM));
+};
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static HASHENT** hashfind _((HASHTABLE*,char*,int));
+static unsigned hash _((char*,int));
+static int default_cmp _((char*,int,HASHDATUM));
+static HASHENT* healloc _((void));
+static void hefree _((HASHENT*));

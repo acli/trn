@@ -1,0 +1,12 @@
+[environment]
+#NETSPEED=slow|1|2|...|9|10|fast
+#KILLLOCAL=%+/Kill/%C
+#KILLGLOBAL=%+/Kill/Global
+
+[options]
+#Header Hiding = !unrecognized
+
+# Make Use XTerm Mouse default to Yes if this is an xterm or similar
+[options] %{TERM}=xterm\\|vs100.*
+Use XTerm Mouse = Yes
+Auto-View Inline = Yes

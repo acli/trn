@@ -1,0 +1,214 @@
+# This is a sample .trn/trnrc file.
+
+[environment]
+LOCALTIMEFMT="%A, %B %e %Y, %r %Z"
+KILLLOCAL=%+/Kill/%C
+KILLGLOBAL=%+/Kill/Global
+#KILLTHREADS=%+/Kill/Threads
+XTERMMOUSE=%(%{TERM}=xterm?y:n)
+MAILPOSTER="elm -i %h -s '%'s' '%'t'"
+MAILHEADER="\\0"
+FORWARDPOSTER="elm -i %h -s '%'[subject]' %\"^J^JTo: \""
+FORWARDHEADER=^J
+ATTRIBUTION="According to %)f <%>f>:"
+SELECTCHARS=abcdefgijlmorstuvwxyz1234567890BCFGHIKVW
+
+[options]
+# ==Display Options========
+Terse Output = #default of no
+Pager Line-Marking = underline
+Erase Screen = #default of no
+Erase Each Line = #default of no
+Muck Up Clear = #default of no
+Background Spinner = yes
+Charset = #default of patm
+Filter Control Characters = #default of yes
+# ==Selector Options========
+Use Newsrc Selector = yes
+Newsrc Selector Commands = #default of Z>
+Use Addgroup Selector = yes
+Addgroup Selector Commands = #default of Z>
+Use Newsgroup Selector = yes
+Newsgroup Selector Order = #default of natural
+Newsgroup Selector Commands = #default of Z>
+Newsgroup Selector Display Styles = #default of slm
+Use News Selector = #default of yes
+News Selector Mode = #default of threads
+News Selector Order = #default of date
+News Selector Commands = X>
+News Selector Display Styles = ms
+Option Selector Commands = #default of Z>
+# ==Newsreading Options========
+Use Threads = #default of yes
+Select My Postings = parent
+Initial Article Lines = #default of $LINES
+Article Tree Lines = 11
+Auto-Grow Groups = #default of yes
+Compress Subjects = #default of yes
+Join Subject Lines = #default of no
+Line Num for Goto = #default of 1
+Ignore THRU on Select = #default of yes
+Read Breadth First = #default of no
+Background Threading = #default of yes
+Scan Mode Count = #default of 0
+Header Magic = #default of 
+Header Hiding = #default of 
+# ==Posting Options========
+Cited Text String = "> "
+# ==Save Options========
+Save Dir = #default of %./News
+Auto Savename = #default of no
+Default Savefile Type = norm
+# ==Mouse Options========
+Use XTerm Mouse = #default of no
+Mouse Modes = #default of acjlptwK
+Newsrc Selector Mousebar = #default of [Top]^ [PgUp]< [PgDn]> [ OK ]^j [Quit]q [Help]?
+Addgroup Selector Mousebar = #default of [Top]^ [Bot]$ [PgUp]< [PgDn]> [ OK ]Z [Quit]q [Help]?
+Newsgroup Selector Mousebar = #default of [Top]^ [PgUp]< [PgDn]> [ OK ]Z [Quit]q [Help]?
+News Selector Mousebar = #default of [Top]^ [Bot]$ [PgUp]< [PgDn]> [KillPg]D [ OK ]Z [Quit]q [Help]?
+Option Selector Mousebar = #default of [Find]/ [FindNext]/^j [Top]^ [Bot]$ [PgUp]< [PgDn]> [Use]^i [Save]S [Abandon]q [Help]?
+Article Pager Mousebar = #default of [Next]n [Sel]+ [Quit]q [Help]h
+# ==MIME Options========
+Multipart Separator = #default of -=-=-=-=-=-
+Auto-View Inline = #default of no
+# ==Misc Options========
+Check for New Groups = #default of yes
+Restriction Includes Empty Groups = #default of yes
+Append Unsubscribed Groups = #default of no
+Initial Group List = no
+Restart At Last Group = #default of no
+Eat Type-Ahead = #default of yes
+Verify Input = #default of no
+Fuzzy Newsgroup Names = yes
+Auto Arrow Macros = #default of yes
+Checkpoint Newsrc Frequency = #default of 20
+Default Refetch Time = #default of 4 hours
+Novice Delays = no
+Old Mthreads Database = #default of no
+
+# Make Use XTerm Mouse default to Yes if this is an xterm or similar
+[options] %{TERM}=^xterm\\|^vs100
+Use XTerm Mouse = Yes
+Auto-View Inline = Yes
+
+# The [attribute] section attaches highlight attributes (standout,
+# underline, or normal) to various screen objects.  If you have a
+# color terminal, you can specify colors instead (see below).  If
+# you specify '-' it means don't change the attribute from its
+# current setting.
+
+[attribute]
+# object	= attr
+ngname		= standout
+plus		= -
+minus		= -
+star		= -
+header		= normal
+subject		= underline
+tree		= normal
+tree marker	= standout
+more		= standout
+heading		= standout
+command		= standout
+mouse bar	= standout
+notice		= standout
+score		= standout
+art heading	= normal
+mime separator	= standout
+mime description= underline
+cited text	= -
+
+# The [termcap] section is needed if you want to specify colors in
+# the [attribute] section (and must precede it).  Any color names
+# can be used (up to around 48 names), but they must be in the form
+# "fg color" and "bg color" and fg/bg default must be defined.
+
+[termcap] %{TERM}=color-xterm\\|color-vs100
+# fg/bg color = string
+fg default = \033[m
+fg black   = \033[30m
+fg red     = \033[31m
+fg green   = \033[32m
+fg yellow  = \033[33m
+fg blue    = \033[34m
+fg magenta = \033[35m
+fg cyan    = \033[36m
+fg white   = \033[37m
+bg default = #\033[m
+bg black   = \033[40m
+bg red     = \033[41m
+bg green   = \033[42m
+bg yellow  = \033[43m
+bg blue    = \033[44m
+bg magenta = \033[45m
+bg cyan    = \033[46m
+bg white   = \033[47m
+
+# Here's a color version of the [attribute] that will override the
+# above section if the TERM variable matches the indicated value.
+# The attribute is normally set to '-' as mixing colors and attributes
+# rarely produces any usable result.  The attribute standout might be
+# useful if a terminal only supports foreground colors, i.e. perhaps
+# "normal white blue" can be written as "standout blue -".
+
+[attribute] %{TERM}=color-xterm\\|color-vs100
+# object	= attr	fg	bg
+ngname		= -	white	blue
+plus		= -	black	green
+minus		= -	white	red
+star		= -	white	blue
+header		= -	blue	-
+subject		= -	blue	yellow
+tree		= -	red	-
+tree marker	= -	white	red
+more		= -	yellow	black
+heading		= -	white	blue
+command		= -	yellow	black
+mouse bar	= -	white	blue
+notice		= -	blue	-
+score		= -	blue	-
+art heading	= -	white	blue
+mime separator	= -	blue	-
+mime description= -	blue	yellow
+cited text	= -	blue	-
+
+# Here's a sample vt100 [termcap] and [attribute] section that defines
+# the "bold" capability
+
+[termcap] %{TERM}=vt100
+fg default = \033[m
+fg bold    = \033[1m
+bg default = #\033[m
+
+[attribute] %{TERM}=vt100
+# object	= attr	fg	bg
+tree		= -	bold	-
+mime separator	= -	bold	-
+mime description= -	bold	-
+cited text	= -	bold	-
+
+# These trailing sections will override the above sections.
+# These examples are conditional on various parameters.
+
+[environment] %H=local.host.com		# check the host name
+NETSPEED=fast
+
+[options] %j = 2400			# check the line speed
+Initial Article Lines = 8
+
+[environment] %{DEBUG}=yes		# check an environment variable
+NEWSHEADER='\
+%(%[followup-to]=^$?:%(%[followup-to]=^%n$?:X-ORIGINAL-NEWSGROUPS: %n
+))Newsgroups: %(%F=^$?%C:%F)
+Subject: %(%S=^$?%"^J^JSubject: ":Re: %S)
+Summary: 
+Expires: 
+%(%R=^$?:References: %R
+)Sender: 
+Followup-To: 
+%(%{REPLYTO}=^$?:Reply-To: %{REPLYTO}
+)Distribution: %(%i=^$?%"Distribution: ":%D)
+Organization: %o
+Keywords: %[keywords]
+Cc: %(%F=poster?%t:%(%F!=@?:%F))
+^J'

@@ -1,0 +1,20 @@
+#!/bin/sh
+#This script requires six arguments:
+#1. site name
+#2. account name to use (usually "ftp")
+#3. password to use (usually user@site.net)
+#4. directory to CD to
+#5. filename on remote system
+#6. filename on local system
+
+#Localization note: if ftp is not always in a users path, you may want
+#to use a full path name below.
+ftp -n<<EOT
+open $1
+user $2 $3
+binary
+cd $4
+get $5 $6
+close
+quit
+EOT

@@ -1,0 +1,9 @@
+/* ngdata.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static int ngorder_number _((NGDATA**,NGDATA**));
+static int ngorder_groupname _((NGDATA**,NGDATA**));
+static int ngorder_count _((NGDATA**,NGDATA**));

@@ -1,0 +1,29 @@
+/* rt-select.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void sel_dogroups _((void));
+static int univ_read _((UNIV_ITEM*));
+static void sel_display _((void));
+static void sel_status_msg _((char*));
+static char sel_input _((void));
+static void sel_prompt _((void));
+static bool select_item _((SEL_UNION));
+static bool delay_return_item _((SEL_UNION));
+static bool deselect_item _((SEL_UNION));
+static bool select_option _((int));
+static void sel_cleanup _((void));
+static bool mark_DEL_as_READ _((char*,int));
+static int sel_command _((char_int));
+static bool sel_perform_change _((long,char*));
+static char another_command _((char_int));
+static int article_commands _((char_int));
+static int newsgroup_commands _((char_int));
+static int addgroup_commands _((char_int));
+static int multirc_commands _((char_int));
+static int option_commands _((char_int));
+static int universal_commands _((char_int));
+static void switch_dmode _((char**));
+static int find_line _((int));

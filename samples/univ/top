@@ -1,0 +1,30 @@
+# This is a sample ~/.trn/univ/top file for controlling the Universal Selector
+
+# First, some groups to always keep an eye on
+news.announce.important
+
+#Some lists of newsgroups
+"All newsgroups" *
+"Computer groups" comp.*
+"WWW" *www*
+
+#This file isn't installed yet, but hopefully it will be soon
+#
+"Newsgroups by Hierarchies" %X/hier_groups
+
+# A file reference relative to the last file
+#(create a file "favorite" in the same directory as this file, containing
+# commands similar to this "top" file.)
+#"Favorite groups" :favorite
+
+# An individual article:
+#"Misc. Article" $v1 15000 news.software.readers
+
+#Include all articles with scores above 5 in news.software.*, except
+#for articles in news.software.nntp:
+#$vg 5 news.software.* !news.software.nntp
+
+#A URL reference (probably obsolete)
+#"URL strn.top" URL:http://www.zynet.com/~caadams/strnwww/strn.top
+
+end group

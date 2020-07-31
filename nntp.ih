@@ -1,0 +1,14 @@
+/* nntp.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+static ART_POS body_pos = -1;
+static ART_POS body_end = 0;
+
+#ifdef SUPPORT_XTHREAD
+static long rawbytes = -1;	/* bytes remaining to be transfered */
+#endif
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static int nntp_copybody _((char*,int,ART_POS));

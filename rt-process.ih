@@ -1,0 +1,9 @@
+/* rt-process.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static void fix_msgid _((char*));
+static char* valid_message_id _((char*,char*));
+static void unlink_child _((ARTICLE*));

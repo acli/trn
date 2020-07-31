@@ -1,0 +1,168 @@
+You can specify trn environment variables in an initialization file with all
+the options.  See the first hint for details on that.  Certain environment
+variables, like RNINIT, must be set in your shell (how else does trn know
+to look there for the rest?).  Others, like REPLYTO may be useful in other
+programs, so you could consider putting that in your shell startup file too.
+But most of them are specific, like MAILHEADER, so you might as well set them
+in the init file with the -E option.  That's why most of them look like
+-EMAILHEADER=xx rather than MAILHEADER=xx -- to remind you.
+
+Helpful hints:
+
+ +  Two  useful flags are the -p and -G flags.  -p means to automatically
+    select any thread that you have posted a message to.  This makes it very
+    easy to track replies to your insightful comments :-) (to automatically
+    select other threads, try the 'T' command).  -G tells the 'g' command
+    to use a loose match algorithm on groups it can't find.  So if you type
+    "g news.softwre.raeders.genrl", it will assume that you meant to type
+    news.software.readers and take you there.  It is usually easier to type
+    "/reader" than using a 'g' command, but use -G too.
+
+ +  The 'X' command in the selector (kinda like catchup/yes) can be made the
+    default action on the last page of selections by using the command-line
+    option:  -XX.  This lets you browse all the pages, making selections as
+    you go, and then mark everything that was not selected as read when you
+    press space at the last page.
+
+ +  If you like to select a little, read a little, and then select a little
+    more, try using the command-line option:  -XDD.  This makes the 'D'
+    command the default on all pages of the selector.  Thus you can select
+    the things you want to read on the current page, press space, and you
+    will read the selected articles immediately (if there were any).  All
+    other articles on the current page will be marked as read.
+
+ +  To use mush to send all R)eplies, put this in your .trn/trnrc file:
+	[environment]
+	MAILPOSTER="mush -h %h"
+
+ +  To use elm to send all R)eplies:
+	[environment]
+	MAILHEADER="\\000"
+	MAILPOSTER="elm -i %h -s '%'s' %t"
+
+ +  To tailor the time field:
+	A good example is LOCALTIMEFMT="%A, %B %e %Y, %r %Z" which becomes:
+	Date: Saturday, June 12 1993, 08:15:32 PM PDT.  (The default is
+	"%a %b %e %X %Z %Y", which is like the date(1) command).  See the
+	strftime(3C) man page for more details on other % characters.
+
+ +  To tailor the "In article <blahblahblah>, joe@user (Joe User)" line:
+	person's name only: %)f
+	person's address only: %>f
+	For example: ATTRIBUTION='According to %)f <%>f>:'
+
+ +  A better kill file scheme than the default (which creates obtuse
+    directories all over your ~/News directory) is to use the following:
+	KILLGLOBAL="%p/Kill/Global"
+	KILLLOCAL="%p/Kill/%C"
+    Where %p is your news directory, usually ~/News, and %C is the full name
+    of the group, like sci.bio.  This means the kill file for sci.bio is in
+    ~/News/Kill/sci.bio instead of ~/News/sci/bio/KILL.  Think about this
+    next time you subscribe to alt.swedish.chef.bork.bork.bork :-)
+
+    Note that you need a file system that allows long file names to make
+    this work.
+
+ +  If you're tired of endless subscription notices to newsgroups you could
+    care less about, look at the AUTOUNSUBSCRIBE variable.  There's a
+    companion AUTOSUBSCRIBE function too.  For example, to automatically
+    unsubscribe all NEW alt groups, use ^alt.*.  More dramatic, to
+    unsubscribe to everything BUT certain groups, use "*,!^local.*,!^comp.*",
+    for example.  If you're REALLY tired of them, use -q to tell trn to not
+    even check for new groups at all.
+
+ +  If you want replies to your postings to go to a machine other than the
+    machine you're posting from, set the REPLYTO environment variable.  For
+    example, you might set this if you were trn's author:
+	REPLYTO="wayne@clari.net (Wayne Davison)"
+
+ +  You might like to redefine the 'u' keys in the following way:  'u' visits
+    the "Set unread?" prompt (except in the thread selector), 'U' goes
+    directly to the already-read article selector, and Ctrl-U unsubscribes
+    from the group (even while in the thread selector).  Put the following
+    3 macros in your .trn/macros file to accomplish this:
+
+	u	%(%g=r?U:u)
+	U	%(%g=r?U+:U)
+	^U	%(%g=s?+u:u)
+
+ +  If you like to be able to move forward/backward by article number more
+    often than you need to search by subject, redefine ^N and ^P to be _N
+    and _P by putting these lines into your macro file:
+
+	^P	%(%m=[aep]?_P:^P)
+	^N	%(%m=[aep]?_N:^N)
+
+ +  If you like the way that 'q' worked in the thread selector in trn 1.x,
+    put the following macro in your macro file:
+
+	q	%(%g=s?+:q)
+
+ +  If you would like the 'f' command to always answer yes to the "Are you
+    starting an unreleated topic?" question, put this line into your macro
+    file:
+
+	f	%(%m=[ap]?fy^m:f)
+
+ +  If you want to be able to save your shar headers in a file as they are
+    extracted and you have access to "unshar" (a program that can extract
+    shar files while saving the headers in UNSHAR.HDR), twiddle the external
+    extract command to send the entire article:
+
+	EXSAVER="%e <%A"
+
+    and then point the UNSHAR variable at unshar instead of /bin/sh:
+
+	UNSHAR="unshar -s"
+
+    Note that this assumes that any other commands you execute with
+    "e dir|command" can also handle the entire article as input
+    (uuencoded and shipped files are not affected).
+
+ +  The following lines represent trn's default headers for posting an
+    article.  If you want to customize your header copy this to your
+    .trn/trnrc file and modify it (and _don't_ use Pnews directly to post,
+    use trn -- the ":post" command from newsgroup's selector works well
+    for this).
+
+[environment]
+NEWSHEADER='\
+%(%[followup-to]=^$?:%(%[followup-to]=^%n$?:X-ORIGINAL-NEWSGROUPS: %n
+))Newsgroups: %(%F=^$?%C:%F)
+Subject: %(%S=^$?%"^J^JSubject: ":Re: %S)
+Summary: 
+Expires: 
+%(%R=^$?:References: %R
+)Sender: 
+Followup-To: 
+%(%{REPLYTO}=^$?:Reply-To: %{REPLYTO}
+)Distribution: %(%i=^$?%"Distribution: ":%D)
+Organization: %o
+Keywords: %[keywords]
+Cc: %(%F=poster?%t:%(%F!=@?:%F))
+^J'
+
+At one point in life, trn's author had the following .trninit file:
+----------------------------------------------------------------------
+-+ -XX -B -N -f -x11ms "-F> " -pp -G -u -mu -a
+-hunrecognized
+-ELOCALTIMEFMT="%A, %B %e %Y, %r %Z"
+-ESELECTCHARS="abdefgijlmorstuvwxyz1234567890BCFGHIKVW"
+-EKILLLOCAL="%p/Kill/%C"
+-EKILLGLOBAL="%p/Kill/Global"
+-EMAILPOSTER="elm -i %h -s '%'s' %t"
+-EFORWARDPOSTER="elm -i %h -s '%'[subject]' %\"^J^JTo: \""
+-EFORWARDHEADER='^J'
+-EATTRIBUTION="According to %)f <%>f>:"
+----------------------------------------------------------------------
+
+and the following .trn/macros file:
+----------------------------------------------------------------------
+;	%(%m=p?|less^J:;)
+u	%(%g=r?U:u)
+U	%(%g=r?U+:U)
+^U	%(%g=s?+u:u)
+~T	s ~/Mail/trn
+~M	| /bin/mail davison
+^[^[	^[
+----------------------------------------------------------------------

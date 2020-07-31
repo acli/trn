@@ -1,0 +1,25 @@
+STUB    '16stub.exe'
+
+SEGMENTS
+	_REAL_TEXT      CLASS 'REALCODE'        FIXED REAL PRELOAD
+	_REAL_DATA      CLASS 'REALDATA'        FIXED REAL PRELOAD
+
+STACKSIZE    5120
+
+IMPORTS
+    WINSOCK.gethostbyname
+    WINSOCK.socket
+    WINSOCK.htons
+    WINSOCK.connect
+    WINSOCK.closesocket
+    WINSOCK.ioctlsocket
+    WINSOCK.recv
+    WINSOCK.send
+    WINSOCK.inet_addr
+    WINSOCK.inet_ntoa
+    WINSOCK.gethostname
+    WINSOCK.getservbyname
+    WINSOCK.WSAGetLastError
+    WINSOCK.WSAStartup
+    WINSOCK.WSACleanup
+    WINSOCK.WSAAsyncSelect

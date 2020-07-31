@@ -1,0 +1,26 @@
+/* rcstuff.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+#define RI_ID		1
+#define RI_NEWSRC	2
+#define RI_ADDGROUPS	3
+
+INI_WORDS rcgroups_ini[] = {
+    { 0, "RCGROUPS", 0 },
+    { 0, "ID", 0 },
+    { 0, "Newsrc", 0 },
+    { 0, "Add Groups", 0 },
+    { 0, 0, 0 }
+};
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+static bool clear_ngitem _((char*,int));
+static bool lock_newsrc _((NEWSRC*));
+static void unlock_newsrc _((NEWSRC*));
+static bool open_newsrc _((NEWSRC*));
+static void init_ngnode _((LIST*,LISTNODE*));
+static void parse_rcline _((NGDATA*));
+static NGDATA* add_newsgroup _((NEWSRC*,char*,char_int));
+static int rcline_cmp _((char*,int,HASHDATUM));

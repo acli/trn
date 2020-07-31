@@ -1,0 +1,283 @@
+Configure          A shell script that installs everything system dependent.
+EXTERN.h           When included, makes other includes not belong to me.
+HACKERSGUIDE       A brief guide to the contorted innards of [t]rn.
+INIT               Sample system-wide switch file.
+INSTALL            Installation instructions.
+INTERN.h           When included, makes other includes belong to me.
+LICENSE            The license details for most of the source files.
+MANIFEST           This list of files.
+Makefile.SH        Shell script to generate the makefile.
+Pnews.1            Manual page for Pnews.
+Pnews.SH           A news posting shell script that knows about -h.
+Policy_sh.SH       Script to save the local policy answers.
+README             Start by reading this file.
+Rnmail.1           Manual page for Rnmail.
+Rnmail.SH          A mailer that knows about -h.
+Speller.SH         An ispell wrapper that understands news articles.
+access_def.SH      The access.def config file for the trn library dir.
+addng.c            Routines for scanning the active file for new newsgroups.
+addng.h            Public info regarding addng.c.
+addng.ih           Private info regarding addng.c.
+art.c              Routines to display an article.
+art.h              Public info regarding art.c.
+artio.c            Reserved for the article abstract type, someday.
+artio.h            Public info regarding artio.c.
+artsrch.c          Routines for searching among articles.
+artsrch.h          Public info regarding artsrch.c.
+artstate.h         Info on the current state of the article.
+autosub.c          Routines to allow automatic subscription management
+autosub.h          Public info regarding autosub.c
+backpage.c         Routines for paging backwards in articles.
+backpage.h         Public info regarding backpage.c.
+bits.c             Bitmap management functions.
+bits.h             Public info regarding bits.c.
+bits.ih            Private info regarding bits.c.
+cache.c            Routines to handle caching of articles.
+cache.h            Public info regarding cache.c.
+cache.ih           Private info regarding cache.c.
+charsubst.c        Routines for converting between various character sets.
+charsubst.h        Public info regarding charsubst.c.
+charsubst.ih       Private info regarding charsubst.c.
+color.c            Color handling.
+color.h            Public info for color.c.
+color.ih           Private info for color.c.
+common.h           Global info.
+config2.h          Configuration dependencies.
+config_h.SH        Shell script to create config.h
+datasrc.c          Routines for accessing various sources of news data.
+datasrc.h          Public info regarding datasrc.c.
+datasrc.ih         Private info regarding datasrc.c.
+decode.c           Routines common to the binary decoders
+decode.h           Public info regarding decode.c.
+decode.ih          Private info regarding decode.c.
+default_topic      A sample file that should really go in the samples dir?
+dependencies       A pre-made list of the source's dependencies.
+edit_dist.c        Routines to find the edit distance between two strings.
+edit_dist.h        Public info for the edit distance routines.
+env.c              Environment variable stuff.
+env.h              Public info for env.c.
+env.ih             Private info regarding env.c.
+environment.SH     Help on trn's env variables (extracted to HelpFiles/config)
+filexp.SH          The filename expansion script.
+filter.c           External kill/score processing.
+filter.h           Public info for filter.c.
+filter.ih          Private info for filter.c.
+final.c            Finalization (exit) routines.
+final.h            Public info regarding final.c.
+ftpgrab            An obscure sample shell script.
+hash.c             Hashing routines.
+hash.h             Public/private info for hashing routines.
+hash.ih            Private info regarding hash.c.
+head.c             Header parsing routines.
+head.h             Public info regarding head.c.
+help.c             Help routines.
+help.h             Public info regarding help.c.
+inews.c            An enhanced, mini-inews for nntp client postings.
+init.c             Initialization (startup) routines.
+init.h             Public info regarding init.c.
+intrp.c            Filename expansion and % interpretation routines.
+intrp.h            Public info regarding intrp.c.
+intrp.ih           Private info regarding intrp.c.
+kfile.c            KILL file routines.
+kfile.h            Public info regarding kfile.c.
+kfile.ih           Private info regarding kfile.c.
+last.c             Routines for handling the .rnlast file.
+last.h             Public info regarding last.c.
+list.c             Routines for creating and accessing a list of data.
+list.h             Public info regarding list.c.
+list.ih            Private info regarding list.c.
+makedepend.SH      Shell script to generate make dependencies.
+makedir.SH         Shell script to make nested subdirectories.
+mbox_saver.SH      Shell script to save an article to a mailbox.
+mempool.c          Memory pool (strings) management routines.
+mempool.h          Public info regarding mempool.c
+mempool.ih         Private info regarding mempool.c.
+mime.c             Routines to handle mime articles.
+mime.h             Public info regarding mime.c.
+mime.ih            Private info regarding mime.c.
+mkpro.SH           Perl script to generate prototypes.
+mktd.SH            Perl script to re-generate typedef.h.
+msdos.h            Some configuration defines for msdos systems.
+myinstall.SH       A simple install script for our Makefile.
+ndir.c             BSD 4.2 directory routine emulation.
+ndir.h             Public directory info.
+newsnews.SH        A motd-like file that trn may print at startup.
+ng.c               Routines to display a newsgroup.
+ng.h               Public info regarding ng.c.
+ng.ih              Private info regarding ng.c.
+ngdata.c           General data fetching routines for a newsgroup.
+ngdata.h           Public info regarding ngdata.c.
+ngdata.ih          Private info regarding ngdata.c.
+ngsrch.c           Routines to search among newsgroups.
+ngsrch.h           Public info regarding ngsrch.c.
+ngstuff.c          Support routines for ng.c.
+ngstuff.h          Public info regarding ng.c.
+nntp.c             Routines for accessing NNTP commands.
+nntp.h             Public info regarding the NNTP routines.
+nntp.ih            Private info regarding nntp.c.
+nntpauth.c         Code to handle NNTP authentication.
+nntpauth.h         Public info for the authentication routines.
+nntpclient.c       Custom version of the nntp client library.
+nntpclient.h       Public info for the nntp client library.
+nntpinit.c         Routines to implement server_init().
+nntpinit.h         Public info regarding nntpinit.c
+nntpinit.ih        Private info regarding nntpinit.c.
+nntplist.c         Used by shell scripts to list server resources. (NNTP only)
+norm_saver.SH      Shell script to save an article to a normal file.
+only.c             Routines to perform newsgroup restriction.
+only.h             Public info regarding only.c.
+opt.c              Option parsing code for trnrc file.
+opt.h              Public info regarding opt.c.
+opt.ih             Private info regarding opt.c.
+os2.h              Some configuration defines for OS/2 systems.
+parsedate.y        A yacc script for date parsing.
+parsedate.h        Public info for parsedate.y.
+patchlevel.h       Indicates current patch level.
+popen.c            An implementation of unix pipes for msdos.
+rcln.c             Routines to mung a .newsrc line.
+rcln.h             Public info regarding rcln.c.
+rcstuff.c          Routines to mung the .newsrc file.
+rcstuff.h          Public info regarding rcstuff.c.
+rcstuff.ih         Private info regarding rcstuff.c.
+respond.c          Various routines for doing things with articles.
+respond.h          Public info regarding respond.c.
+respond.ih         Private info regarding respond.c.
+rt-mt.c            Support for the mthread's .thread file format.
+rt-mt.h            Public/private info for rt-mt.c.
+rt-mt.ih           Private info regarding rt.c.
+rt-ov.c            Support for .overview files.
+rt-ov.h            Public info for rt-ov.c.
+rt-ov.ih           Private info regarding rt.c.
+rt-page.c          Routines to manipulate pages in the selector.
+rt-page.h          Public info for rt-page.c.
+rt-page.ih         Private info regarding rt.c.
+rt-process.c       The thread-processing code.
+rt-process.h       Public info for rt-process.c.
+rt-process.ih      Private info regarding rt.c.
+rt-select.c        The thread/subject/article selector.
+rt-select.h        Public/private info for rt-select.c.
+rt-select.ih       Private info regarding rt.c.
+rt-util.c          Utility routines for reading threads.
+rt-util.h          Public info for rt-util.c.
+rt-util.ih         Private info regarding rt.c.
+rt-wumpus.c        Routines to draw the character-oriented tree display.
+rt-wumpus.h        Public info for rt-wumpus.c.
+rt-wumpus.ih       Private info regarding rt.c.
+rthread.c          The basic routines added to init and read threads.
+rthread.h          Public info for rthread.c.
+rthread.ih         Private info regarding rthread.c.
+sacmd.c            Strn article scan mode.
+sacmd.h            Strn article scan mode.
+sadesc.c           Strn article scan mode.
+sadesc.h           Strn article scan mode.
+sadisp.c           Strn article scan mode.
+sadisp.h           Strn article scan mode.
+samain.c           Strn article scan mode.
+samain.h           Strn article scan mode.
+samisc.c           Strn article scan mode.
+samisc.h           Strn article scan mode.
+sathread.c         Strn article scan mode.
+sathread.h         Strn article scan mode.
+scan.c             Strn generic scan mode.
+scan.h             Strn generic scan mode.
+scanart.c          Strn article scan mode.
+scanart.h          Strn article scan mode.
+scmd.c             Strn generic scan mode.
+scmd.h             Strn generic scan mode.
+score-easy.c       Strn scoring.
+score-easy.h       Strn scoring.
+score.c            Strn scoring.
+score.h            Strn scoring.
+scorefile.c        Strn scoring.
+scorefile.h        Strn scoring.
+scorefile.ih       Strn scoring.
+scoresave.c        Strn scoring.
+scoresave.h        Strn scoring.
+sdisp.c            Strn generic scan mode.
+sdisp.h            Strn generic scan mode.
+search.c           Regular expression processing ala emacs.
+search.h           Public info regarding search.c.
+smisc.c            Strn generic scan mode.
+smisc.h            Strn generic scan mode.
+sorder.c           Strn generic scan mode.
+sorder.h           Strn generic scan mode.
+spage.c            Strn generic scan mode.
+spage.h            Strn generic scan mode.
+strftime.c         Source for strftime.c, if needed.
+strn.1             Manual page for strn.
+sw.c               Switch processing routines.
+sw.h               Public info regarding switch.c.
+term.c             Terminal interface routines.
+term.h             Public info regarding term.c.
+term.ih            Private info regarding term.c.
+tkstuff.c          Some Tk interface routines.
+tkstuff.h          Public info for tkstuff.c.
+tkstuff.ih         Private info for tkstuff.c.
+tktree.c           Some Tk interface routines to display the article tree.
+tktree.h           Public info for tktree.c.
+tktree.ih          Private info for tktree.c.
+trn-artchk.c       An article-checking program called from Pnews.
+trn.1              Manual pages for trn -- PLEASE READ.
+trn.c              The main program.
+trn.h              Public info for trn.c.
+typedef.h          Trn's typedefs.
+univ.c             Universal selector code.
+univ.h             Public info regarding univ.c.
+univ.ih            Private info regarding univ.c.
+url.c              Fetches strn files given a Uniform Resource Locator
+url.h              Public info regarding url.c
+url.ih             Private info regarding url.c
+util.c             Utility routines.
+util.h             Public info regarding util.c.
+util.ih            Private info regarding util.c.
+util2.c            Utility routines common to trn and nntplist.
+util2.h            Public info regarding util2.c.
+util3.c            Utility routines exclusive to accessories.
+util3.h            Public info for util3.c.
+uudecode.c         Decodes uuencoded files.
+uudecode.h         Public info regarding uudecode.c.
+uudecode.ih        Private info regarding uudecode.c.
+wildmat.c          A wildcard match routine.
+wildmat.h          Public info regarding wildmat.c.
+wildmat.ih         Private info regarding wildmat.c.
+msdos/config.sh       A sample config.sh file for msdos systems.
+msdos/inews.def       The linker def file for inews.
+msdos/inews.lnk       The link file for inews.
+msdos/nntplist.def    The linker def file for nntplist.
+msdos/nntplist.lnk    The link file for nntplist.
+msdos/trn-artc.def    The linker def file for trn-artchk.
+msdos/trn-artc.lnk    The link file for trn-artchk.
+msdos/trn.def         The linker def file for trn.
+msdos/trn.lnk         The link file for trn.
+os2/config.sh         A sample config.sh file for os2 systems.
+samples/mimecap          A sample .mimecap file for trn's mime support.
+samples/overview.fmt     A sample overview.fmt file for your news lib dir.
+samples/subscriptions    A sample subscriptions file for the default .newsrc.
+samples/univ/top         A sample ~/.trn/univ/top for the universal selector.
+samples/univ/hier_groups A sample hierarchy of newsgroups for the univ. sel.
+support/Score.pl      A perl article-scoring library routine.
+support/filter        A sample external filter script that uses Score.pl.
+support/filter.README The readme for external filter scripts.
+support/mhactive      A perl script to create "active" for MH mail folders.
+support/trnkill       A script to run all trn's kill files in the background.
+support/unipatch.c    A unified diff filter for use with old versions of patch.
+support/tk/README        A brief description of how to setup the Tk files.
+support/tk/tkinit        The file that trn reads to init Tk (when in ~/.trn).
+support/tk/atree.tcl     A tree-display for Tktrn in tcl. (old, unsupported)
+support/tk/objatree.tcl  A new tree-display for Tktrn in tcl. (object-oriented)
+support/tk/obtcl.tcl     obTcl 0.54+patches by Patrik Floding (object util.)
+support/tk/ArtTree.tcl   The Article Tree object definition.
+support/tk/TrnModule.tcl Support for Trn/TK modules (saving window positions)
+support/tk/ScoreBar.tcl  Simple scoring/TK sample that displays current score.
+support/tk/Tree.tcl      The graphical Tree object definition.
+support/tk/debug.tcl     A simple TK debugging tool, mainly for module writers.
+HelpFiles/top               The top help file for the help selector.
+HelpFiles/quickstart        Some simple help for getting started quickly.
+HelpFiles/changelog         List of new features with trn 3.0.
+HelpFiles/hints             Helpful hints to get the most out of using trn.
+HelpFiles/config/index      The help menu for the configuration help.
+HelpFiles/config/macros     Help file on macros.
+HelpFiles/config/options    Help file on options.
+HelpFiles/samples/index     The help menu for the samples.
+HelpFiles/samples/access    A sample ~/.trn/access file.
+HelpFiles/samples/trnrc     A sample ~/.trn/trnrc file.

@@ -1,0 +1,4 @@
+"Trn Quickstart" &quickstart
+"What's New?" &changelog
+"Helpful Hints" &hints
+"Configuration" :config/index

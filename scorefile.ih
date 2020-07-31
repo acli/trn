@@ -1,0 +1,11 @@
+/* scorefile.ih
+ */
+/* This software is copyrighted as detailed in the LICENSE file. */
+
+/* DON'T EDIT BELOW THIS LINE OR YOUR CHANGES WILL BE LOST! */
+
+#ifdef SCOREFILE_CACHE
+static int sf_open_file _((char*));
+static void sf_file_clear _((void));
+static char* sf_file_getline _((int));
+#endif

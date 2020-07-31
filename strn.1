@@ -1,0 +1,66 @@
+.\" strn.1
+.\"
+.\" This manual page is taken from the trn.1 page.
+.\"
+.de Sh
+.br
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.de Ip
+.br
+.ie \\n.$>=3 .ne \\$3
+.el .ne 3
+.IP "\\$1" \\$2
+..
+.\" unbreakable dash.
+.tr \(*W-|\(bv\*(Tr
+.ie n \{\
+.ds -- \(*W-
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+.ds L' '
+.ds R' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds L' `
+.ds R' '
+'br\}
+.TH STRN 1 LOCAL
+.UC 6
+.SH NAME
+strn - scanning threaded read news program
+.SH SYNOPSIS
+.B trn [options] [newsgroups]
+.SH DESCRIPTION
+.I Strn
+has been replaced by
+.I trn,
+version 4.0.  (The last independent version of strn was version 0.9.2.)
+Trn is a threaded version of
+.I rn,
+which is a replacement for the readnews(1) program.
+.SH AUTHORS
+See the
+.I trn
+manual page.
+.SH SEE ALSO
+trn(1)
+.SH DIAGNOSTICS
+Generally self-documenting, as they say.
+.SH BUGS
+See the
+.I trn
+manual page.
