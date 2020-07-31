@@ -1,0 +1,30 @@
+# VIM
+.*.swp
+
+# Real generated files
+*.o
+access.def
+all
+config.h
+config.sh
+filexp
+environment
+inews
+makedepend
+makedir
+Makefile
+mbox.saver
+mkpro
+mktd
+myinstall
+newsnews
+nntplist
+norm.saver
+parsedate.c
+Pnews
+Pnews.header
+Policy.sh
+Rnmail
+Speller
+trn
+trn-artchk
