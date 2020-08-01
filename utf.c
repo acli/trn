@@ -5,6 +5,7 @@
  */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
+#include <stdio.h>
 
 #include "EXTERN.h"
 #include "common.h"
@@ -18,9 +19,9 @@ int
 byte_length_at(s)
 const char *s;
 {
-    int it = 1; /* correct for ASCII */
-    size_t n = strlen(s);
-    if (1) {
+    int it = s != NULL; /* correct for ASCII */
+    if (it) {
+	size_t n = strlen(s);
 	if (n > 0 && (*s & 0x80) == 0) {
 	    ;
 	} else if (n > 1 && (*s & 0xE0) == 0xC0 && OK(s + 1)) {
@@ -44,10 +45,12 @@ bool
 at_norm_char(s)
 const char *s;
 {
-    int it = 1;
-    switch (byte_length_at(s)) {
-    case 1:
-	it = (U(*s) >= ' ' && U(*s) < '\177'); /* correct for ASCII */
+    int it = s != NULL;
+    if (it) {
+	switch (byte_length_at(s)) {
+	case 1:
+	    it = (U(*s) >= ' ' && U(*s) < '\177'); /* correct for ASCII */
+	}
     }
     return it;
 }
@@ -56,13 +59,19 @@ int
 put_char_adv(sp)
 char **sp;
 {
-    char *s = *sp;
-    int w = byte_length_at(s);
-    int i;
-    for (i = 0; i < w; i += 1) {
-	putchar(*s);
-	s++;
+    int it;
+    if (sp == NULL) {
+	it = 0;
+    } else {
+	char *s = *sp;
+	int w = byte_length_at(s);
+	int i;
+	for (i = 0; i < w; i += 1) {
+	    putchar(*s);
+	    s++;
+	}
+	*sp = s;
+	it = 1; /* This is technically wrong because double-width characters exist */
     }
-    *sp = s;
-    return 1; /* This is technically wrong because wide characters exist */
+    return it;
 }
