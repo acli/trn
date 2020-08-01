@@ -1255,8 +1255,10 @@ char* f;
 		fudge = do_indent((char*)NULL);
 		while (*cp == ' ' || *cp == '\t') cp++;
 		if ((fudge -= cp - line_start) != 0) {
-		    if (fudge < 0)
-			bcopy(cp, cp + fudge, t - cp);
+		    if (fudge < 0) {
+			if (t - cp > 0)
+			    bcopy(cp, cp + fudge, t - cp);
+		    }
 		    else
 			for (s = t; s-- != cp; ) s[fudge] = *s;
 		    (void) do_indent(line_start);
