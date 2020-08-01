@@ -13,6 +13,8 @@
 
 int tests_run = 0;
 
+/* byte length */
+
 static char *test_byte_length_at__null () {
     mu_assert("error, byte_length_at(NULL) != 0", byte_length_at(NULL) == 0);
     return 0;
@@ -32,6 +34,8 @@ static char *test_byte_length_at__cjk_basic () {
     mu_assert("error, byte_length_at(\"天\") != 3", byte_length_at("天") == 3);
     return 0;
 }
+
+/* at "normal" character */
 
 static char *test_at_norm_char__null () {
     mu_assert("error, at_norm_char(NULL) != 0", at_norm_char(NULL) == 0);
@@ -68,6 +72,8 @@ static char *test_at_norm_char__cjk_basic () {
     return 0;
 }
 
+/* visual advance width */
+
 static char *test_put_char_adv__null () {
     mu_assert("error, put_char_adv(NULL) != 0", put_char_adv(NULL) == 0);
     return 0;
@@ -93,9 +99,11 @@ static char *test_put_char_adv__cjk_basic__retval () {
     char *sp0 = "玄";
     char *sp = sp0;
     int retval = put_char_adv(&sp);
-    mu_assert("error, put_char_adv(&\"á\") -> retval != 1", retval == 1);
+    mu_assert("error, put_char_adv(&\"á\") -> retval != 2", retval == 2);
     return 0;
 }
+
+/* byte advance width */
 
 static char *test_put_char_adv__ascii__sp () {
     char *sp0 = "a";
@@ -121,6 +129,44 @@ static char *test_put_char_adv__cjk_basic__sp () {
     return 0;
 }
 
+/* code point decoding */
+
+static char *test_code_point_at__null () {
+    mu_assert("error, code_point_at(NULL) != INVALID_CODE_POINT", code_point_at(NULL) == INVALID_CODE_POINT);
+    return 0;
+}
+
+static char *test_code_point_at__sp () {
+    mu_assert("error, code_point_at(\" \") != 0x20", code_point_at(" ") == 0x20);
+    return 0;
+}
+
+static char *test_code_point_at__5 () {
+    mu_assert("error, code_point_at(\"5\") != 0x35", code_point_at("5") == 0x35);
+    return 0;
+}
+
+static char *test_code_point_at__eth () {
+    mu_assert("error, code_point_at(\"ð\") != 0xF0", code_point_at("ð") == 0xF0);
+    return 0;
+}
+
+static char *test_code_point_at__shin () {
+    mu_assert("error, code_point_at(\"ש\") != 0x05E9", code_point_at("ש") == 0x05E9);
+    return 0;
+}
+
+static char *test_code_point_at__oy () {
+    mu_assert("error, code_point_at(\"ᢰ\") != 0x18B0", code_point_at("ᢰ") == 0x18B0);
+    return 0;
+}
+
+static char *test_code_point_at__kissing_face_with_closed_eyes () {
+    mu_assert("error, code_point_at(\"😚\") != 0x1F61A", code_point_at("😚") == 0x1F61A);
+    return 0;
+}
+
+
 static char *all_tests() {
     /* Number of bytes taken by the character at the beginning of the string */
     mu_run_test(test_byte_length_at__null);
@@ -136,7 +182,7 @@ static char *all_tests() {
     mu_run_test(test_at_norm_char__iso8859_1);
     mu_run_test(test_at_norm_char__cjk_basic);
 
-    /* Advance widths */
+    /* Advance widths in character cell units */
     mu_run_test(test_put_char_adv__null);
     mu_run_test(test_put_char_adv__ascii__sp);
     mu_run_test(test_put_char_adv__iso8859_1__sp);
@@ -146,6 +192,15 @@ static char *all_tests() {
     mu_run_test(test_put_char_adv__ascii__retval);
     mu_run_test(test_put_char_adv__iso8859_1__retval);
     mu_run_test(test_put_char_adv__cjk_basic__retval);
+
+    /* Code point decoding */
+    mu_run_test(test_code_point_at__null);
+    mu_run_test(test_code_point_at__sp);
+    mu_run_test(test_code_point_at__5);
+    mu_run_test(test_code_point_at__eth);
+    mu_run_test(test_code_point_at__shin);
+    mu_run_test(test_code_point_at__oy);
+    mu_run_test(test_code_point_at__kissing_face_with_closed_eyes);
     return 0;
 }
 
