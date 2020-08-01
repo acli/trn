@@ -14,7 +14,7 @@ int byte_length_at(const char *);
 int visual_width_at(const char *);
 int visual_length_of(const char *);
 
-#define INVALID_CODE_POINT ((unsigned long) -1)
+#define INVALID_CODE_POINT ((unsigned long) ~0)
 unsigned long code_point_at(const char *);
 
 int put_char_adv(char **);
