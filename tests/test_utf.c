@@ -103,7 +103,7 @@ static char *test_put_char_adv__cjk_basic__retval () {
     return 0;
 }
 
-/* byte advance width */
+/* pointer advance */
 
 static char *test_put_char_adv__ascii__sp () {
     char *sp0 = "a";
