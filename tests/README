@@ -1,0 +1,8 @@
+This directory contains test cases for some newly written functions
+that can be unit tested.
+
+To test changes to the existing code base it's necessary to link in
+the entire trn.  To do this stub.c is generated from trn.c by
+renaming main; this enables the linking to succeed but if any of the
+tested functions depends on some sort of initialization performed by
+trn main() then we're screwed.

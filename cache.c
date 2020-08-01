@@ -570,6 +570,9 @@ void
 dectrl(str)
 char* str;
 {
+    if (str == NULL)
+	return;
+
     for ( ; *str;) {
 	int w = byte_length_at(str);
 	if (AT_GREY_SPACE(str)) {
