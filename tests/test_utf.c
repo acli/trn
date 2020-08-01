@@ -166,6 +166,26 @@ static char *test_code_point_at__kissing_face_with_closed_eyes () {
     return 0;
 }
 
+static char *test_visual_length_of__null () {
+    mu_assert("error, visual_length_of(NULL) != 0", visual_length_of(NULL) == 0);
+    return 0;
+}
+
+static char *test_visual_length_of__ascii () {
+    mu_assert("error, visual_length_of(\"cat\") != 3", visual_length_of("cat") == 3);
+    return 0;
+}
+
+static char *test_visual_length_of__iso_8859_1 () {
+    mu_assert("error, visual_length_of(\"liberté\") != 7", visual_length_of("liberté") == 7);
+    return 0;
+}
+
+static char *test_visual_length_of__cjk () {
+    mu_assert("error, visual_length_of(\"良心\") != 4", visual_length_of("良心") == 4);
+    return 0;
+}
+
 
 static char *all_tests() {
     /* Number of bytes taken by the character at the beginning of the string */
@@ -201,6 +221,12 @@ static char *all_tests() {
     mu_run_test(test_code_point_at__shin);
     mu_run_test(test_code_point_at__oy);
     mu_run_test(test_code_point_at__kissing_face_with_closed_eyes);
+
+    /* Visual length of string */
+    mu_run_test(test_visual_length_of__null);
+    mu_run_test(test_visual_length_of__ascii);
+    mu_run_test(test_visual_length_of__iso_8859_1);
+    mu_run_test(test_visual_length_of__cjk);
     return 0;
 }
 

@@ -71,6 +71,22 @@ const char *s;
     return it;
 }
 
+int
+visual_length_of(s)
+const char *s;
+{
+    int it = 0;
+    if (s) {
+	for (; *s; ) {
+	    int w = byte_length_at(s);
+	    int v = visual_width_at(s);
+	    it += v;
+	    s += w;
+	}
+    }
+    return it;
+}
+
 unsigned long
 code_point_at(s)
 const char *s;

@@ -1,4 +1,5 @@
 /* rt-util.c
+*  vi: set sw=4 ts=8 ai sm noet :
 */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
@@ -21,6 +22,7 @@
 #include "ng.h"
 #include "util.h"
 #include "util2.h"
+#include "utf.h"
 #ifdef USE_TK
 #include "tkstuff.h"
 #endif
@@ -338,7 +340,7 @@ int size;
 {
     static char lbuf[LBUFLEN];
     char* s = from? from : nullstr;
-    int len;
+    int len, vis_len;
 
 #ifdef CHARSUBST
     strcharsubst(lbuf, s, sizeof lbuf, *charsubst);
@@ -349,13 +351,22 @@ int size;
 	s = compress_name(s, size);
     else
 	s = compress_address(lbuf, size);
+#ifdef USE_UTF_HACK
     len = strlen(s);
+    vis_len = visual_length_of(s);
+#else
+    len = strlen(s);
+    vis_len = len;
+#endif
     if (!len) {
 	strcpy(s,"NO NAME");
 	len = 7;
     }
-    while (len < size) s[len++] = ' ';
-    s[size] = '\0';
+    while (vis_len < size && len < sizeof lbuf - 1) {
+	s[len++] = ' ';
+	vis_len++;
+    }
+    s[len] = '\0';
     return s;
 }
 
