@@ -56,7 +56,7 @@ static char *test_dectrl__ascii_some_nonprintable () {
 }
 
 static char *test_dectrl__iso_8859_1 () {
-    char *before = "« La liberté guide le peuple. »";
+    char *before = "« La Liberté guidant le peuple. »";
     char *after = strdup(before);
     dectrl(after);
     printf("Test %d:\n", tests_run);
