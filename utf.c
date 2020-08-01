@@ -12,9 +12,13 @@
 #include "utf.h"
 #include "INTERN.h"
 
+/* OK - valid second and subsequent bytes in UTF-8 */
 #define OK(s) ((*(s) & 0xC0) == 0x80)
 #define U(c) ((Uchar)(c))
 
+/* LEAD - decode leading byte in UTF-8 at (char *)s, bitmask mask, shift width bits
+ * NEXT - decode second and subsequent bytes with byte value (char)s_i, shift width bits
+ */
 #define LEAD(s, mask, bits) ((*s & mask) << bits)
 #define NEXT(s_i, bits) (((s_i) & 0x3F) << bits)
 
