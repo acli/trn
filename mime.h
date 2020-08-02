@@ -56,10 +56,12 @@ struct mime_sect {
 #define TF_SPACE	0x0080
 #define TF_TAB		0x0100
 
+/* NOTE: This must match tagattr below */
 #define TAG_BLOCKQUOTE	0
 #define TAG_BR		(TAG_BLOCKQUOTE+1)
 #define TAG_DIV		(TAG_BR+1)
-#define TAG_HR		(TAG_DIV+1)
+#define TAG_HEAD	(TAG_DIV+1)
+#define TAG_HR		(TAG_HEAD+1)
 #define TAG_IMG		(TAG_HR+1)
 #define TAG_LI		(TAG_IMG+1)
 #define TAG_OL		(TAG_LI+1)
@@ -72,7 +74,8 @@ struct mime_sect {
 #define TAG_TR		(TAG_TH+1)
 #define TAG_TITLE	(TAG_TR+1)
 #define TAG_UL		(TAG_TITLE+1)
-#define LAST_TAG	(TAG_UL+1)
+#define TAG_XML		(TAG_UL+1)
+#define LAST_TAG	(TAG_XML+1)
 
 #define CLOSING_TAG	0
 #define OPENING_TAG	1
@@ -92,6 +95,7 @@ HTML_TAGS tagattr[LAST_TAG] = {
     {"blockquote",	10,	TF_BLOCK | TF_P | TF_NL			},
     {"br",		 2,	TF_NL | TF_BR				},
     {"div",		 3,	TF_BLOCK | TF_NL			},
+    {"head",		 2,	TF_BLOCK | TF_HIDE			},
     {"hr",		 2,	TF_NL					},
     {"img",		 3,	0					},
     {"li",		 2,	TF_NL					},
@@ -105,6 +109,7 @@ HTML_TAGS tagattr[LAST_TAG] = {
     {"tr",		 2,	TF_NL					},
     {"title",		 5,	TF_BLOCK | TF_HIDE			},
     {"ul",		 2,	TF_BLOCK | TF_P | TF_NL | TF_LIST	},
+    {"xml",		 3,	TF_BLOCK | TF_HIDE			}, /* non-standard but seen in the wild */
 };
 #endif
 

@@ -1125,6 +1125,7 @@ static const char* named_entities[] = {
     "apo",	"'",	/* non-standard but seen in the wild */
 #ifndef USE_UTF_HACK
     "nbsp",	" ",
+    "ensp",	" ",	/* seen in the wild */
     "lsquo",	"'",
     "rsquo",	"'",
     "ldquo",	"\"",
@@ -1139,6 +1140,7 @@ static const char* named_entities[] = {
     "eacute",	"e",
 #else /* USE_UTF_HACK */
     "nbsp",	" ",
+    "ensp",	" ",	/* U+2002 */
     "lsquo",	"‘",
     "rsquo",	"’",
     "ldquo",	"“",
