@@ -1113,34 +1113,37 @@ int state;
 static int word_wrap_in_pre, normal_word_wrap, word_wrap;
 
 static const char* named_entities[] = {
-    "lt;",	"<",
-    "gt;",	">",
-    "amp;",	"&",
-    "quot;",	"\"",
+    "lt",	"<",
+    "gt",	">",
+    "amp",	"&",
+    "quot",	"\"",
+    "apo",	"'",	/* non-standard but seen in the wild */
 #ifndef USE_UTF_HACK
-    "nbsp;",	" ",
-    "apo;",	"'",
-    "lsquo;",	"'",
-    "rsquo;",	"'",
-    "ldquo;",	"\"",
-    "rdquo;",	"\"",
-    "ndash;",	"-",
-    "mdash;",	"-",
-    "copy;",	"(C)",
-    "zwsp;",	"",
-    "zwnj;",	"",
+    "nbsp",	" ",
+    "lsquo",	"'",
+    "rsquo",	"'",
+    "ldquo",	"\"",
+    "rdquo",	"\"",
+    "ndash",	"-",
+    "mdash",	"-",
+    "copy",	"(C)",
+    "zwsp",	"",
+    "zwnj",	"",
+    "ccedil",	"c",	/* per charsubst.c */
+    "eacute",	"e",
 #else /* USE_UTF_HACK */
-    "nbsp;",	" ",
-    "apo;",	"’",
-    "lsquo;",	"‘",
-    "rsquo;",	"’",
-    "ldquo;",	"“",
-    "rdquo;",	"”",
-    "ndash;",	"–",
-    "mdash;",	"—",
-    "copy;",	"©",
-    "zwsp;",	"​",
-    "zwnj;",	"‌",
+    "nbsp",	" ",
+    "lsquo",	"‘",
+    "rsquo",	"’",
+    "ldquo",	"“",
+    "rdquo",	"”",
+    "ndash",	"–",
+    "mdash",	"—",
+    "copy",	"©",
+    "zwsp",	"​",
+    "zwnj",	"‌",
+    "ccedil",	"ç",
+    "eacute",	"é",
 #endif
     NULL,	NULL,
 };
@@ -1224,19 +1227,25 @@ char* f;
 	    ;
 	else if (*f == '&') {
 	    int i;
-	    int entity_found;
+	    int entity_found = 0;
 	    t = output_prep(t);
-	    for (i = 0, entity_found = 0; !entity_found && named_entities[i] != NULL; i += 2) {
+	    for (i = 0, entity_found = 0; named_entities[i] != NULL; i += 2) {
 		int n = strlen(named_entities[i]);
 		if (strncaseEQ(f+1, named_entities[i], n)) {
-		    int j;
-		    for (j = 0; named_entities[i + 1][j]; j++)
-			*t++ = named_entities[i + 1][j];
-		    f += n;
-		    entity_found = 1;
+		    char det = f[n+1];
+		    if (det == ';')
+			entity_found = n + 2;
+		    else if (!(isalnum(det)))
+			entity_found = n + 1;
 		}
+	    if (entity_found) break;
 	    }
-	    if (!entity_found)
+	    if (entity_found) {
+		int j;
+		for (j = 0; named_entities[i + 1][j]; j++)
+		    *t++ = named_entities[i + 1][j];
+		f += entity_found;
+	    } else
 		*t++ = *f;
 	    mime_section->html |= HF_NL_OK|HF_P_OK|HF_SPACE_OK;
 	}
