@@ -119,6 +119,57 @@ const char *s;
     return it;
 }
 
+int
+insert_utf8_at(s, c)
+char *s;
+unsigned long c;
+{
+    int it;
+    /* FIXME - should we check if s has enough space? */
+    if (s == NULL)
+	it = 0;
+    else if (c <= 0x0000007F) {
+	s[0] = (char)c;
+	it = 1;
+    }
+    else if (c <= 0x000007FF) {
+	s[0] = ((char)(c >>  6) & 0x1F) | 0xC0;
+	s[1] = ((char) c        & 0x3F) | 0x80;
+	it = 2;
+    }
+    else if (c <= 0x0000FFFF) {
+	s[0] = ((char)(c >> 12) & 0x1F) | 0xE0;
+	s[1] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[2] = ((char) c        & 0x3F) | 0x80;
+	it = 3;
+    }
+    else if (c <= 0x001FFFFF) {
+	s[0] = ((char)(c >> 18) & 0x1F) | 0xF0;
+	s[1] = ((char)(c >> 12) & 0x3F) | 0x80;
+	s[2] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[3] = ((char) c        & 0x3F) | 0x80;
+	it = 4;
+    }
+    else if (c <= 0x03FFFFFF) {
+	s[0] = ((char)(c >> 24) & 0x1F) | 0xF8;
+	s[1] = ((char)(c >> 18) & 0x3F) | 0x80;
+	s[2] = ((char)(c >> 12) & 0x3F) | 0x80;
+	s[3] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[4] = ((char) c        & 0x3F) | 0x80;
+	it = 5;
+    }
+    else if (c <= 0x7FFFFFFF) {
+	s[0] = ((char)(c >> 30) & 0x1F) | 0xFC;
+	s[1] = ((char)(c >> 24) & 0x3F) | 0x80;
+	s[2] = ((char)(c >> 18) & 0x3F) | 0x80;
+	s[3] = ((char)(c >> 12) & 0x3F) | 0x80;
+	s[3] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[4] = ((char) c        & 0x3F) | 0x80;
+	it = 6;
+    }
+    return it;
+}
+
 bool
 at_norm_char(s)
 const char *s;

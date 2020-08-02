@@ -186,6 +186,36 @@ static char *test_visual_length_of__cjk () {
     return 0;
 }
 
+/* insert utf */
+
+static char *test_insert_utf8_at__null () {
+    mu_assert("error, insert_utf8_at(NULL,...) != 0", insert_utf8_at(NULL, 0x40) == 0);
+    return 0;
+}
+
+static char *test_insert_utf8_at__ascii () {
+    char buf[8];
+    mu_assert("error, insert_utf8_at(..., 0x64) != 1", insert_utf8_at(buf, 0x64) == 1);
+    return 0;
+}
+
+static char *test_insert_utf8_at__iso_8859_1 () {
+    char buf[8];
+    mu_assert("error, insert_utf8_at(..., 0xe4) != 2", insert_utf8_at(buf, 0xe4) == 2);
+    return 0;
+}
+
+static char *test_insert_utf8_at__cjk_basic () {
+    char buf[8];
+    mu_assert("error, insert_utf8_at(..., 0x4e00) != 3", insert_utf8_at(buf, 0x4e00) == 3);
+    return 0;
+}
+
+static char *test_insert_utf8_at__kissing_face_with_closed_eyes () {
+    char buf[8];
+    mu_assert("error, insert_utf8_at(..., 0x1f61a) != 4", insert_utf8_at(buf, 0x1f61a) == 4);
+    return 0;
+}
 
 static char *all_tests() {
     /* Number of bytes taken by the character at the beginning of the string */
@@ -227,6 +257,13 @@ static char *all_tests() {
     mu_run_test(test_visual_length_of__ascii);
     mu_run_test(test_visual_length_of__iso_8859_1);
     mu_run_test(test_visual_length_of__cjk);
+
+    /* Code point to UTF */
+    mu_run_test(test_insert_utf8_at__null);
+    mu_run_test(test_insert_utf8_at__ascii);
+    mu_run_test(test_insert_utf8_at__iso_8859_1);
+    mu_run_test(test_insert_utf8_at__cjk_basic);
+    mu_run_test(test_insert_utf8_at__kissing_face_with_closed_eyes);
     return 0;
 }
 
