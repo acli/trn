@@ -1458,11 +1458,11 @@ bool_int opening_tag;
 	    itype = 4;
 	    if ((cp = find_attr(word, "type")) != NULL) {
 		switch (*cp) {
-		  case '1':  itype = 4;  break;
 		  case 'a':  itype = 5;  break;
 		  case 'A':  itype = 6;  break;
 		  case 'i':  itype = 7;  break;
 		  case 'I':  itype = 8;  break;
+		  default:   itype = 4;  break;
 		}
 	    }
 	    blks[j].indent = itype;
