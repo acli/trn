@@ -1,7 +1,6 @@
 /* mime.c
  * vi: set sw=4 ts=8 ai sm noet:
  */
-#define DEBUGGING
 
 #include "EXTERN.h"
 #include "common.h"
@@ -1202,12 +1201,6 @@ char* f;
 	    else if (tagword_len < (sizeof tagword) - 1)
 		tagword[tagword_len++] = *f;
 	}
-	else if (mime_section->html & HF_IN_COMMENT) {
-	    if (*f == '-' && f[1] == '-') {
-		f++;
-		mime_section->html &= ~HF_IN_COMMENT;
-	    }
-	}
 	else if (mime_section->html & HF_IN_TAG) {
 	    if (*f == '>') {
 		mime_section->html &= ~HF_IN_TAG;
@@ -1227,6 +1220,12 @@ char* f;
 		mime_section->html |= HF_IN_SQUOTE;
 	    else if (tagword_len < (sizeof tagword) - 1) {
 		tagword[tagword_len++] = AT_GREY_SPACE(f)? ' ' : *f;
+	    }
+	}
+	else if (mime_section->html & HF_IN_COMMENT) {
+	    if (*f == '-' && f[1] == '-') {
+		f++;
+		mime_section->html &= ~HF_IN_COMMENT;
 	    }
 	}
 	else if (*f == '<') {
@@ -1370,24 +1369,6 @@ bool_int opening_tag;
 
     for (cp = word; *cp && *cp != ' '; cp++) ;
     len = cp - word;
-#ifdef DEBUGGING
-    printf("TAG: (%s%*.*s)", (opening_tag? "": "/"), len, len, word);
-    if (mime_section->html)			printf("%*s %% ", 25-len-!opening_tag, "");
-    if (mime_section->html & HF_IN_TAG)		printf("HF_IN_TAG ");
-    if (mime_section->html & HF_IN_COMMENT)	printf("HF_IN_COMMENT ");
-    if (mime_section->html & HF_IN_HIDING)	printf("HF_IN_HIDING ");
-    if (mime_section->html & HF_IN_PRE)		printf("HF_IN_PRE ");
-    if (mime_section->html & HF_IN_DQUOTE)	printf("HF_IN_DQUOTE ");
-    if (mime_section->html & HF_IN_SQUOTE)	printf("HF_IN_SQUOTE ");
-    if (mime_section->html & HF_QUEUED_P)	printf("HF_QUEUED_P ");
-    if (mime_section->html & HF_P_OK)		printf("HF_P_OK ");
-    if (mime_section->html & HF_QUEUED_NL)	printf("HF_QUEUED_NL ");
-    if (mime_section->html & HF_NL_OK)		printf("HF_NL_OK ");
-    if (mime_section->html & HF_NEED_INDENT)	printf("HF_NEED_INDENT ");
-    if (mime_section->html & HF_SPACE_OK)	printf("HF_SPACE_OK ");
-    if (mime_section->html & HF_COMPACT)	printf("HF_COMPACT ");
-    printf("\n") FLUSH;
-#endif
 
     if (!isalpha(*word))
 	return t;
@@ -1631,6 +1612,24 @@ bool_int opening_tag;
 	}
     }
 
+#ifdef DEBUGGING
+    						printf("%*s %% -> ", 4 + 25, "");
+    if (mime_section->html == 0)		printf("0 ");
+    if (mime_section->html & HF_IN_TAG)		printf("HF_IN_TAG ");
+    if (mime_section->html & HF_IN_COMMENT)	printf("HF_IN_COMMENT ");
+    if (mime_section->html & HF_IN_HIDING)	printf("HF_IN_HIDING ");
+    if (mime_section->html & HF_IN_PRE)		printf("HF_IN_PRE ");
+    if (mime_section->html & HF_IN_DQUOTE)	printf("HF_IN_DQUOTE ");
+    if (mime_section->html & HF_IN_SQUOTE)	printf("HF_IN_SQUOTE ");
+    if (mime_section->html & HF_QUEUED_P)	printf("HF_QUEUED_P ");
+    if (mime_section->html & HF_P_OK)		printf("HF_P_OK ");
+    if (mime_section->html & HF_QUEUED_NL)	printf("HF_QUEUED_NL ");
+    if (mime_section->html & HF_NL_OK)		printf("HF_NL_OK ");
+    if (mime_section->html & HF_NEED_INDENT)	printf("HF_NEED_INDENT ");
+    if (mime_section->html & HF_SPACE_OK)	printf("HF_SPACE_OK ");
+    if (mime_section->html & HF_COMPACT)	printf("HF_COMPACT ");
+    printf("\n") FLUSH;
+#endif
     return t;
 }
 
