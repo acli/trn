@@ -1276,8 +1276,11 @@ char* f;
 	    }
 	    if (entity_found) {
 		int j;
-		for (j = 0; named_entities[i + 1][j]; j++)
-		    *t++ = named_entities[i + 1][j];
+		for (j = 0; ; j++) {
+		    char c = named_entities[i + 1][j];
+		if (c == '\0') break;
+		    *t++ = c;
+		}
 		f += entity_found;
 	    } else
 		*t++ = *f;
