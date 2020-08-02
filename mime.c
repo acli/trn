@@ -1253,7 +1253,8 @@ char* f;
 		    ncr_found = 1 + is_hex + i;
 	    }
 	    if (ncr_found && ncr <= CODE_POINT_MAX) {
-		t += insert_utf8_at(t, ncr);
+		if (ncr)
+		    t += insert_utf8_at(t, ncr);
 		f += ncr_found;
 	    } else
 		*t++ = *f;
