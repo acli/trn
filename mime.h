@@ -60,8 +60,7 @@ struct mime_sect {
 #define TAG_BLOCKQUOTE	0
 #define TAG_BR		(TAG_BLOCKQUOTE+1)
 #define TAG_DIV		(TAG_BR+1)
-#define TAG_HEAD	(TAG_DIV+1)
-#define TAG_HR		(TAG_HEAD+1)
+#define TAG_HR		(TAG_DIV+1)
 #define TAG_IMG		(TAG_HR+1)
 #define TAG_LI		(TAG_IMG+1)
 #define TAG_OL		(TAG_LI+1)
@@ -95,7 +94,6 @@ HTML_TAGS tagattr[LAST_TAG] = {
     {"blockquote",	10,	TF_BLOCK | TF_P | TF_NL			},
     {"br",		 2,	TF_NL | TF_BR				},
     {"div",		 3,	TF_BLOCK | TF_NL			},
-    {"head",		 2,	TF_BLOCK | TF_HIDE			},
     {"hr",		 2,	TF_NL					},
     {"img",		 3,	0					},
     {"li",		 2,	TF_NL					},
