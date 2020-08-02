@@ -20,6 +20,7 @@
 #include "color.h"
 #include "util.h"
 #include "util2.h"
+#include "utf.h"
 #include "backpage.h"
 #include "charsubst.h"
 #include "INTERN.h"
@@ -1111,6 +1112,39 @@ int state;
 
 static int word_wrap_in_pre, normal_word_wrap, word_wrap;
 
+static const char* named_entities[] = {
+    "lt;",	"<",
+    "gt;",	">",
+    "amp;",	"&",
+    "quot;",	"\"",
+#ifndef USE_UTF_HACK
+    "nbsp;",	" ",
+    "apo;",	"'",
+    "lsquo;",	"'",
+    "rsquo;",	"'",
+    "ldquo;",	"\"",
+    "rdquo;",	"\"",
+    "ndash;",	"-",
+    "mdash;",	"-",
+    "copy;",	"(C)",
+    "zwsp;",	"",
+    "zwnj;",	"",
+#else /* USE_UTF_HACK */
+    "nbsp;",	" ",
+    "apo;",	"’",
+    "lsquo;",	"‘",
+    "rsquo;",	"’",
+    "ldquo;",	"“",
+    "rdquo;",	"”",
+    "ndash;",	"–",
+    "mdash;",	"—",
+    "copy;",	"©",
+    "zwsp;",	"​",
+    "zwnj;",	"‌",
+#endif
+    NULL,	NULL,
+};
+
 int
 filter_html(t, f)
 char* t;
@@ -1189,28 +1223,20 @@ char* f;
 	else if (mime_section->html & HF_IN_HIDING)
 	    ;
 	else if (*f == '&') {
+	    int i;
+	    int entity_found;
 	    t = output_prep(t);
-	    if (strncaseEQ(f+1,"lt;",3)) {
-		*t++ = '<';
-		f += 3;
+	    for (i = 0, entity_found = 0; !entity_found && named_entities[i] != NULL; i += 2) {
+		int n = strlen(named_entities[i]);
+		if (strncaseEQ(f+1, named_entities[i], n)) {
+		    int j;
+		    for (j = 0; named_entities[i + 1][j]; j++)
+			*t++ = named_entities[i + 1][j];
+		    f += n;
+		    entity_found = 1;
+		}
 	    }
-	    else if (strncaseEQ(f+1,"gt;",3)) {
-		*t++ = '>';
-		f += 3;
-	    }
-	    else if (strncaseEQ(f+1,"amp;",4)) {
-		*t++ = '&';
-		f += 4;
-	    }
-	    else if (strncaseEQ(f+1,"nbsp;",5)) {
-		*t++ = ' ';
-		f += 5;
-	    }
-	    else if (strncaseEQ(f+1,"quot;",5)) {
-		*t++ = '"';
-		f += 5;
-	    }
-	    else
+	    if (!entity_found)
 		*t++ = *f;
 	    mime_section->html |= HF_NL_OK|HF_P_OK|HF_SPACE_OK;
 	}
