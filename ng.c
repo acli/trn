@@ -248,9 +248,9 @@ char* start_command;			/* command to fake up first */
 	if ((art > lastart || forcegrow) && !keep_the_group_static) {
 	    ART_NUM oldlast = lastart;
 #ifdef SUPPORT_NNTP
-	    if (artsize < 0)
-		nntp_finishbody(FB_SILENT);
 	    if (datasrc->flags & DF_REMOTE) {
+		if (artsize < 0)
+		    nntp_finishbody(FB_SILENT);
 		if (datasrc->act_sf.fp || getngsize(ngptr) > lastart) {
 		    if (nntp_group(ngname,ngptr) <= 0) {
 			exit_code = NG_NOSERVER;

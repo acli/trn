@@ -324,7 +324,7 @@ mime_SetArticle()
 
 	mime_state = mime_section->type;
 	if (mime_state == NOT_MIME
-	 || (mime_state == TEXT_MIME && mime_section->encoding == MENCODE_NONE))
+	 /*|| (mime_state == TEXT_MIME && mime_section->encoding == MENCODE_NONE)*/)
 	    is_mime = FALSE;
 	else if (!mime_section->type_name)
 	    mime_section->type_name = savestr(text_plain);
