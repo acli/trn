@@ -1296,8 +1296,12 @@ char* f;
 	    t = do_newline(t, HF_NL_OK);
 	}
 	else {
+	    int w = byte_length_at(f);
+	    int i;
 	    t = output_prep(t);
-	    *t++ = *f;
+	    for (i = 0; i < w; i++)
+		*t++ = *f++;
+	    f--;
 	    mime_section->html |= HF_NL_OK|HF_P_OK|HF_SPACE_OK;
 	}
 
