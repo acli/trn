@@ -1203,7 +1203,7 @@ char* f;
 	}
 	else if (mime_section->html & HF_IN_TAG) {
 	    if (*f == '>') {
-		mime_section->html &= ~HF_IN_TAG;
+		mime_section->html &= ~(HF_IN_TAG | HF_IN_COMMENT);
 		tagword[tagword_len] = '\0';
 		if (*tagword == '/')
 		    t = tag_action(t, tagword+1, CLOSING_TAG);
