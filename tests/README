@@ -6,3 +6,7 @@ the entire trn.  To do this stub.c is generated from trn.c by
 renaming main; this enables the linking to succeed but if any of the
 tested functions depends on some sort of initialization performed by
 trn main() then we're screwed.
+
+References
+==========
+https://www.w3.org/MarkUp/html-spec/html-spec.txt
