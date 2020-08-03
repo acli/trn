@@ -1251,7 +1251,7 @@ char* f;
 		char det = f[2 + is_hex + i];
 		if (det == ';')
 		    ncr_found = 2 + is_hex + i;
-		else if (!(isalnum(det)))
+		else if (!(det == '-' || isalnum(det))) /* see html-spec.txt 3.2.1 */
 		    ncr_found = 1 + is_hex + i;
 	    }
 	    if (ncr_found && ncr <= CODE_POINT_MAX) {
@@ -1261,7 +1261,7 @@ char* f;
 	    } else
 		*t++ = *f;
 	}
-	else if (*f == '&') {
+	else if (*f == '&' && isalpha(f[1])) { /* see html-spec.txt 3.2.1 */
 	    int i;
 	    int entity_found = 0;
 	    t = output_prep(t);
@@ -1271,7 +1271,7 @@ char* f;
 		    char det = f[n+1];
 		    if (det == ';')
 			entity_found = n + 1;
-		    else if (!(isalnum(det)))
+		    else if (!(det == '-' || isalnum(det))) /* see html-spec.txt 3.2.1 */
 			entity_found = n;
 		}
 	    if (entity_found) break;
