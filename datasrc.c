@@ -678,8 +678,8 @@ char* groupname;
     return nullstr;
 }
 
-/* NOTE: This was factored from srcfile_open and srcfile_append and
- * is essentially identical to dectrl() except the s++ and return s.
+/* NOTE: This was factored from srcfile_open and srcfile_append and is
+ * basically same as dectrl() except the s++, *s != '\n' and return s.
  * Because we need to keep track of s we can't really reuse dectrl()
  * from cache.c; if we want to factor further we need a new function.
  */
