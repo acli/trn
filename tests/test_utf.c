@@ -79,52 +79,29 @@ static char *test_put_char_adv__null () {
     return 0;
 }
 
-static char *test_put_char_adv__ascii__retval () {
+static char *test_put_char_adv__ascii () {
     char *sp0 = "a";
     char *sp = sp0;
     int retval = put_char_adv(&sp);
     mu_assert("error, put_char_adv(&\"a\") -> retval != 1", retval == 1);
-    return 0;
-}
-
-static char *test_put_char_adv__iso8859_1__retval () {
-    char *sp0 = "á";
-    char *sp = sp0;
-    int retval = put_char_adv(&sp);
-    mu_assert("error, put_char_adv(&\"á\") -> retval != 1", retval == 1);
-    return 0;
-}
-
-static char *test_put_char_adv__cjk_basic__retval () {
-    char *sp0 = "玄";
-    char *sp = sp0;
-    int retval = put_char_adv(&sp);
-    mu_assert("error, put_char_adv(&\"á\") -> retval != 2", retval == 2);
-    return 0;
-}
-
-/* pointer advance */
-
-static char *test_put_char_adv__ascii__sp () {
-    char *sp0 = "a";
-    char *sp = sp0;
-    int retval = put_char_adv(&sp);
     mu_assert("error, put_char_adv(&\"a\") -> sp - sp0 != 1", sp - sp0 == 1);
     return 0;
 }
 
-static char *test_put_char_adv__iso8859_1__sp () {
+static char *test_put_char_adv__iso8859_1 () {
     char *sp0 = "á";
     char *sp = sp0;
     int retval = put_char_adv(&sp);
+    mu_assert("error, put_char_adv(&\"á\") -> retval != 1", retval == 1);
     mu_assert("error, put_char_adv(&\"á\") -> sp - sp0 != 2", sp - sp0 == 2);
     return 0;
 }
 
-static char *test_put_char_adv__cjk_basic__sp () {
+static char *test_put_char_adv__cjk_basic () {
     char *sp0 = "玄";
     char *sp = sp0;
     int retval = put_char_adv(&sp);
+    mu_assert("error, put_char_adv(&\"á\") -> retval != 2", retval == 2);
     mu_assert("error, put_char_adv(&\"á\") -> sp - sp0 != 3", sp - sp0 == 3);
     return 0;
 }
@@ -236,16 +213,11 @@ static char *all_tests() {
     mu_run_test(test_at_norm_char__iso8859_1);
     mu_run_test(test_at_norm_char__cjk_basic);
 
-    /* Advance widths in character cell units */
+    /* Put char -- advance pointer + return visual advance widths in character cell units */
     mu_run_test(test_put_char_adv__null);
-    mu_run_test(test_put_char_adv__ascii__sp);
-    mu_run_test(test_put_char_adv__iso8859_1__sp);
-    mu_run_test(test_put_char_adv__cjk_basic__sp);
-
-    /* Byte offsets in strings */
-    mu_run_test(test_put_char_adv__ascii__retval);
-    mu_run_test(test_put_char_adv__iso8859_1__retval);
-    mu_run_test(test_put_char_adv__cjk_basic__retval);
+    mu_run_test(test_put_char_adv__ascii);
+    mu_run_test(test_put_char_adv__iso8859_1);
+    mu_run_test(test_put_char_adv__cjk_basic);
 
     /* Code point decoding */
     mu_run_test(test_code_point_at__null);
