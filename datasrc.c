@@ -678,16 +678,25 @@ char* groupname;
     return nullstr;
 }
 
+/* NOTE: This was factored from srcfile_open and srcfile_append and
+ * is essentially identical to dectrl() except the s++ and return s.
+ * Because we need to keep track of s we can't really reuse dectrl()
+ * from cache.c; if we want to factor further we need a new function.
+ */
 char *
-clear_out_grey_space(s)
+adv_then_find_next_nl_and_dectrl(s)
 char *s;
 {
+    if (s == NULL)
+	return s;
+
     for (s++; *s && *s != '\n';) {
 	int w = byte_length_at(s);
 	if (AT_GREY_SPACE(s)) {
-	    int i;
-	    for (i = 0; i < w; i += 1)
+	    register int i;
+	    for (i = 0; i < w; i += 1) {
 		s[i] = ' ';
+	    }
 	}
 	s += w;
     }
@@ -819,7 +828,7 @@ char* server;
 	    strcpy(buf+keylen+1, s);
 	    s = buf+keylen+1;
 	}
-	s = clear_out_grey_space(s);
+	s = adv_then_find_next_nl_and_dectrl(s);
 	linelen = s - buf + 1;
 	if (*s != '\n') {
 	    if (linelen == sizeof buf) {
@@ -892,7 +901,7 @@ int keylen;
 	strcpy(bp+keylen+1, s);
 	s = bp+keylen+1;
     }
-    s = clear_out_grey_space(s);
+    s = adv_then_find_next_nl_and_dectrl(s);
     linelen = s - bp + 1;
     if (*s != '\n') {
 	*s++ = '\n';
