@@ -69,7 +69,7 @@ static char *test_dectrl__iso_8859_1 () {
 }
 
 static char *test_dectrl__cjk_basic () {
-    char *before = "寧化飛灰，不作瓦全";
+    char *before = "寧化飛灰，不作浮塵";
     char *after = strdup(before);
     dectrl(after);
     printf("Test %d:\n", tests_run);
