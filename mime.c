@@ -1256,7 +1256,7 @@ char* f;
 	    }
 	    if (ncr_found && ncr <= CODE_POINT_MAX) {
 		if (ncr)
-		    t += insert_utf8_at(t, ncr);
+		    t += insert_unicode_at(t, ncr);
 		f += ncr_found;
 	    } else
 		*t++ = *f;

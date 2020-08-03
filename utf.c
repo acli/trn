@@ -120,7 +120,7 @@ const char *s;
 }
 
 int
-insert_utf8_at(s, c)
+insert_unicode_at(s, c)
 char *s;
 unsigned long c;
 {
