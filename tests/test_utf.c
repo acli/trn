@@ -194,26 +194,30 @@ static char *test_insert_utf8_at__null () {
 }
 
 static char *test_insert_utf8_at__ascii () {
-    char buf[8];
+    char buf[8] = "\0\0\0\0\0\0\0";
     mu_assert("error, insert_utf8_at(..., 0x64) != 1", insert_utf8_at(buf, 0x64) == 1);
+    mu_assert("error, insert_utf8_at(..., 0x64) did not set buf to \"d\"", strcmp(buf, "d") == 0);
     return 0;
 }
 
 static char *test_insert_utf8_at__iso_8859_1 () {
-    char buf[8];
+    char buf[8] = "\0\0\0\0\0\0\0";
     mu_assert("error, insert_utf8_at(..., 0xe4) != 2", insert_utf8_at(buf, 0xe4) == 2);
+    mu_assert("error, insert_utf8_at(..., 0xe4) did not set buf to \"ä\"", strcmp(buf, "ä") == 0);
     return 0;
 }
 
 static char *test_insert_utf8_at__cjk_basic () {
-    char buf[8];
+    char buf[8] = "\0\0\0\0\0\0\0";
     mu_assert("error, insert_utf8_at(..., 0x4e00) != 3", insert_utf8_at(buf, 0x4e00) == 3);
+    mu_assert("error, insert_utf8_at(..., 0x4e00) did not set buf to \"一\"", strcmp(buf, "一") == 0);
     return 0;
 }
 
 static char *test_insert_utf8_at__kissing_face_with_closed_eyes () {
-    char buf[8];
+    char buf[8] = "\0\0\0\0\0\0\0";
     mu_assert("error, insert_utf8_at(..., 0x1f61a) != 4", insert_utf8_at(buf, 0x1f61a) == 4);
+    mu_assert("error, insert_utf8_at(..., 0x1f61a) did not set buf to \"😚\"", strcmp(buf, "😚") == 0);
     return 0;
 }
 
