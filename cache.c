@@ -557,6 +557,7 @@ int size;
 			    t[len] = d[len];
 			    len++;
 			}
+			free(d);
 		    }
 		    *e = '?';
 		    t += len;
