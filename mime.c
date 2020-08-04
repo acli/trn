@@ -367,7 +367,7 @@ char* s;
 	s += 4;
 	if (*s++ != '/')
 	    return;
-	utf_init(mime_FindParam(mp->type_params,"charset"));
+	utf_init(mime_FindParam(mp->type_params,"charset"), "utf-8"); /*FIXME*/
 	if (strncaseEQ(s, "html", 4))
 	    mp->type = HTMLTEXT_MIME;
 	else if (strncaseEQ(s, "x-vcard", 7))

@@ -13,12 +13,12 @@
 
 int tests_run = 0;
 
-static char *test_utf_init () {
-    mu_assert("error, utf_init(NULL) != CHARSET_UNKNOWN", utf_init(NULL) == CHARSET_UNKNOWN);
-    mu_assert("error, utf_init(\"us-ascii\") != CHARSET_ASCII", utf_init("us-ascii") == CHARSET_ASCII);
-    mu_assert("error, utf_init(\"utf-8\") != CHARSET_UTF8", utf_init("utf-8") == CHARSET_UTF8);
-    mu_assert("error, utf_init(\"US-ASCII\") != CHARSET_ASCII", utf_init("US-ASCII") == CHARSET_ASCII);
-    mu_assert("error, utf_init(\"UTF-8\") != CHARSET_UTF8", utf_init("UTF-8") == CHARSET_UTF8);
+static char *test_utf_init__in () {
+    mu_assert("error, utf_init(NULL, ...) != CHARSET_UNKNOWN", utf_init(NULL, "utf-8") == CHARSET_UNKNOWN);
+    mu_assert("error, utf_init(\"us-ascii\", ...) != CHARSET_ASCII", utf_init("us-ascii", "utf-8") == CHARSET_ASCII);
+    mu_assert("error, utf_init(\"utf-8\", ...) != CHARSET_UTF8", utf_init("utf-8", "utf-8") == CHARSET_UTF8);
+    mu_assert("error, utf_init(\"US-ASCII\", ...) != CHARSET_ASCII", utf_init("US-ASCII", "utf-8") == CHARSET_ASCII);
+    mu_assert("error, utf_init(\"UTF-8\", ...) != CHARSET_UTF8", utf_init("UTF-8", "utf-8") == CHARSET_UTF8);
     return 0;
 }
 
@@ -208,8 +208,45 @@ static char *test_insert_unicode_at__kissing_face_with_closed_eyes () {
     return 0;
 }
 
+/* create copy of string converted to utf8 */
+
+static char *test_create_utf8_copy__null () {
+    mu_assert("error, create_utf8_copy(NULL) != NULL", create_utf8_copy(NULL) == NULL);
+    return 0;
+}
+
+static char *test_create_utf8_copy__ascii () {
+    char *before = "Lorem ipsum";
+    char *after = create_utf8_copy(before);
+    mu_assert("error, create_utf8_copy of ASCII string returned NULL", before != NULL);
+    mu_assert("error, create_utf8_copy of ASCII string did not alloc a new string", before != after);
+    mu_assert("error, create_utf8_copy of ASCII string did not create an identical copy", strcmp(before, after) == 0);
+    free(after);
+    return 0;
+}
+
+static char *test_create_utf8_copy__iso8859_1 () {
+    char *before = "Quoi, le biblioth\350que est ferm\351\240!";
+    char *after;
+    char *expected = "Quoi, le bibliothèque est fermé !";
+    utf_init("iso8859-1", "utf-8");
+    after = create_utf8_copy(before);
+    utf_init("utf-8", "utf-8");
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, create_utf8_copy of ISO-8859-1 string returned NULL", before != NULL);
+    mu_assert("error, create_utf8_copy of ISO-8859-1 string did not alloc a new string", before != after);
+    mu_assert("error, create_utf8_copy of ISO-8859-1 string did not create a corresponding UTF-8 copy", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
+/* main loop */
+
 static char *all_tests() {
-    mu_run_test(test_utf_init);
+    mu_run_test(test_utf_init__in);
 
     /* Number of bytes taken by the character at the beginning of the string */
     mu_run_test(test_byte_length_at__null);
@@ -252,6 +289,10 @@ static char *all_tests() {
     mu_run_test(test_insert_unicode_at__iso_8859_1);
     mu_run_test(test_insert_unicode_at__cjk_basic);
     mu_run_test(test_insert_unicode_at__kissing_face_with_closed_eyes);
+
+    mu_run_test(test_create_utf8_copy__null);
+    mu_run_test(test_create_utf8_copy__ascii);
+    mu_run_test(test_create_utf8_copy__iso8859_1);
     return 0;
 }
 

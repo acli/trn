@@ -46,10 +46,11 @@ struct charset_desc charset_descs[] = {
     { NULL, CHARSET_UNKNOWN }
 };
 
-static int charset = CHARSET_UTF8;
+static int in_charset = CHARSET_UTF8;
+static int out_charset = CHARSET_UTF8;
 
 int
-utf_init(s)
+find_charset(s)
 const char *s;
 {
     int it = CHARSET_UNKNOWN;
@@ -67,10 +68,22 @@ const char *s;
 	    }
 	if (it != CHARSET_UNKNOWN) break;
 	}
-	if (it != CHARSET_UNKNOWN)
-	    charset = it;
     }
     return it;
+}
+
+int
+utf_init(f, t)
+const char *f;
+const char *t;
+{
+    int i = find_charset(f);
+    int o = find_charset(t);
+    if (i != CHARSET_UNKNOWN)
+	in_charset = i;
+    if (o != CHARSET_UNKNOWN)
+	out_charset = o;
+    return i;
 }
 
 int
@@ -80,7 +93,7 @@ const char *s;
     int it = s != NULL; /* correct for ASCII */
     if (!it) {
 	;
-    } else if (IS_UTF8(charset)) {
+    } else if (IS_UTF8(in_charset)) {
 	size_t n = strlen(s);
 	if (n > 0 && (*s & 0x80) == 0) {
 	    ;
@@ -97,9 +110,9 @@ const char *s;
 	} else {
 	    /* FIXME - invalid UTF-8 */
 	}
-    } else if (IS_SINGLE_BYTE(charset)) {
+    } else if (IS_SINGLE_BYTE(in_charset)) {
 	;
-    } else if (IS_DOUBLE_BYTE(charset)) {
+    } else if (IS_DOUBLE_BYTE(in_charset)) {
 	if (*s & 0x80)
 	    it = 2;
     }
@@ -115,9 +128,9 @@ const char *s;
     int it = 1;
     if (c == INVALID_CODE_POINT) {
 	it = 0;
-    } else if (IS_SINGLE_BYTE(charset)) {
+    } else if (IS_SINGLE_BYTE(in_charset)) {
 	it = 1;
-    } else if (IS_DOUBLE_BYTE(charset)) {
+    } else if (IS_DOUBLE_BYTE(in_charset)) {
 	it = (c & 0x80)? 2: 1;
     } else if ((c >= 0x00300 && c <= 0x0036F)	/* combining diacritics */
 	    || (c >= 0x01AB0 && c <= 0x01AFF)
@@ -159,7 +172,7 @@ const char *s;
 {
     CODE_POINT it;
     if (s != NULL) {
-	if (IS_UTF8(charset)) {
+	if (IS_UTF8(in_charset)) {
 	    size_t n = strlen(s);
 	    if (n > 0 && (*s & 0x80) == 0) {
 		it = *s;
@@ -176,16 +189,16 @@ const char *s;
 	    } else {
 		it = INVALID_CODE_POINT;
 	    }
-	} else if (charset == CHARSET_ASCII) {
+	} else if (in_charset == CHARSET_ASCII) {
 	    it = *s & 0x7F;
-	} else if (charset == CHARSET_ISO8859_1) {
-	    it = *s;
-	} else if (charset == CHARSET_ISO8859_15) {
-	    it = *s;
+	} else if (in_charset == CHARSET_ISO8859_1) {
+	    it = *s & 0xFF; /* I hate signed/unsigned conversions */
+	} else if (in_charset == CHARSET_ISO8859_15) {
+	    it = *s & 0xFF;
 	    if (it == '\244')
 		it = 0x20AC;
-	} else if (charset == CHARSET_WINDOWS_1252) {
-	    it = *s;
+	} else if (in_charset == CHARSET_WINDOWS_1252) {
+	    it = *s & 0xFF;
 	    if (it > 0x7F && it < 0xA0) {
 		/*FIXME*/
 	    }
@@ -256,12 +269,12 @@ CODE_POINT c;
     /* FIXME - should we check if s has enough space? */
     if (s == NULL)
 	it = 0;
-    else if (IS_UTF8(charset)) {
+    else if (IS_UTF8(out_charset)) {
 	it = insert_utf8_at(s, c);
     } else if (c <= 0x7F
-	    || (charset == CHARSET_ISO8859_1 && c <= 0xFF)
-	    || (charset == CHARSET_ISO8859_15 && c <= 0xFF && c != 0xA4)
-	    || (charset == CHARSET_WINDOWS_1252 && (c < 0x7F || (c >= 0xA0 && c <= 0xFF)))) {
+	    || (out_charset == CHARSET_ISO8859_1 && c <= 0xFF)
+	    || (out_charset == CHARSET_ISO8859_15 && c <= 0xFF && c != 0xA4)
+	    || (out_charset == CHARSET_WINDOWS_1252 && (c < 0x7F || (c >= 0xA0 && c <= 0xFF)))) {
 	s[0] = (char)c;
 	it = 1;
     }
@@ -274,15 +287,15 @@ const char *s;
 {
     int it = s != NULL;
     if (it) {
-	if (charset == CHARSET_UTF8) {
+	if (in_charset == CHARSET_UTF8) {
 	    CODE_POINT c = code_point_at(s);
 	    it = c >= 0x20 && !(c >= 0x7F && c < 0xA0) && c != 0x2028 && c != 0x2029;
 	}
-	else if (charset == CHARSET_ASCII)
+	else if (in_charset == CHARSET_ASCII)
 	    it = (U(*s) >= ' ' && U(*s) < 0x7F);
-	else if (IS_ISO_8859_X(charset))
+	else if (IS_ISO_8859_X(in_charset))
 	    it = ((U(*s) >= ' ' && U(*s) < 0x7F) || (U(*s) >= 0xA0 && U(*s) <= 0xFF));
-	else if (IS_WINDOWS_125X(charset))
+	else if (IS_WINDOWS_125X(in_charset))
 	    it = (U(*s) >= ' ' && U(*s) <= 0xFF);
     }
     return it;
@@ -298,7 +311,7 @@ bool_int outputok;
 	it = 0;
     } else {
 	char *s = *strptr;
-	if (charset == CHARSET_UTF8 || (*s >= ' ' && *s < 0x7F)) {
+	if (in_charset == CHARSET_UTF8 || (*s >= ' ' && *s < 0x7F)) {
 	    int w = byte_length_at(s);
 	    int i;
 	    it = visual_width_at(s);
@@ -308,7 +321,7 @@ bool_int outputok;
 		    s++;
 		}
 	    *strptr = s;
-	} else if (IS_ISO_8859_X(charset) || IS_WINDOWS_125X(charset)) { /* FIXME */
+	} else if (IS_ISO_8859_X(in_charset) || IS_WINDOWS_125X(in_charset)) { /* FIXME */
 	    char buf[7];
 	    int w = insert_utf8_at(buf, U(*s));
 	    int i;
@@ -317,6 +330,40 @@ bool_int outputok;
 	    it = 1;
 	    s++;
 	    *strptr = s;
+	}
+    }
+    return it;
+}
+
+char *
+create_utf8_copy(s)
+char *s;
+{
+    char *it = s;
+    if (s != NULL) {
+	int slen;
+	int tlen;
+	int i;
+	char buf[7];
+
+	/* Precalculate size of required space */
+	for (slen = tlen = 0; s[slen]; ) {
+	    int sw = byte_length_at(s+slen);
+	    int tw = insert_utf8_at(buf, code_point_at(s+slen));
+	    slen += sw;
+	    tlen += tw;
+	}
+
+	/* Create the actual copy */
+	it = malloc(tlen + 1);
+	if (it) {
+	    char *bufptr = it;
+	    for (i = 0; s[i]; ) {
+		int sw = byte_length_at(s+i);
+		bufptr += insert_utf8_at(bufptr, code_point_at(s+i));
+		i += sw;
+	    }
+	    *bufptr = '\0';
 	}
     }
     return it;

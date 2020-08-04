@@ -528,6 +528,12 @@ int size;
 	    char* q = index(f+2,'?');
 	    char ch = (q && q[2] == '?')? q[1] : 0;
 	    char* e;
+
+	    if (q) {
+		*q = '\0';
+		utf_init(f+2, "utf-8"); /*FIXME*/
+		*q = '?';
+	    }
 	    if (ch == 'q' || ch == 'Q' || ch == 'b' || ch == 'B') {
 		e = q+2;
 		do {
@@ -535,6 +541,7 @@ int size;
 		} while (e && e[1] != '=');
 		if (e) {
 		    int len = e - f + 2;
+		    char *d;
 		    i -= len-1;
 		    size -= len;
 		    q += 3;
@@ -544,6 +551,13 @@ int size;
 			len = qp_decodestring(t, q, 1);
 		    else
 			len = b64_decodestring(t, q);
+		    d = create_utf8_copy(t);
+		    if (d) {
+			for (len = 0; d[len]; ) {
+			    t[len] = d[len];
+			    len++;
+			}
+		    }
 		    *e = '?';
 		    t += len;
 		    size += len;

@@ -17,7 +17,7 @@
 
 typedef unsigned long CODE_POINT;
 
-int utf_init(const char *);
+int utf_init(const char *, const char *);
 
 bool at_norm_char(const char *);
 
@@ -30,5 +30,7 @@ int insert_unicode_at(char *, CODE_POINT);
 CODE_POINT code_point_at(const char *);
 
 int put_char_adv(char **, bool_int);
+
+char *create_utf8_copy(char *);
 
 #endif
