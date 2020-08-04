@@ -1290,7 +1290,7 @@ char* f;
 	}
 	else if ((*f == ' ' || AT_GREY_SPACE(f)) && !(mime_section->html & HF_IN_PRE)) {
 	    /* We don't want to call output_prep() here. */
-	    if (mime_section->html & HF_SPACE_OK) {
+	    if (*f == ' ' || (mime_section->html & HF_SPACE_OK)) {
 		mime_section->html &= ~HF_SPACE_OK;
 		*t++ = ' ';
 	    }
