@@ -523,7 +523,7 @@ int size;
     bool pass2needed = FALSE;
 
     /* Pass 1 to decode coded bytes (which might be character fragments - so 1 pass is wrong) */
-    for (i = size; i--; ) {
+    for (i = size; *f && i--; ) {
 	if (*f == '=' && f[1] == '?') {
 	    char* q = index(f+2,'?');
 	    char ch = (q && q[2] == '?')? q[1] : 0;
