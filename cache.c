@@ -520,6 +520,7 @@ int size;
 {
     int i;
     char *s = t; /* save for pass 2 */
+    bool pass2needed = FALSE;
 
     /* Pass 1 to decode coded bytes (which might be character fragments - so 1 pass is wrong) */
     for (i = size; i--; ) {
@@ -546,6 +547,9 @@ int size;
 		    *e = '?';
 		    t += len;
 		    size += len;
+		    /* If the next character is whitespace we should eat it now */
+		    while (*f == ' ' || *f == '\t')
+			f++;
 		}
 		else
 		    *t++ = *f++;
@@ -556,13 +560,15 @@ int size;
 	    *t++ = *f++;
 	else
 	    f++, size--;
+	pass2needed = TRUE;
     }
     while (size > 1 && t[-1] == ' ')
 	t--, size--;
     *t = '\0';
 
     /* Pass 2 to clear out "control" characters */
-    dectrl(s);
+    if (pass2needed)
+	dectrl(s);
     return size;
 }
 
