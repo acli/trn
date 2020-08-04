@@ -409,6 +409,10 @@ do_article()
 #ifdef CHARSUBST
 			    register int i;
 #ifdef USE_UTF_HACK
+			    if (outpos + visual_width_at(bufptr) > tc_COLS) { /* will line overflow? */
+				newline();
+				outpos = 0;
+			    }
 			    i = put_char_adv(&bufptr, outputok);
 			    bufptr--;
 #else /* !USE_UTF_HACK */
