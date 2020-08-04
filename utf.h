@@ -8,7 +8,15 @@
 
 #define USE_UTF_HACK
 
+#define CHARSET_ASCII		0x0000
+#define CHARSET_UTF8		0x8000
+#define CHARSET_ISO8859_1	0x4000
+#define CHARSET_ISO8859_15	0x4001
+#define CHARSET_UNKNOWN		0x0FFF
+
 typedef unsigned long CODE_POINT;
+
+int utf_init(const char *);
 
 bool at_norm_char(const char *);
 
