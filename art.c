@@ -1,4 +1,5 @@
 /* art.c
+ * vi: set sw=4 ts=8 ai sm noet :
  */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
@@ -408,7 +409,7 @@ do_article()
 #ifdef CHARSUBST
 			    register int i;
 #ifdef USE_UTF_HACK
-			    i = put_char_adv(&bufptr);
+			    i = put_char_adv(&bufptr, outputok);
 			    bufptr--;
 #else /* !USE_UTF_HACK */
 			    i = putsubstchar(*bufptr, tc_COLS - outpos, outputok);
@@ -420,10 +421,8 @@ do_article()
 			    outpos += i;
 #else
 #ifdef USE_UTF_HACK
-			    if (outputok) {
-				outpos += put_char_adv(&bufptr);
-				bufptr--;
-			    }
+			    outpos += put_char_adv(&bufptr, outputok);
+			    bufptr--;
 #else /* !USE_UTF_HACK */
 			    if (outputok)
 				putchar(*bufptr);

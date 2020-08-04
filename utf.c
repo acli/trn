@@ -53,7 +53,7 @@ int
 visual_width_at(s)
 const char *s;
 {
-    unsigned long c = code_point_at(s);
+    CODE_POINT c = code_point_at(s);
     int it = 1;
     if (c == INVALID_CODE_POINT) {
 	it = 0;
@@ -91,11 +91,11 @@ const char *s;
     return it;
 }
 
-unsigned long
+CODE_POINT
 code_point_at(s)
 const char *s;
 {
-    int it;
+    CODE_POINT it;
     if (s != NULL) {
 	size_t n = strlen(s);
 	if (n > 0 && (*s & 0x80) == 0) {
@@ -122,7 +122,7 @@ const char *s;
 int
 insert_unicode_at(s, c)
 char *s;
-unsigned long c;
+CODE_POINT c;
 {
     int it;
     /* FIXME - should we check if s has enough space? */
@@ -185,22 +185,24 @@ const char *s;
 }
 
 int
-put_char_adv(sp)
-char **sp;
+put_char_adv(strptr, outputok)
+char **strptr;
+bool_int outputok;
 {
     int it;
-    if (sp == NULL) {
+    if (strptr == NULL) {
 	it = 0;
     } else {
-	char *s = *sp;
+	char *s = *strptr;
 	int w = byte_length_at(s);
 	int i;
 	it = visual_width_at(s);
-	for (i = 0; i < w; i += 1) {
-	    putchar(*s);
-	    s++;
-	}
-	*sp = s;
+	if (outputok)
+	    for (i = 0; i < w; i += 1) {
+		putchar(*s);
+		s++;
+	    }
+	*strptr = s;
     }
     return it;
 }

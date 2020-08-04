@@ -75,14 +75,15 @@ static char *test_at_norm_char__cjk_basic () {
 /* visual advance width */
 
 static char *test_put_char_adv__null () {
-    mu_assert("error, put_char_adv(NULL) != 0", put_char_adv(NULL) == 0);
+    mu_assert("error, put_char_adv(NULL, FALSE) != 0", put_char_adv(NULL, FALSE) == 0);
+    mu_assert("error, put_char_adv(NULL, TRUE) != 0",  put_char_adv(NULL, TRUE) == 0);
     return 0;
 }
 
 static char *test_put_char_adv__ascii () {
     char *sp0 = "a";
     char *sp = sp0;
-    int retval = put_char_adv(&sp);
+    int retval = put_char_adv(&sp, TRUE);
     mu_assert("error, put_char_adv(&\"a\") -> retval != 1", retval == 1);
     mu_assert("error, put_char_adv(&\"a\") -> sp - sp0 != 1", sp - sp0 == 1);
     return 0;
@@ -91,7 +92,7 @@ static char *test_put_char_adv__ascii () {
 static char *test_put_char_adv__iso8859_1 () {
     char *sp0 = "á";
     char *sp = sp0;
-    int retval = put_char_adv(&sp);
+    int retval = put_char_adv(&sp, TRUE);
     mu_assert("error, put_char_adv(&\"á\") -> retval != 1", retval == 1);
     mu_assert("error, put_char_adv(&\"á\") -> sp - sp0 != 2", sp - sp0 == 2);
     return 0;
@@ -100,7 +101,7 @@ static char *test_put_char_adv__iso8859_1 () {
 static char *test_put_char_adv__cjk_basic () {
     char *sp0 = "玄";
     char *sp = sp0;
-    int retval = put_char_adv(&sp);
+    int retval = put_char_adv(&sp, TRUE);
     mu_assert("error, put_char_adv(&\"á\") -> retval != 2", retval == 2);
     mu_assert("error, put_char_adv(&\"á\") -> sp - sp0 != 3", sp - sp0 == 3);
     return 0;

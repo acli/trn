@@ -8,16 +8,18 @@
 
 #define USE_UTF_HACK
 
+typedef unsigned long CODE_POINT;
+
 bool at_norm_char(const char *);
 
 int byte_length_at(const char *);
 int visual_width_at(const char *);
 int visual_length_of(const char *);
-int insert_unicode_at(char *, unsigned long);
+int insert_unicode_at(char *, CODE_POINT);
 
-#define INVALID_CODE_POINT ((unsigned long)(~0))
-unsigned long code_point_at(const char *);
+#define INVALID_CODE_POINT ((CODE_POINT) ~0LU)
+CODE_POINT code_point_at(const char *);
 
-int put_char_adv(char **);
+int put_char_adv(char **, bool_int);
 
 #endif

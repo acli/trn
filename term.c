@@ -1605,26 +1605,25 @@ int hilite;
 #endif
 	    underline();
 	}
-	for (i = 0; i < tc_COLS; i++) {
-	    if (!*s)
-		break;
+	for (i = 0; *s && i < tc_COLS; ) {
 	    if (AT_NORM_CHAR(s)) {
-		i += put_char_adv(&s) - 1;
-		s--;
+		i += put_char_adv(&s, TRUE);
 	    }
 	    else if (*s == '\t') {
 		putchar(*s);
-		i = ((i+8) & ~7) - 1; 
+		s++;
+		i = ((i+8) & ~7); 
 	    }
 	    else if (*s == '\n') {
+		s++;
 		i = 32000;
 	    }
 	    else {
-		i++;
 		putchar('^');
 		putchar(*s + 64);
+		s++;
+		i += 2;
 	    }
-	    s++;
 	}
 	if (i) {
 	    if (hilite == STANDOUT)
