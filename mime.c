@@ -316,13 +316,14 @@ mime_SetArticle()
     multimedia_mime = FALSE;
     is_mime = (htype[MIMEVER_LINE].flags & HT_MAGIC)
 	    && htype[MIMEVER_LINE].minpos >= 0;
+
+    s = fetchlines(art,CONTTYPE_LINE);
+    mime_ParseType(mime_section,s);
+    free(s);
+
     if (is_mime) {
 	s = fetchlines(art,CONTXFER_LINE);
 	mime_ParseEncoding(mime_section,s);
-	free(s);
-
-	s = fetchlines(art,CONTTYPE_LINE);
-	mime_ParseType(mime_section,s);
 	free(s);
 
 	s = fetchlines(art,CONTDISP_LINE);
@@ -366,11 +367,7 @@ char* s;
 	s += 4;
 	if (*s++ != '/')
 	    return;
-#if 0
-	t = mime_FindParam(mp->type_params,"charset");
-	if (t && strncaseNE(t, "us-ascii", 8))
-	    mp->type = ISOTEXT_MIME;
-#endif
+	utf_init(mime_FindParam(mp->type_params,"charset"));
 	if (strncaseEQ(s, "html", 4))
 	    mp->type = HTMLTEXT_MIME;
 	else if (strncaseEQ(s, "x-vcard", 7))

@@ -10,8 +10,9 @@
 
 #define CHARSET_ASCII		0x0000
 #define CHARSET_UTF8		0x8000
-#define CHARSET_ISO8859_1	0x4000
-#define CHARSET_ISO8859_15	0x4001
+#define CHARSET_ISO8859_1	0x4010
+#define CHARSET_ISO8859_15	0x4011
+#define CHARSET_WINDOWS_1252	0x4020
 #define CHARSET_UNKNOWN		0x0FFF
 
 typedef unsigned long CODE_POINT;
@@ -25,7 +26,7 @@ int visual_width_at(const char *);
 int visual_length_of(const char *);
 int insert_unicode_at(char *, CODE_POINT);
 
-#define INVALID_CODE_POINT ((CODE_POINT) ~0LU)
+#define INVALID_CODE_POINT ((CODE_POINT) ~0L)
 CODE_POINT code_point_at(const char *);
 
 int put_char_adv(char **, bool_int);

@@ -14,7 +14,7 @@
 
 /* OK - valid second and subsequent bytes in UTF-8 */
 #define OK(s) ((*(s) & 0xC0) == 0x80)
-#define U(c) ((Uchar)(c))
+#define U(c) (((Uchar)(c)) & 0xFF)
 
 /* LEAD - decode leading byte in UTF-8 at (char *)s, bitmask mask, shift width bits
  * NEXT - decode second and subsequent bytes with byte value (char)s_i, shift width bits
@@ -22,9 +22,12 @@
 #define LEAD(s, mask, bits) ((*s & mask) << bits)
 #define NEXT(s_i, bits) (((s_i) & 0x3F) << bits)
 
-#define IS_UTF8(cs)		(cs & 0x8000)
-#define IS_SINGLE_BYTE(cs)	(cs & 0x4000)
-#define IS_DOUBLE_BYTE(cs)	(cs & 0x2000)
+#define IS_UTF8(cs)		((cs) & 0x8000)
+#define IS_SINGLE_BYTE(cs)	((cs) & 0x4000)
+#define IS_DOUBLE_BYTE(cs)	((cs) & 0x2000)
+
+#define IS_ISO_8859_X(cs)	(((cs) & 0x4010) == 0x4010)
+#define IS_WINDOWS_125X(cs)	(((cs) & 0x4020) == 0x4020)
 
 struct charset_desc {
     char *name;
@@ -32,9 +35,14 @@ struct charset_desc {
 };
 
 struct charset_desc charset_descs[] = {
+    { "ascii", CHARSET_ASCII },
     { "us-ascii", CHARSET_ASCII },
     { "utf-8", CHARSET_UTF8 },
     { "iso8859-1", CHARSET_ISO8859_1 },
+    { "iso8859-15", CHARSET_ISO8859_15 },
+    { "iso-8859-1", CHARSET_ISO8859_1 },
+    { "iso-8859-15", CHARSET_ISO8859_15 },
+    { "windows-1252", CHARSET_WINDOWS_1252 },
     { NULL, CHARSET_UNKNOWN }
 };
 
@@ -57,7 +65,7 @@ const char *s;
 		    it = charset_descs[i].id;
 	if (s[j] == 0 || name[j] == 0) break;
 	    }
-	if (it == 0) break;
+	if (it != CHARSET_UNKNOWN) break;
 	}
 	if (it != CHARSET_UNKNOWN)
 	    charset = it;
@@ -172,9 +180,69 @@ const char *s;
 	    it = *s & 0x7F;
 	} else if (charset == CHARSET_ISO8859_1) {
 	    it = *s;
+	} else if (charset == CHARSET_ISO8859_15) {
+	    it = *s;
+	    if (it == '\244')
+		it = 0x20AC;
+	} else if (charset == CHARSET_WINDOWS_1252) {
+	    it = *s;
+	    if (it > 0x7F && it < 0xA0) {
+		/*FIXME*/
+	    }
 	}
     } else {
 	it = INVALID_CODE_POINT;
+    }
+    return it;
+}
+
+int
+insert_utf8_at(s, c)
+char *s;
+CODE_POINT c;
+{
+    int it;
+    /* FIXME - should we check if s has enough space? */
+    if (s == NULL)
+	it = 0;
+    else if (c <= 0x0000007F) {
+	s[0] = (char)c;
+	it = 1;
+    }
+    else if (c <= 0x000007FF) {
+	s[0] = ((char)(c >>  6) & 0x1F) | 0xC0;
+	s[1] = ((char) c        & 0x3F) | 0x80;
+	it = 2;
+    }
+    else if (c <= 0x0000FFFF) {
+	s[0] = ((char)(c >> 12) & 0x1F) | 0xE0;
+	s[1] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[2] = ((char) c        & 0x3F) | 0x80;
+	it = 3;
+    }
+    else if (c <= 0x001FFFFF) {
+	s[0] = ((char)(c >> 18) & 0x1F) | 0xF0;
+	s[1] = ((char)(c >> 12) & 0x3F) | 0x80;
+	s[2] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[3] = ((char) c        & 0x3F) | 0x80;
+	it = 4;
+    }
+    else if (c <= 0x03FFFFFF) {
+	s[0] = ((char)(c >> 24) & 0x1F) | 0xF8;
+	s[1] = ((char)(c >> 18) & 0x3F) | 0x80;
+	s[2] = ((char)(c >> 12) & 0x3F) | 0x80;
+	s[3] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[4] = ((char) c        & 0x3F) | 0x80;
+	it = 5;
+    }
+    else if (c <= 0x7FFFFFFF) {
+	s[0] = ((char)(c >> 30) & 0x1F) | 0xFC;
+	s[1] = ((char)(c >> 24) & 0x3F) | 0x80;
+	s[2] = ((char)(c >> 18) & 0x3F) | 0x80;
+	s[3] = ((char)(c >> 12) & 0x3F) | 0x80;
+	s[3] = ((char)(c >>  6) & 0x3F) | 0x80;
+	s[4] = ((char) c        & 0x3F) | 0x80;
+	it = 6;
     }
     return it;
 }
@@ -189,46 +257,11 @@ CODE_POINT c;
     if (s == NULL)
 	it = 0;
     else if (IS_UTF8(charset)) {
-	if (c <= 0x0000007F) {
-	    s[0] = (char)c;
-	    it = 1;
-	}
-	else if (c <= 0x000007FF) {
-	    s[0] = ((char)(c >>  6) & 0x1F) | 0xC0;
-	    s[1] = ((char) c        & 0x3F) | 0x80;
-	    it = 2;
-	}
-	else if (c <= 0x0000FFFF) {
-	    s[0] = ((char)(c >> 12) & 0x1F) | 0xE0;
-	    s[1] = ((char)(c >>  6) & 0x3F) | 0x80;
-	    s[2] = ((char) c        & 0x3F) | 0x80;
-	    it = 3;
-	}
-	else if (c <= 0x001FFFFF) {
-	    s[0] = ((char)(c >> 18) & 0x1F) | 0xF0;
-	    s[1] = ((char)(c >> 12) & 0x3F) | 0x80;
-	    s[2] = ((char)(c >>  6) & 0x3F) | 0x80;
-	    s[3] = ((char) c        & 0x3F) | 0x80;
-	    it = 4;
-	}
-	else if (c <= 0x03FFFFFF) {
-	    s[0] = ((char)(c >> 24) & 0x1F) | 0xF8;
-	    s[1] = ((char)(c >> 18) & 0x3F) | 0x80;
-	    s[2] = ((char)(c >> 12) & 0x3F) | 0x80;
-	    s[3] = ((char)(c >>  6) & 0x3F) | 0x80;
-	    s[4] = ((char) c        & 0x3F) | 0x80;
-	    it = 5;
-	}
-	else if (c <= 0x7FFFFFFF) {
-	    s[0] = ((char)(c >> 30) & 0x1F) | 0xFC;
-	    s[1] = ((char)(c >> 24) & 0x3F) | 0x80;
-	    s[2] = ((char)(c >> 18) & 0x3F) | 0x80;
-	    s[3] = ((char)(c >> 12) & 0x3F) | 0x80;
-	    s[3] = ((char)(c >>  6) & 0x3F) | 0x80;
-	    s[4] = ((char) c        & 0x3F) | 0x80;
-	    it = 6;
-	}
-    } else if ((charset == CHARSET_ASCII && c <= 0x7F) || (charset == CHARSET_ISO8859_1 && c <= 0xFF)) {
+	it = insert_utf8_at(s, c);
+    } else if (c <= 0x7F
+	    || (charset == CHARSET_ISO8859_1 && c <= 0xFF)
+	    || (charset == CHARSET_ISO8859_15 && c <= 0xFF && c != 0xA4)
+	    || (charset == CHARSET_WINDOWS_1252 && (c < 0x7F || (c >= 0xA0 && c <= 0xFF)))) {
 	s[0] = (char)c;
 	it = 1;
     }
@@ -241,10 +274,16 @@ const char *s;
 {
     int it = s != NULL;
     if (it) {
-	switch (byte_length_at(s)) {
-	case 1:
-	    it = (U(*s) >= ' ' && U(*s) < '\177'); /* correct for ASCII */
+	if (charset == CHARSET_UTF8) {
+	    CODE_POINT c = code_point_at(s);
+	    it = c >= 0x20 && !(c >= 0x7F && c < 0xA0) && c != 0x2028 && c != 0x2029;
 	}
+	else if (charset == CHARSET_ASCII)
+	    it = (U(*s) >= ' ' && U(*s) < 0x7F);
+	else if (IS_ISO_8859_X(charset))
+	    it = ((U(*s) >= ' ' && U(*s) < 0x7F) || (U(*s) >= 0xA0 && U(*s) <= 0xFF));
+	else if (IS_WINDOWS_125X(charset))
+	    it = (U(*s) >= ' ' && U(*s) <= 0xFF);
     }
     return it;
 }
@@ -259,15 +298,26 @@ bool_int outputok;
 	it = 0;
     } else {
 	char *s = *strptr;
-	int w = byte_length_at(s);
-	int i;
-	it = visual_width_at(s);
-	if (outputok)
-	    for (i = 0; i < w; i += 1) {
-		putchar(*s);
-		s++;
-	    }
-	*strptr = s;
+	if (charset == CHARSET_UTF8 || (*s >= ' ' && *s < 0x7F)) {
+	    int w = byte_length_at(s);
+	    int i;
+	    it = visual_width_at(s);
+	    if (outputok)
+		for (i = 0; i < w; i += 1) {
+		    putchar(*s);
+		    s++;
+		}
+	    *strptr = s;
+	} else if (IS_ISO_8859_X(charset) || IS_WINDOWS_125X(charset)) { /* FIXME */
+	    char buf[7];
+	    int w = insert_utf8_at(buf, U(*s));
+	    int i;
+	    for (i = 0; i < w; i += 1)
+		putchar(buf[i]);
+	    it = 1;
+	    s++;
+	    *strptr = s;
+	}
     }
     return it;
 }
