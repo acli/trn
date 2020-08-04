@@ -13,6 +13,15 @@
 
 int tests_run = 0;
 
+static char *test_utf_init () {
+    mu_assert("error, utf_init(NULL) != CHARSET_UNKNOWN", utf_init(NULL) == CHARSET_UNKNOWN);
+    mu_assert("error, utf_init(\"us-ascii\") != CHARSET_ASCII", utf_init("us-ascii") == CHARSET_ASCII);
+    mu_assert("error, utf_init(\"utf-8\") != CHARSET_UTF8", utf_init("utf-8") == CHARSET_UTF8);
+    mu_assert("error, utf_init(\"US-ASCII\") != CHARSET_ASCII", utf_init("US-ASCII") == CHARSET_ASCII);
+    mu_assert("error, utf_init(\"UTF-8\") != CHARSET_UTF8", utf_init("UTF-8") == CHARSET_UTF8);
+    return 0;
+}
+
 /* byte length */
 
 static char *test_byte_length_at__null () {
@@ -200,6 +209,8 @@ static char *test_insert_unicode_at__kissing_face_with_closed_eyes () {
 }
 
 static char *all_tests() {
+    mu_run_test(test_utf_init);
+
     /* Number of bytes taken by the character at the beginning of the string */
     mu_run_test(test_byte_length_at__null);
     mu_run_test(test_byte_length_at__ascii);

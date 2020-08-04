@@ -18,6 +18,9 @@ test: test_cache test_utf
 test_cache: test_cache.o $(everything)
 test_utf: test_utf.o ../utf.o
 
+../%.o: ../%.c
+	make -C..
+
 # Part 2 of stupid magic
 
 stub.o: ../trn.c
