@@ -22,6 +22,36 @@ static char *test_utf_init__in () {
     return 0;
 }
 
+static char *test_input_charset_name () {
+    const char* charsets[] = { "us-ascii", "iso8859-1", "utf-8", NULL };
+    int i;
+    for (i = 0; charsets[i] != NULL; i += 1) {
+	const char* before = charsets[i];
+	const char* after;
+	utf_init(before, "utf-8");
+	after = input_charset_name();
+	printf("Set: \"%s\"\n", before);
+	printf("Got: \"%s\"\n", after);
+	mu_assert("error, after utf_init(before, \"utf-8\"), input_charset_name() is not before", strcmp(before, after) == 0);
+    }
+    return 0;
+}
+
+static char *test_output_charset_name () {
+    const char* charsets[] = { "us-ascii", "iso8859-1", "utf-8", NULL };
+    int i;
+    for (i = 0; charsets[i] != NULL; i += 1) {
+	const char* before = charsets[i];
+	const char* after;
+	utf_init("utf-8", before);
+	after = output_charset_name();
+	printf("Set: \"%s\"\n", before);
+	printf("Got: \"%s\"\n", after);
+	mu_assert("error, after utf_init(before, \"utf-8\"), output_charset_name() is not before", strcmp(before, after) == 0);
+    }
+    return 0;
+}
+
 /* byte length */
 
 static char *test_byte_length_at__null () {
@@ -247,6 +277,8 @@ static char *test_create_utf8_copy__iso8859_1 () {
 
 static char *all_tests() {
     mu_run_test(test_utf_init__in);
+    mu_run_test(test_input_charset_name);
+    mu_run_test(test_output_charset_name);
 
     /* Number of bytes taken by the character at the beginning of the string */
     mu_run_test(test_byte_length_at__null);

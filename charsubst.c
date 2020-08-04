@@ -18,6 +18,7 @@
 #include "search.h"
 #include "artstate.h"
 #include "util2.h"
+#include "utf.h"
 #include "INTERN.h"
 #include "charsubst.h"
 #include "charsubst.ih"
@@ -114,6 +115,16 @@ bool_int outputok;
 char*
 current_charsubst()
 {
+#ifdef USE_UTF_HACK
+    static char show[50];
+    const char* ics = input_charset_name();
+    const char* ocs = output_charset_name();
+    int maxlen = (sizeof show - 5)/2;
+    if (strcmp(ics, ocs) == 0)
+	sprintf(show, "[%.*s]", maxlen, ics, maxlen, ocs);
+    else
+	sprintf(show, "[%.*s->%.*s]", maxlen, ics, maxlen, ocs);
+#else /*!USE_UTF_HACK */
     static char* show;
 
     switch (*charsubst) {
@@ -151,6 +162,7 @@ current_charsubst()
 	show = nullstr;
 	break;
     }
+#endif
     return show;
 }
 

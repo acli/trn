@@ -18,6 +18,8 @@
 typedef unsigned long CODE_POINT;
 
 int utf_init(const char *, const char *);
+const char *input_charset_name();
+const char *output_charset_name();
 
 bool at_norm_char(const char *);
 

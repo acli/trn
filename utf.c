@@ -35,9 +35,11 @@ struct charset_desc {
 };
 
 struct charset_desc charset_descs[] = {
-    { "ascii", CHARSET_ASCII },
+    /* Canonical names must be listed first */
     { "us-ascii", CHARSET_ASCII },
+    { "ascii", CHARSET_ASCII },
     { "utf-8", CHARSET_UTF8 },
+    { "utf8", CHARSET_UTF8 },
     { "iso8859-1", CHARSET_ISO8859_1 },
     { "iso8859-15", CHARSET_ISO8859_15 },
     { "iso-8859-1", CHARSET_ISO8859_1 },
@@ -72,6 +74,22 @@ const char *s;
     return it;
 }
 
+const char *
+find_charset_name(id)
+int id;
+{
+    const char *it = NULL;
+    int i;
+    for (i = 0; ; i += 1) {
+	char *name = charset_descs[i].name;
+    if (name == NULL) break;
+	if (id == charset_descs[i].id)
+	    it = name;
+    if (it != NULL) break;
+    }
+    return it;
+}
+
 int
 utf_init(f, t)
 const char *f;
@@ -84,6 +102,18 @@ const char *t;
     if (o != CHARSET_UNKNOWN)
 	out_charset = o;
     return i;
+}
+
+const char *
+input_charset_name()
+{
+    return find_charset_name(in_charset);
+}
+
+const char *
+output_charset_name()
+{
+    return find_charset_name(out_charset);
 }
 
 int
