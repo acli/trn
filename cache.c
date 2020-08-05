@@ -529,12 +529,14 @@ int size;
 	    char ch = (q && q[2] == '?')? q[1] : 0;
 	    char* e;
 
-	    if (q) {
-		*q = '\0';
-		utf_init(f+2, "utf-8"); /*FIXME*/
-		*q = '?';
-	    }
 	    if (ch == 'q' || ch == 'Q' || ch == 'b' || ch == 'B') {
+		const char* old_ics = input_charset_name();
+		const char* old_ocs = output_charset_name();
+		if (q) {
+		    *q = '\0';
+		    utf_init(f+2, "utf-8"); /*FIXME*/
+		    *q = '?';
+		}
 		e = q+2;
 		do {
 		    e = index(e+1, '?');
@@ -568,6 +570,7 @@ int size;
 		}
 		else
 		    *t++ = *f++;
+		utf_init(old_ics, old_ocs);
 	    }
 	    else
 		*t++ = *f++;
