@@ -23,31 +23,49 @@ static char *test_utf_init__in () {
 }
 
 static char *test_input_charset_name () {
-    const char* charsets[] = { "ascii", "iso8859-1", "utf8", NULL };
+    const char* charsets[] = {
+	"us-ascii", TAG_ASCII,
+	"ascii", TAG_ASCII,
+	"iso8859-1", TAG_ISO8859_1,
+	"WiNdOwS-1252", TAG_WINDOWS_1252,
+	"utf8", TAG_UTF8,
+	"UTF-8", TAG_UTF8,
+	NULL, NULL };
     int i;
-    for (i = 0; charsets[i] != NULL; i += 1) {
+    for (i = 0; charsets[i] != NULL; i += 2) {
 	const char* before = charsets[i];
 	const char* after;
+	const char* expected = charsets[i+1];
 	utf_init(before, "utf8");
 	after = input_charset_name();
 	printf("Set: \"%s\"\n", before);
 	printf("Got: \"%s\"\n", after);
-	mu_assert("error, after utf_init(before, \"utf8\"), input_charset_name() is not before", strcmp(before, after) == 0);
+	printf("Expected: \"%s\"\n", expected);
+	mu_assert("error, after utf_init(before, \"utf8\"), input_charset_name() is not before", strcmp(expected, after) == 0);
     }
     return 0;
 }
 
 static char *test_output_charset_name () {
-    const char* charsets[] = { "ascii", "iso8859-1", "utf8", NULL };
+    const char* charsets[] = {
+	"us-ascii", TAG_ASCII,
+	"ascii", TAG_ASCII,
+	"iso8859-1", TAG_ISO8859_1,
+	"WiNdOwS-1252", TAG_WINDOWS_1252,
+	"utf8", TAG_UTF8,
+	"UTF-8", TAG_UTF8,
+	NULL, NULL };
     int i;
-    for (i = 0; charsets[i] != NULL; i += 1) {
+    for (i = 0; charsets[i] != NULL; i += 2) {
 	const char* before = charsets[i];
 	const char* after;
+	const char* expected = charsets[i+1];
 	utf_init("utf8", before);
 	after = output_charset_name();
 	printf("Set: \"%s\"\n", before);
 	printf("Got: \"%s\"\n", after);
-	mu_assert("error, after utf_init(before, \"utf8\"), output_charset_name() is not before", strcmp(before, after) == 0);
+	printf("Expected: \"%s\"\n", expected);
+	mu_assert("error, after utf_init(before, \"utf8\"), input_charset_name() is not before", strcmp(expected, after) == 0);
     }
     return 0;
 }

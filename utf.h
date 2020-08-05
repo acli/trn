@@ -15,6 +15,12 @@
 #define CHARSET_WINDOWS_1252	0x4020
 #define CHARSET_UNKNOWN		0x0FFF
 
+#define TAG_ASCII		"US"
+#define TAG_UTF8		"UTF"
+#define TAG_ISO8859_1		"Latin1"
+#define TAG_ISO8859_15		"Latin9"
+#define TAG_WINDOWS_1252	"CP1252"
+
 typedef unsigned long CODE_POINT;
 
 int utf_init(const char *, const char *);

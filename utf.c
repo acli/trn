@@ -71,17 +71,27 @@ typedef struct charset_desc {
 } charset_desc_t;
 
 charset_desc_t charset_descs[] = {
-    /* First name listed treated as canonical - we prefer shorter names */
-    { "ascii", CHARSET_ASCII, NULL },
+    /* Tags defined in utf.h go first; these are short labels for charsubst.c */
+    { TAG_ASCII, CHARSET_ASCII, NULL },
     { "us-ascii", CHARSET_ASCII, NULL },
-    { "utf8", CHARSET_UTF8, NULL },
+    { "ascii", CHARSET_ASCII, NULL },
+
+    { TAG_UTF8, CHARSET_UTF8, NULL },
     { "utf-8", CHARSET_UTF8, NULL },
+    { "utf8", CHARSET_UTF8, NULL },
+
+    { TAG_ISO8859_1, CHARSET_ISO8859_1, iso8859_1_himap },
     { "iso8859-1", CHARSET_ISO8859_1, iso8859_1_himap },
-    { "iso8859-15", CHARSET_ISO8859_15, iso8859_15_himap },
     { "iso-8859-1", CHARSET_ISO8859_1, iso8859_1_himap },
+
+    { TAG_ISO8859_15, CHARSET_ISO8859_15, iso8859_15_himap },
+    { "iso8859-15", CHARSET_ISO8859_15, iso8859_15_himap },
     { "iso-8859-15", CHARSET_ISO8859_15, iso8859_15_himap },
+
+    { TAG_WINDOWS_1252, CHARSET_WINDOWS_1252, cp1252_himap },
     { "cp1252", CHARSET_WINDOWS_1252, cp1252_himap },
     { "windows-1252", CHARSET_WINDOWS_1252, cp1252_himap },
+
     { NULL, CHARSET_UNKNOWN }
 };
 
