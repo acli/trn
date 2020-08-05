@@ -532,18 +532,20 @@ int size;
 	    if (ch == 'q' || ch == 'Q' || ch == 'b' || ch == 'B') {
 		const char* old_ics = input_charset_name();
 		const char* old_ocs = output_charset_name();
-		if (q) {
-		    *q = '\0';
-		    utf_init(f+2, "utf-8"); /*FIXME*/
-		    *q = '?';
-		}
+#ifdef USE_UTF_HACK
+		*q = '\0';
+		utf_init(f+2, "utf-8"); /*FIXME*/
+		*q = '?';
+#endif
 		e = q+2;
 		do {
 		    e = index(e+1, '?');
 		} while (e && e[1] != '=');
 		if (e) {
 		    int len = e - f + 2;
+#ifdef USE_UTF_HACK
 		    char *d;
+#endif
 		    i -= len-1;
 		    size -= len;
 		    q += 3;
@@ -553,6 +555,7 @@ int size;
 			len = qp_decodestring(t, q, 1);
 		    else
 			len = b64_decodestring(t, q);
+#ifdef USE_UTF_HACK
 		    d = create_utf8_copy(t);
 		    if (d) {
 			for (len = 0; d[len]; ) {
@@ -561,6 +564,7 @@ int size;
 			}
 			free(d);
 		    }
+#endif
 		    *e = '?';
 		    t += len;
 		    size += len;
@@ -570,7 +574,9 @@ int size;
 		}
 		else
 		    *t++ = *f++;
+#ifdef USE_UTF_HACK
 		utf_init(old_ics, old_ocs);
+#endif
 	    }
 	    else
 		*t++ = *f++;
