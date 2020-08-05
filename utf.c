@@ -35,15 +35,16 @@ struct charset_desc {
 };
 
 struct charset_desc charset_descs[] = {
-    /* Canonical names must be listed first */
-    { "us-ascii", CHARSET_ASCII },
+    /* First name listed treated as canonical - we prefer shorter names */
     { "ascii", CHARSET_ASCII },
-    { "utf-8", CHARSET_UTF8 },
+    { "us-ascii", CHARSET_ASCII },
     { "utf8", CHARSET_UTF8 },
+    { "utf-8", CHARSET_UTF8 },
     { "iso8859-1", CHARSET_ISO8859_1 },
     { "iso8859-15", CHARSET_ISO8859_15 },
     { "iso-8859-1", CHARSET_ISO8859_1 },
     { "iso-8859-15", CHARSET_ISO8859_15 },
+    { "cp1252", CHARSET_WINDOWS_1252 },
     { "windows-1252", CHARSET_WINDOWS_1252 },
     { NULL, CHARSET_UNKNOWN }
 };

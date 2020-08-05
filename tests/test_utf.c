@@ -14,40 +14,40 @@
 int tests_run = 0;
 
 static char *test_utf_init__in () {
-    mu_assert("error, utf_init(NULL, ...) != CHARSET_UNKNOWN", utf_init(NULL, "utf-8") == CHARSET_UNKNOWN);
-    mu_assert("error, utf_init(\"us-ascii\", ...) != CHARSET_ASCII", utf_init("us-ascii", "utf-8") == CHARSET_ASCII);
-    mu_assert("error, utf_init(\"utf-8\", ...) != CHARSET_UTF8", utf_init("utf-8", "utf-8") == CHARSET_UTF8);
-    mu_assert("error, utf_init(\"US-ASCII\", ...) != CHARSET_ASCII", utf_init("US-ASCII", "utf-8") == CHARSET_ASCII);
-    mu_assert("error, utf_init(\"UTF-8\", ...) != CHARSET_UTF8", utf_init("UTF-8", "utf-8") == CHARSET_UTF8);
+    mu_assert("error, utf_init(NULL, ...) != CHARSET_UNKNOWN", utf_init(NULL, "utf8") == CHARSET_UNKNOWN);
+    mu_assert("error, utf_init(\"ascii\", ...) != CHARSET_ASCII", utf_init("ascii", "utf8") == CHARSET_ASCII);
+    mu_assert("error, utf_init(\"utf8\", ...) != CHARSET_UTF8", utf_init("utf8", "utf8") == CHARSET_UTF8);
+    mu_assert("error, utf_init(\"US-ASCII\", ...) != CHARSET_ASCII", utf_init("US-ASCII", "utf8") == CHARSET_ASCII);
+    mu_assert("error, utf_init(\"UTF-8\", ...) != CHARSET_UTF8", utf_init("UTF-8", "utf8") == CHARSET_UTF8);
     return 0;
 }
 
 static char *test_input_charset_name () {
-    const char* charsets[] = { "us-ascii", "iso8859-1", "utf-8", NULL };
+    const char* charsets[] = { "ascii", "iso8859-1", "utf8", NULL };
     int i;
     for (i = 0; charsets[i] != NULL; i += 1) {
 	const char* before = charsets[i];
 	const char* after;
-	utf_init(before, "utf-8");
+	utf_init(before, "utf8");
 	after = input_charset_name();
 	printf("Set: \"%s\"\n", before);
 	printf("Got: \"%s\"\n", after);
-	mu_assert("error, after utf_init(before, \"utf-8\"), input_charset_name() is not before", strcmp(before, after) == 0);
+	mu_assert("error, after utf_init(before, \"utf8\"), input_charset_name() is not before", strcmp(before, after) == 0);
     }
     return 0;
 }
 
 static char *test_output_charset_name () {
-    const char* charsets[] = { "us-ascii", "iso8859-1", "utf-8", NULL };
+    const char* charsets[] = { "ascii", "iso8859-1", "utf8", NULL };
     int i;
     for (i = 0; charsets[i] != NULL; i += 1) {
 	const char* before = charsets[i];
 	const char* after;
-	utf_init("utf-8", before);
+	utf_init("utf8", before);
 	after = output_charset_name();
 	printf("Set: \"%s\"\n", before);
 	printf("Got: \"%s\"\n", after);
-	mu_assert("error, after utf_init(before, \"utf-8\"), output_charset_name() is not before", strcmp(before, after) == 0);
+	mu_assert("error, after utf_init(before, \"utf8\"), output_charset_name() is not before", strcmp(before, after) == 0);
     }
     return 0;
 }
@@ -259,9 +259,9 @@ static char *test_create_utf8_copy__iso8859_1 () {
     char *before = "Quoi, le biblioth\350que est ferm\351\240!";
     char *after;
     char *expected = "Quoi, le bibliothèque est fermé !";
-    utf_init("iso8859-1", "utf-8");
+    utf_init("iso8859-1", "utf8");
     after = create_utf8_copy(before);
-    utf_init("utf-8", "utf-8");
+    utf_init("utf8", "utf8");
     printf("Test %d:\n", tests_run);
     printf("Before   : \"%s\"\n", before);
     printf("After    : \"%s\"\n", after);
