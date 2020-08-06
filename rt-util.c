@@ -130,18 +130,24 @@ try_again:
 #else
     d = name + 1;
 #endif
-    for ( ; *d; ) {
-	if (*d == ',' || *d == ';' || *d == '(' || *d == '@'
-	 || (*d == '-' && (d[1] == '-' || d[1] == ' '))) {
-	    *d-- = '\0';
+    for (d = name ; ; ) {
+#ifdef USE_UTF_HACK
+	int w = byte_length_at(d);
+	int x = byte_length_at(d + w);
+#else
+	int w = 1;
+	int x = 2;
+#endif
+	char ch = d[w];
+	char next = d[x];
+    if (!ch) break;
+	if (ch == ',' || ch == ';' || ch == '(' || ch == '@'
+	 || (ch == '-' && (next == '-' || next == ' '))) {
+	    *d = '\0';
 	    s = d;
 	    break;
 	}
-#ifdef USE_UTF_HACK
-	d += byte_length_at(d);
-#else
-	d++;
-#endif
+	d += w;
     }
 
     /* Find the last name */
@@ -161,17 +167,7 @@ try_again:
 	while (!isspace(*s)) {
 	    if (s == name) {	/* only one name */
 #ifdef USE_UTF_HACK
-		/* FIXME - need to move into some function */
-		int i;
-		int j;
-		for (i = j = 0; ; ) {
-		    int w = byte_length_at(name + i);
-		    int v = visual_width_at(name + i);
-		if (w == 0 || j + v > max) break;
-		    i += w;
-		    j += v;
-		}
-		name[i] = '\0';
+		terminate_string_at_visual_index(name, max);
 #else
 		name[max] = '\0';
 #endif
@@ -335,8 +331,11 @@ try_again:
 		}
 		if (vis_len > max) {
 		    /* Finally just truncate the last name */
-		    /*FIXME*/
+#ifdef USE_UTF_HACK
+		    terminate_string_at_visual_index(last, max - 2);
+#else
 		    last[max - 2] = '\0';
+#endif
 		}
 	    }
 	} else {
@@ -362,11 +361,11 @@ try_again:
     do {
 	int i;
 	int j;
-	for (i = j = 0; j < max; ) {
+	for (i = j = 0; last[i] && j < max; ) {
 	    int w = byte_length_at(last + i);
 	    int v = visual_width_at(last + i);
-	if (j + v > max) break;
-	    bcopy(last, d, w);
+	if (w == 0 || j + v > max) break;
+	    bcopy(last+i, d+i, w);
 	    i += w;
 	    j += v;
 	}

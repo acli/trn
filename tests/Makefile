@@ -1,4 +1,4 @@
-CFLAGS=-I.. -g -Werror=incompatible-pointer-types
+CFLAGS=-I.. -O0 -g -Werror=incompatible-pointer-types
 LDLIBS=-ltermcap
 
 # Part 1 of some stupid magic to link in the entire trn code base minus main()
@@ -11,11 +11,13 @@ everything=../filter.o ../sorder.o ../rcln.o ../sdisp.o ../rt-ov.o ../final.o ..
 all:
 	make test 2>&1|less
 
-test: test_cache test_utf
+test: test_cache test_rt-util test_utf
 	./test_cache
+	./test_rt-util
 	./test_utf
 
 test_cache: test_cache.o $(everything)
+test_rt-util: test_rt-util.o $(everything)
 test_utf: test_utf.o ../utf.o
 
 ../%.o: ../%.c

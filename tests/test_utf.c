@@ -295,6 +295,84 @@ static char *test_create_utf8_copy__iso8859_1 () {
     return 0;
 }
 
+/* terminate string at nth visual column instead of at the nth byte */
+
+static char *test_terminate_string_at_visual_index__null () {
+    terminate_string_at_visual_index(NULL, 1);
+    mu_assert("error, terminate_at_visual_index(NULL) should not crash", 1);
+    return 0;
+}
+
+static char *test_terminate_string_at_visual_index__negative_index () {
+    char *before = "abcdefg";
+    char *after = strdup(before);
+    char *expected = "";
+    terminate_string_at_visual_index(after, -12345);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, terminate_at_visual_index(\"abcdefg\", -12345) != \"abcdefg\"", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
+static char *test_terminate_string_at_visual_index__ascii () {
+    char *before = "abcdefg";
+    char *after = strdup(before);;
+    char *expected = "abcde";
+    terminate_string_at_visual_index(after, 5);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, terminate_at_visual_index(\"abcdefg\", 5) != \"abcde\"", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
+static char *test_terminate_string_at_visual_index__iso8859_1 () {
+    char *before = "áíúéóäïüëö";
+    char *after = strdup(before);;
+    char *expected = "áíúéó";
+    terminate_string_at_visual_index(after, 5);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, terminate_at_visual_index(\"áíúéóäïüëö\", 5) != \"áíúéó\"", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
+static char *test_terminate_string_at_visual_index__cjk_basic () {
+    char *before = "寧化飛灰不作浮塵";
+    char *after = strdup(before);;
+    char *expected = "寧化飛灰";
+    terminate_string_at_visual_index(after, 8);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, terminate_at_visual_index(\"寧化飛灰不作浮塵\", 8) != \"寧化飛灰\"", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
+static char *test_terminate_string_at_visual_index__cjk_basic_at_wrong_boundary () {
+    char *before = "寧化飛灰不作浮塵";
+    char *after = strdup(before);;
+    char *expected = "寧化飛灰 ";
+    terminate_string_at_visual_index(after, 9);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, terminate_at_visual_index(\"寧化飛灰不作浮塵\", 9) != \"寧化飛灰 \"", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
 /* main loop */
 
 static char *all_tests() {
@@ -347,6 +425,13 @@ static char *all_tests() {
     mu_run_test(test_create_utf8_copy__null);
     mu_run_test(test_create_utf8_copy__ascii);
     mu_run_test(test_create_utf8_copy__iso8859_1);
+
+    mu_run_test(test_terminate_string_at_visual_index__null);
+    mu_run_test(test_terminate_string_at_visual_index__negative_index);
+    mu_run_test(test_terminate_string_at_visual_index__ascii);
+    mu_run_test(test_terminate_string_at_visual_index__iso8859_1);
+    mu_run_test(test_terminate_string_at_visual_index__cjk_basic);
+    mu_run_test(test_terminate_string_at_visual_index__cjk_basic_at_wrong_boundary);
     return 0;
 }
 

@@ -471,3 +471,24 @@ char *s;
     }
     return it;
 }
+
+void
+terminate_string_at_visual_index(s, i)
+char *s;
+int i;
+{
+    if (s) {
+	int j;
+	for (j = 0; *s; ) {
+	    int w = byte_length_at(s);
+	    int v = visual_width_at(s);
+	if (w == 0 || j + v > i) break;
+	    s += w;
+	    j += v;
+	}
+	if (j + 1 == i && *s)
+	    *s++ = ' ';
+	if (*s)
+	    *s = '\0';
+    }
+}

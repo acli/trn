@@ -42,4 +42,6 @@ int put_char_adv(char **, bool_int);
 
 char *create_utf8_copy(char *);
 
+void terminate_string_at_visual_index(char *, int);
+
 #endif
