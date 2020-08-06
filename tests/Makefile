@@ -1,4 +1,4 @@
-CFLAGS=-I.. -O0 -g -Werror=incompatible-pointer-types
+CFLAGS=-I.. -O0 -g -Werror=incompatible-pointer-types -Wreturn-type -Werror=return-type
 LDLIBS=-ltermcap
 
 # Part 1 of some stupid magic to link in the entire trn code base minus main()
