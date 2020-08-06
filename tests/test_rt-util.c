@@ -16,16 +16,30 @@ int tests_run = 0;
 #define NAME_MAX 29
 
 
-static char *test_compress_name () {
+static char *test_compress_name__SAIC () {
     char *before = "School of the Art Institute of Chicago";
     char *after = strdup(before);
-    char *expected = "School o t A I o C";
+    char *expected = "School o t A I o Chicago";
     compress_name(after, NAME_MAX);
     printf("Test %d:\n", tests_run);
     printf("Before   : \"%s\"\n", before);
     printf("After    : \"%s\"\n", after);
     printf("Expected : \"%s\"\n", expected);
-    mu_assert("error, compress_name(\"School of the Art Institute of Chicago\") != \"School o t A I o C\"", strcmp(after, expected) == 0);
+    mu_assert("error, compress_name(\"School of the Art Institute of Chicago\") != \"School o t A I o Chicago\"", strcmp(after, expected) == 0);
+    free(after);
+    return 0;
+}
+
+static char *test_compress_name__PCS () {
+    char *before = "IEEE Professional Communication Society";
+    char *after = strdup(before);
+    char *expected = "IEEE P C Society";
+    compress_name(after, NAME_MAX);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, compress_name(\"IEEE Professional Communication Society\") != \"IEEE P C Society\"", strcmp(after, expected) == 0);
     free(after);
     return 0;
 }
@@ -34,7 +48,8 @@ static char *test_compress_name () {
 /* main loop */
 
 static char *all_tests() {
-    mu_run_test(test_compress_name);
+    mu_run_test(test_compress_name__SAIC);
+    mu_run_test(test_compress_name__PCS);
     return 0;
 }
 
