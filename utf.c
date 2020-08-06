@@ -186,18 +186,17 @@ const char *s;
     if (!it) {
 	;
     } else if (IS_UTF8(gs.in)) {
-	size_t n = strlen(s);
-	if (n > 0 && (*s & 0x80) == 0) {
+	if ((*s & 0x80) == 0) {
 	    ;
-	} else if (n > 1 && (*s & 0xE0) == 0xC0 && OK(s + 1)) {
+	} else if ((*s & 0xE0) == 0xC0 && OK(s + 1)) {
 	    it = 2;
-	} else if (n > 2 && (*s & 0xF0) == 0xE0 && OK(s + 1) && OK(s + 2)) {
+	} else if ((*s & 0xF0) == 0xE0 && OK(s + 1) && OK(s + 2)) {
 	    it = 3;
-	} else if (n > 3 && (*s & 0xF8) == 0xF0 && OK(s + 1) && OK(s + 2) && OK(s + 3)) {
+	} else if ((*s & 0xF8) == 0xF0 && OK(s + 1) && OK(s + 2) && OK(s + 3)) {
 	    it = 4;
-	} else if (n > 4 && (*s & 0xFC) == 0xF8 && OK(s + 1) && OK(s + 2) && OK(s + 3) && OK(s + 4)) {
+	} else if ((*s & 0xFC) == 0xF8 && OK(s + 1) && OK(s + 2) && OK(s + 3) && OK(s + 4)) {
 	    it = 5;
-	} else if (n > 5 && (*s & 0xFE) == 0xFC && OK(s + 1) && OK(s + 2) && OK(s + 3) && OK(s + 4) && OK(s + 5)) {
+	} else if ((*s & 0xFE) == 0xFC && OK(s + 1) && OK(s + 2) && OK(s + 3) && OK(s + 4) && OK(s + 5)) {
 	    it = 6;
 	} else {
 	    /* FIXME - invalid UTF-8 */
@@ -253,6 +252,28 @@ const char *s;
 	    int v = visual_width_at(s);
 	    it += v;
 	    s += w;
+	}
+    }
+    return it;
+}
+
+int
+visual_length_between(s1, s2)
+const char *s1;
+const char *s2;
+{
+    int it = 0;
+    if (s1 && s2) {
+	if (s1 > s2) {
+	    const char *t = s1;
+	    s1 = s2;
+	    s2 = t;
+	}
+	for (; *s1 && s1 < s2; ) {
+	    int w = byte_length_at(s1);
+	    int v = visual_width_at(s1);
+	    it += v;
+	    s1 += w;
 	}
     }
     return it;

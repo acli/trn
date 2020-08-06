@@ -84,6 +84,7 @@ static char *test_byte_length_at__ascii () {
 
 static char *test_byte_length_at__iso8859_1 () {
     mu_assert("error, byte_length_at(\"á\") != 2", byte_length_at("á") == 2);
+    mu_assert("error, byte_length_at(\"î\") != 2", byte_length_at("î") == 2);
     return 0;
 }
 
@@ -213,6 +214,9 @@ static char *test_visual_length_of__ascii () {
 
 static char *test_visual_length_of__iso_8859_1 () {
     mu_assert("error, visual_length_of(\"liberté\") != 7", visual_length_of("liberté") == 7);
+    mu_assert("error, visual_length_of(\"bébé\") != 4", visual_length_of("bébé") == 4);
+    mu_assert("error, visual_length_of(\"be\314\201be\314\201\") /* combining acute */ != 4", visual_length_of("be\314\201be\314\201") == 4);
+    mu_assert("error, visual_length_of(\"\314\201\") /* combining acute */ != 0", visual_length_of("\314\201") == 0);
     return 0;
 }
 

@@ -32,6 +32,7 @@ bool at_norm_char(const char *);
 int byte_length_at(const char *);
 int visual_width_at(const char *);
 int visual_length_of(const char *);
+int visual_length_between(const char *, const char *);
 int insert_unicode_at(char *, CODE_POINT);
 
 #define INVALID_CODE_POINT ((CODE_POINT) ~0L)

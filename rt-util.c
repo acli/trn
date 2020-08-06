@@ -93,6 +93,13 @@ int max;
     register char* mid;
     register char* d;
     register int len, namelen, midlen;
+#ifdef USE_UTF_HACK
+    int vis_len, vis_namelen, vis_midlen;
+#else
+#define vis_len len
+#define vis_namelen namelen
+#define vis_midlen midlen
+#endif
     int notlast;
 
 try_again:
@@ -103,7 +110,12 @@ try_again:
     s = name + len - 1;
     while (isspace(*s)) s--;
     s[1] = '\0';
-    if (s - name + 1 <= max)
+#ifdef USE_UTF_HACK
+    vis_len = visual_length_between(s, name) + 1;
+#else
+    vis_len = s - name + 1;
+#endif
+    if (vis_len <= max)
 	return name;
 
     /* Look for characters that likely mean the end of the name
@@ -113,13 +125,23 @@ try_again:
     ** "Ridge, Ross" and since "R HTMU" is worse than "Ridge" we do
     ** it anyways.
     */
-    for (d = name + 1; *d; d++) {
+#ifdef USE_UTF_HACK
+    d = name + byte_length_at(name);
+#else
+    d = name + 1;
+#endif
+    for ( ; *d; ) {
 	if (*d == ',' || *d == ';' || *d == '(' || *d == '@'
 	 || (*d == '-' && (d[1] == '-' || d[1] == ' '))) {
 	    *d-- = '\0';
 	    s = d;
 	    break;
 	}
+#ifdef USE_UTF_HACK
+	d += byte_length_at(d);
+#else
+	d++;
+#endif
     }
 
     /* Find the last name */
@@ -128,14 +150,31 @@ try_again:
 	while (isspace(*s)) s--;
 	s[1] = '\0';
 	len = s - name + 1;
-	if (len <= max)
+#ifdef USE_UTF_HACK
+	vis_len = visual_length_between(s, name) + 1;
+#endif
+	if (vis_len <= max)
 	    return name;
 	/* If the last name is an abbreviation it's not the one we want. */
 	if (*s == '.')
 	    notlast = 1;
 	while (!isspace(*s)) {
 	    if (s == name) {	/* only one name */
+#ifdef USE_UTF_HACK
+		/* FIXME - need to move into some function */
+		int i;
+		int j;
+		for (i = j = 0; ; ) {
+		    int w = byte_length_at(name + i);
+		    int v = visual_width_at(name + i);
+		if (w == 0 || j + v > max) break;
+		    i += w;
+		    j += v;
+		}
+		name[i] = '\0';
+#else
 		name[max] = '\0';
+#endif
 		return name;
 	    }
 	    if (isdigit(*s))	/* probably a phone number */
@@ -152,8 +191,17 @@ try_again:
 	s--;
     }
     mid = name;
-    while (!isspace(*mid)) mid++;
+    while (!isspace(*mid)) {
+#ifdef USE_UTF_HACK
+	mid += byte_length_at(mid);
+#else
+	mid++;
+#endif
+    }
     namelen = mid - name + 1;
+#ifdef USE_UTF_HACK
+    vis_namelen = visual_length_between(mid, name) + 1;
+#endif
     if (mid == s+1) {	/* no middle name */
 	mid = 0;
 	midlen = 0;
@@ -161,22 +209,33 @@ try_again:
 	*mid++ = '\0';
 	while (isspace(*mid)) {
 	    len--;
+#ifdef USE_UTF_HACK
+	    mid += byte_length_at(mid);
+#else
 	    mid++;
+#endif
 	}
 	midlen = s - mid + 2;
+#ifdef USE_UTF_HACK
+	vis_midlen = visual_length_between(s, mid) + 2;
+#endif
 	/* If first name is an initial and middle isn't and it all fits
 	** without the first initial, drop it. */
-	if (len > max && mid != s) {
-	    if (len - namelen <= max
+	if (vis_len > max && mid != s) {
+	    if (vis_len - vis_namelen <= max
 	     && ((mid[1] != '.' && (!name[1] || (name[1] == '.' && !name[2])))
 	      || (*mid == '"' && *s == '"'))) {
 		len -= namelen;
 		name = mid;
 		namelen = midlen;
+#ifdef USE_UTF_HACK
+		vis_len = vis_namelen;
+		vis_namelen = vis_midlen;
+#endif
 		mid = 0;
 	    }
 	    else if (*mid == '"' && *s == '"') {
-		if (midlen > max) {
+		if (vis_midlen > max) {
 		    name = mid+1;
 		    *s = '\0';
 		    goto try_again;
@@ -185,53 +244,107 @@ try_again:
 		last = mid;
 		namelen = 0;
 		mid = 0;
+#ifdef USE_UTF_HACK
+		vis_len = vis_midlen;
+		vis_namelen = 0;
+#endif
 	    }
 	}
     }
     s[1] = '\0';
-    if (mid && len > max) {
+    if (mid && vis_len > max) {
 	/* Turn middle names into intials */
 	len -= s - mid + 2;
+#ifdef USE_UTF_HACK
+	vis_len -= visual_length_between(s, mid) + 2;
+#endif
 	d = s = mid;
 	while (*s) {
+#ifdef USE_UTF_HACK
+	    int w;
+	    int v;
+#endif
 	    if (isalpha(*s)) {
-		if (d != mid)
+		if (d != mid) {
+#ifdef USE_UTF_HACK
+		    int w = byte_length_at(s);
+		    memset(d, ' ', w);
+		    d += w;
+#else
 		    *d++ = ' ';
+#endif
+		}
+#ifdef USE_UTF_HACK
+		w = byte_length_at(s);
+		bcopy(s, d, w);
+		d += w;
+		s += w;
+#else
 		*d++ = *s++;
+#endif
 	    }
-	    while (*s && !isspace(*s)) s++;
+	    while (*s && !isspace(*s)) {
+#ifdef USE_UTF_HACK
+		s += byte_length_at(s);
+#else
+		s++;
+#endif
+	    }
 	    while (isspace(*s)) s++;
 	}
 	if (d != mid) {
 	    *d = '\0';
 	    midlen = d - mid + 1;
 	    len += midlen;
+#ifdef USE_UTF_HACK
+	    vis_midlen = visual_length_between(d, mid) + 1;
+	    vis_len += vis_midlen;
+#endif
 	} else
 	    mid = 0;
     }
-    if (len > max) {
+    if (vis_len > max) {
 	/* If the first name fits without the middle initials, drop them */
-	if (mid && len - midlen <= max) {
+	if (mid && vis_len - vis_midlen <= max) {
 	    len -= midlen;
+#ifdef USE_UTF_HACK
+	    vis_len -= vis_midlen;
+#endif
 	    mid = 0;
 	} else if (namelen > 0) {
 	    /* Turn the first name into an initial */
+#ifdef USE_UTF_HACK
+	    int w = byte_length_at(name);
+	    len -= namelen - (w + 1);
+	    name[w] = '\0';
+	    namelen = w + 1;
+	    vis_namelen = visual_width_at(name) + 1;
+#else
 	    len -= namelen - 2;
 	    name[1] = '\0';
 	    namelen = 2;
-	    if (len > max) {
+#endif
+	    if (vis_len > max) {
 		/* Dump the middle initials (if present) */
 		if (mid) {
 		    len -= midlen;
+#ifdef USE_UTF_HACK
+		    vis_len -= vis_midlen;
+#endif
 		    mid = 0;
 		}
-		if (len > max) {
+		if (vis_len > max) {
 		    /* Finally just truncate the last name */
+		    /*FIXME*/
 		    last[max - 2] = '\0';
 		}
 	    }
-	} else
+	} else {
 	    namelen = 0;
+#ifdef USE_UTF_HACK
+	    vis_namelen = 0;
+#endif
+	}
     }
 
     /* Paste the names back together */
@@ -244,9 +357,29 @@ try_again:
 	d += midlen;
 	d[-1] = ' ';
     }
+#ifdef USE_UTF_HACK
+    /* FIXME - need to move into some function */
+    do {
+	int i;
+	int j;
+	for (i = j = 0; j < max; ) {
+	    int w = byte_length_at(last + i);
+	    int v = visual_width_at(last + i);
+	if (j + v > max) break;
+	    bcopy(last, d, w);
+	    i += w;
+	    j += v;
+	}
+	d[i] = '\0';
+    } while (0);
+#else
     safecpy(d, last, max);	/* "max - (d-name)" would be overkill */
+#endif
     return name;
 }
+#undef vis_len;
+#undef vis_namelen
+#undef vis_midlen
 
 /* Compress an email address, trying to keep as much of the local part of
 ** the addresses as possible.  The order of precence is @ ! %, but

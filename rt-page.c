@@ -1,4 +1,5 @@
 /* rt-page.c
+ * vi: set sw=4 ts=8 ai sm noet :
 */
 /* This software is copyrighted as detailed in the LICENSE file. */
 
@@ -17,6 +18,7 @@
 #include "env.h"
 #include "util.h"
 #include "util2.h"
+#include "utf.h"
 #include "opt.h"
 #include "only.h"
 #include "addng.h"
@@ -1815,6 +1817,9 @@ int sel;
     int subj_width = tc_COLS - 8 - UseSelNum;
     int from_width = tc_COLS / 5;
     int date_width = tc_COLS / 5;
+#ifdef USE_UTF_HACK
+    utf_init("utf-8", "utf-8"); /* FIXME */
+#endif
 
     maybe_eol();
     if (subj_width < 32)
