@@ -20,6 +20,22 @@ export PATH || (echo "OOPS, this isn't sh.  Desperation time.  I will feed mysel
 # trn version
 pnewsversion="trn$trnversion"
 
+# Current output charset
+charset=utf-8
+if [ -n "$LC_CTYPE" ]; then
+	case "$LC_CTYPE" in
+	*.*)	charset="`echo "$LC_CTYPE" | cut -d. -f2`"
+	esac
+elif [ -n "$LC_ALL" ]; then
+	case "$LC_ALL" in
+	*.*)	charset="`echo "$LC_ALL" | cut -d. -f2`"
+	esac
+elif [ -n "$LANG" ]; then
+	case "$LANG" in
+	*.*)	charset="`echo "$LANG" | cut -d. -f2`"
+	esac
+fi
+
 # System dependencies
 
 mailer="\${RNMAILER-${mailer-/bin/mail}}"
@@ -637,6 +653,12 @@ EOH
 		/^X-Newsposter:/d;
 		/^[	 ]*$/i\
 X-Newsreader: '$pnewsversion'
+		/^[	 ]*$/i\
+Mime-Version: 1.0
+		/^[	 ]*$/i\
+Content-Type: text/plain; charset="'$charset'"
+		/^[	 ]*$/i\
+Content-Transfer-Encoding: 8bit
 		}'
 	    case "$NNTPSERVER" in
 	    local|'') share_connection=no;;
