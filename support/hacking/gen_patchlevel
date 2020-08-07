@@ -57,5 +57,5 @@ sub get_commitinfo () {
 
 $ENV{'LANG'} = $ENV{'LC_CTYPE'} = $ENV{'LC_ALL'} = 'C';
 
-printf "#undef PATCHLEVEL\n";
+# This must be a single #define because otherwise Pnews.SH will get confused
 printf "#define PATCHLEVEL \" %s+utf8 %s\"\n", get_patchlevel, get_commitinfo;

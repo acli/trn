@@ -39,7 +39,6 @@
  */
 
 #include "patchlevel.h"
-#include "patchlevel2.h"
 #include "INTERN.h"
 #include "common.h"
 #include "EXTERN.h"
@@ -50,6 +49,11 @@
 #include "datasrc.h"
 #include "nntp.h"
 #include "INTERN.h"
+#include "utf.h"
+#ifdef USE_UTF_HACK
+#undef PATCHLEVEL
+#include "patchlevel2.h"
+#endif
 #include "trn.h"
 #include "EXTERN.h"
 #include "term.h"

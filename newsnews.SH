@@ -2,7 +2,9 @@
 case $CONFIG in
     '') . ./config.sh ;;
 esac
-trnversion=`sed -e 's/.*" \(.*\)\"/\1/' $src/patchlevel.h 2>/dev/null`
+patchlevel=patchlevel.h
+test -f patchlevel2.h && patchlevel=patchlevel2.h
+trnversion=`sed -e 's/.*" \(.*\)\"/\1/' $src/$patchlevel 2>/dev/null`
 echo "Extracting newsnews (with version substitution)"
 cat >newsnews <<!GROK!THIS!
 			*** NEWS NEWS ***
