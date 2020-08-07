@@ -1,0 +1,61 @@
+#!/usr/bin/perl
+# vi: set sw=4 ts=8 ai sm noet :
+
+use POSIX;
+
+my $appName = $1 if $0 =~ /([^\/]+)$/;
+my $patchlevel = 'patchlevel.h';
+
+my $url = 'github.com';
+
+sub get_patchlevel () {
+    open(INPUT, '<', $patchlevel) || die "$appName: $patchlevel: $!\n";
+    my $patchlevel = $& if scalar <INPUT> =~ /\b\d+\.\d+(?:-\w+)\b/;
+    close INPUT;
+    return $patchlevel;
+}
+
+sub get_commitinfo () {
+    my($commit, $date, $tag, $status);
+
+    my $h = open(INPUT, '-|');
+    my @cmd = qw( git log -n 1 --date=rfc --decorate=short );
+    die "$appName: $cmd[0]: fork: $!\n" unless defined $h;
+    if (!$h) {
+	exec { $cmd[0] } @cmd;
+	die "$appName: $cmd[0]: exec: $!\n";
+    }
+    for (;;) {
+	my $s = <INPUT>;
+    last unless defined $s;
+	$commit = $1 if $s =~ /^commit (\w+)/;
+	$tag = $1 if $s =~ /^commit .* tag: (\w+)/;
+	$date = $1 if $s =~ /^Date:\s+\w+, (\d+ \w+ \d+)/;
+    }
+    close INPUT;
+
+    my $h = open(INPUT, '-|');
+    my @cmd = qw( git status --porcelain );
+    die "$appName: $cmd[0]: fork: $!\n" unless defined $h;
+    if (!$h) {
+	exec { $cmd[0] } @cmd;
+	die "$appName: $cmd[0]: exec: $!\n";
+    }
+    for (;;) {
+	my $s = <INPUT>;
+    last unless defined $s;
+	$status = '+' if $s =~ /^[\?! ]{2}/
+    }
+    close INPUT;
+
+    $date = POSIX::strftime('%d %b %Y', localtime time) if $status;
+    $date =~ s/^0//;
+    $date =~ s/^(\d+) (\w+)/$2 $1,/; # Make it look like what the stock patchlevel looks like
+
+    return sprintf('(%s; %s%s%s%s)', $date, substr($commit, 0, 7), $status, ($url? ' ': ''), $url);
+}
+
+$ENV{'LANG'} = $ENV{'LC_CTYPE'} = $ENV{'LC_ALL'} = 'C';
+
+printf "#undef PATCHLEVEL\n";
+printf "#define PATCHLEVEL \" %s+utf8 %s\"\n", get_patchlevel, get_commitinfo;

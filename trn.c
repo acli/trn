@@ -39,6 +39,7 @@
  */
 
 #include "patchlevel.h"
+#include "patchlevel2.h"
 #include "INTERN.h"
 #include "common.h"
 #include "EXTERN.h"
