@@ -652,11 +652,11 @@ EOH
 		/^X-Newsreader:/d;
 		/^X-Newsposter:/d;
 		/^[	 ]*$/i\
-X-Newsreader: '$pnewsversion'
+X-Newsreader: '"$pnewsversion"'
 		/^[	 ]*$/i\
 Mime-Version: 1.0
 		/^[	 ]*$/i\
-Content-Type: text/plain; charset="'$charset'"
+Content-Type: text/plain; charset="'"$charset"'"
 		/^[	 ]*$/i\
 Content-Transfer-Encoding: 8bit
 		}'
