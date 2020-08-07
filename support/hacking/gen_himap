@@ -1,5 +1,13 @@
 #!/usr/bin/perl
 # vi: set sw=4 ts=8 ai sm noet :
+# pod2man support/hacking/gen_himap|groff -man -Tascii|cat -s|less
+=encoding UTF-8
+
+=head1 Name
+
+gen_himap - generate mapping tables for characters in the 0x80 to 0xFF range
+
+=cut
 
 # see https://stackoverflow.com/questions/6162484/why-does-modern-perl-avoid-utf-8-by-default for these crazy hacks
 # THERE ARE MORE CRAZY HACKS THERE FOR MORE COMPLEX PROJECTS!!
@@ -15,13 +23,15 @@ use integer;
 my $section;
 my %map;
 
+my $use_old_style_output = 0;
+
 for (;;) {
     my $s = scalar <>;
 last unless defined $s;
     chomp $s;
     if ($s =~ /^  +(.+?) characters$/) {
 	$section = $1;
-    } elsif ($s =~ /^  +([0-7]{3})  +(\d+)  +([0-9a-fA-F]{2})  +(\S)  +\S/u) {
+    } elsif ($s =~ /^  +([0-7]{3})  +(\d+)  +([0-9a-fA-F]{2})  +([^ ])  +\S/u) {
 	my($oct, $dec, $hex, $ch) = ($1, $2, $3, $4);
 	$map{$section}->[$dec] = $ch;
     }
@@ -31,19 +41,41 @@ for my $key (sort keys %map) {
     my $label = lc $key;
     $label =~ s/\s+//g;
     $label =~ s/-/_/g;
-    printf "const char* %s_himap[128] = {\n", $label;
+    printf "%s %s_himap[128] = {\n",
+	($use_old_style_output? 'const char*': 'CODE_POINT'),
+	$label;
+
     for (my $i = 128; $i < 256; $i += 1) {
 	my $pos = $i % 16;
 	print "    " if $pos == 0;
 	if (defined $map{$key}->[$i]) {
-#	    printf '"%s", ', $map{$key}->[$i];
-	    my $ch = ord $map{$key}->[$i];
+	    if ($use_old_style_output) {
+		printf '"%s", ', $map{$key}->[$i];
+	    } else {
+		my $ch = ord $map{$key}->[$i];
 		printf '0x%04x,', $ch;
+	    }
 	} else {
-#	    printf 'NULL,';
-	    printf 'XXXXXX,';
+	    printf '%s,', ($use_old_style_output? 'NULL': 'XXXXXX');
 	}
 	print $pos == 7? "\t": $pos == 15? "\n": ' ';
     }
     print "};\n\n";
 }
+
+=head1 Synopsis
+
+B<man> I<charset> | B<support/hacking/gen_himap>
+
+=head1 Description
+
+F<gen_himap> reads a Linux cat page for the specified single-byte character set
+and generates a corresponding mapping table that can be injected into utf.c.
+The injected mapping table needs to be integrated into the charset_descs array;
+suitable TAG_* and CHARSET_* values also need to be defined in utf.h.
+
+=head1 Author
+
+Ambrose Li <ambrose.li@gmail.com>
+
+=cut
