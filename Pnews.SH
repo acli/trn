@@ -652,7 +652,7 @@ EOH
 		/^X-Newsreader:/d;
 		/^X-Newsposter:/d;
 		/^User-Agent:/d;
-		/^From:/s/Re:  */Re: /g;
+		/^Subject:/s/Re:  */Re: /g;
 		/^[	 ]*$/i\
 X-Newsreader: '"$pnewsversion"'
 		/^[	 ]*$/i\
