@@ -1,6 +1,9 @@
 # VIM
 .*.swp
 
+# Real generated files - for this patched version
+patchlevel2.h
+
 # Real generated files
 *.o
 access.def
