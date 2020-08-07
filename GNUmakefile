@@ -5,5 +5,5 @@ install: all
 	make -f Makefile install
 
 patchlevel2.h: patchlevel.h support/hacking/gen_patchlevel .git/index $(wildcard *.o)
-	perl support/hacking/gen_patchlevel > $@.tmp && if [ -f $@ ] && diff $@ $@.tmp; then rm -f $@.tmp; else mv -f $@.tmp $@; rm -f trn.o Pnews newsnews; fi
+	perl support/hacking/gen_patchlevel > $@.tmp && if [ -f $@ ] && diff $@ $@.tmp; then rm -f $@.tmp; else mv -f $@.tmp $@; rm -f trn.o Pnews Pnews.header newsnews; fi
 
