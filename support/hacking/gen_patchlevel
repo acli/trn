@@ -44,7 +44,7 @@ sub get_commitinfo () {
     for (;;) {
 	my $s = <INPUT>;
     last unless defined $s;
-	$status = '+' if $s =~ /^[\?! ]{2}/
+	$status = '+' if $s !~ /^[\?! ]{2}/
     }
     close INPUT;
 
