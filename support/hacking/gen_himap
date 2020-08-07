@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+# vi: set sw=4 ts=8 ai sm noet :
+
+# see https://stackoverflow.com/questions/6162484/why-does-modern-perl-avoid-utf-8-by-default for these crazy hacks
+# THERE ARE MORE CRAZY HACKS THERE FOR MORE COMPLEX PROJECTS!!
+use v5.14; # //u modifier
+use utf8;
+use open qw( :encoding(UTF-8) :std );
+use charnames qw( :full :short );
+use feature "unicode_strings";
+
+use strict;
+use integer;
+
+my $section;
+my %map;
+
+for (;;) {
+    my $s = scalar <>;
+last unless defined $s;
+    chomp $s;
+    if ($s =~ /^  +(.+?) characters$/) {
+	$section = $1;
+    } elsif ($s =~ /^  +([0-7]{3})  +(\d+)  +([0-9a-fA-F]{2})  +(\S)  +\S/u) {
+	my($oct, $dec, $hex, $ch) = ($1, $2, $3, $4);
+	$map{$section}->[$dec] = $ch;
+    }
+}
+
+for my $key (sort keys %map) {
+    my $label = lc $key;
+    $label =~ s/\s+//g;
+    $label =~ s/-/_/g;
+    printf "const char* %s_himap[128] = {\n", $label;
+    for (my $i = 128; $i < 256; $i += 1) {
+	my $pos = $i % 16;
+	print "    " if $pos == 0;
+	if (defined $map{$key}->[$i]) {
+#	    printf '"%s", ', $map{$key}->[$i];
+	    my $ch = ord $map{$key}->[$i];
+		printf '0x%04x,', $ch;
+	} else {
+#	    printf 'NULL,';
+	    printf 'XXXXXX,';
+	}
+	print $pos == 7? "\t": $pos == 15? "\n": ' ';
+    }
+    print "};\n\n";
+}
