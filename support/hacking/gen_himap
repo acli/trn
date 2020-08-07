@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 # vi: set sw=4 ts=8 ai sm noet :
+#
+# Man page for this script:
 # pod2man support/hacking/gen_himap|groff -man -Tascii|cat -s|less
+#
 =encoding UTF-8
 
 =head1 Name
@@ -65,11 +68,11 @@ for my $key (sort keys %map) {
 
 =head1 Synopsis
 
-B<man> I<charset> | B<support/hacking/gen_himap>
+B<man> I<charset> B<|> B<support/hacking/gen_himap>
 
 =head1 Description
 
-F<gen_himap> reads a Linux cat page for the specified single-byte character set
+F<gen_himap> reads a Linux cat page for the specified single-byte I<charset>
 and generates a corresponding mapping table that can be injected into utf.c.
 The injected mapping table needs to be integrated into the charset_descs array;
 suitable TAG_* and CHARSET_* values also need to be defined in utf.h.
