@@ -1,4 +1,5 @@
 /* This software is copyrighted as detailed in the LICENSE file. */
+/* vi: set sw=4 ts=8 ai sm noet : */
 
 /*  trn -- threaded readnews program based on rn 4.4
  *
@@ -564,10 +565,12 @@ input_newsgroup()
 	return ING_ASK;
       case Ctl('n'):		/* next newsrc list */
 	end_only();
+	newline();
 	use_next_multirc(multirc);
 	goto display_multirc;
       case Ctl('p'):		/* prev newsrc list */
 	end_only();
+	newline();
 	use_prev_multirc(multirc);
       display_multirc:
       {
@@ -581,7 +584,7 @@ input_newsgroup()
 	}
 	if (rp)
 	    strcpy(buf+len, ", ...");
-	printf("\n\nUsing newsrc group #%d: %s.\n",multirc->num,buf+2);
+	printf("\nUsing newsrc group #%d: %s.\n",multirc->num,buf+2);
 	termdown(3);
 	return ING_RESTART;
       }
