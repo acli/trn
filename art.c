@@ -172,8 +172,10 @@ do_article()
 	    restart = 0;
 	}
 	linenum = 1;
+#if 0 /* This causes a bug (headers displayed twice sometimes when you press v then ^R) */
 	if (!do_hiding)
 	    is_mime = FALSE;
+#endif
 	if (firstpage) {
 	    if (firstline) {
 		interp(art_line,sizeof art_line,firstline);
