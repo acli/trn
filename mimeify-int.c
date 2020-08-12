@@ -10,6 +10,19 @@
 #include "EXTERN.h"
 #include "common.h"
 #include "utf.h"
+#include "mimeify-int.h"
 #include "INTERN.h"
 
+int
+mimeify_scan_input(input, statptr)
+FILE * input;
+mimeify_status_t *statptr;
+{
+    int st = 0;
+    if (input == NULL)
+	st = 1;
+    else {
+    }
+    return st;
+}
 

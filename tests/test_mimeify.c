@@ -9,11 +9,14 @@
 #include "EXTERN.h"
 #include "common.h"
 #include "utf.h"
+#include "mimeify-int.h"
 #include "INTERN.h"
 
 int tests_run = 0;
 
 #define MIMEIFY_BIN "../mimeify"
+
+/* mimeify executable */
 
 static char *test_mimeify__empty_argv () {
     int st = system(MIMEIFY_BIN);
@@ -33,6 +36,12 @@ static char *test_mimeify__too_many_argv () {
     return 0;
 }
 
+/* mimeify_scan_input() */
+
+static char *test_mimeify_scan_input__null_null () {
+    mu_assert("error, mimeify_scan_input(NULL, NULL) == 0", mimeify_scan_input(NULL, NULL) != 0);
+    return 0;
+}
 
 /* main loop */
 
@@ -40,6 +49,8 @@ static char *all_tests() {
     mu_run_test(test_mimeify__empty_argv);
     mu_run_test(test_mimeify__one_argv);
     mu_run_test(test_mimeify__too_many_argv);
+
+    mu_run_test(test_mimeify_scan_input__null_null);
     return 0;
 }
 

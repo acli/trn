@@ -10,6 +10,7 @@
 #include "EXTERN.h"
 #include "common.h"
 #include "utf.h"
+#include "mimeify-int.h"
 #include "INTERN.h"
 
 

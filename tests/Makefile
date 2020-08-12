@@ -19,7 +19,7 @@ test: test_cache test_rt-util test_utf test_mimeify
 	./test_mimeify
 
 test_cache: test_cache.o $(everything)
-test_mimeify: test_mimeify.o
+test_mimeify: test_mimeify.o ../mimeify-int.o
 test_rt-util: test_rt-util.o $(everything)
 test_utf: test_utf.o ../utf.o
 
