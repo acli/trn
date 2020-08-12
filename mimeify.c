@@ -19,7 +19,11 @@ int argc;
 char* argv[];
 {
     int st = 0;
-    if (argc < 2) {
+    if (argc != 2) {
+	fprintf(stderr, "Usage: mimeify FILE\n\
+Create an equivalent MIME-compliant article from the specified FILE.\n\
+The result is sent to standard output.\n\
+");
 	st = 1;
     } else {
 	;

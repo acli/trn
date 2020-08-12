@@ -17,7 +17,19 @@ int tests_run = 0;
 
 static char *test_mimeify__empty_argv () {
     int st = system(MIMEIFY_BIN);
-    mu_assert("error, system(" MIMEIFY_BIN ") == 0", st != 0);
+    mu_assert("error, system(\"" MIMEIFY_BIN "\") == 0", st != 0);
+    return 0;
+}
+
+static char *test_mimeify__one_argv () {
+    int st = system(MIMEIFY_BIN " /dev/null");
+    mu_assert("error, system(\"" MIMEIFY_BIN " /dev/null\") != 0", st == 0);
+    return 0;
+}
+
+static char *test_mimeify__too_many_argv () {
+    int st = system(MIMEIFY_BIN " /dev/null /dev/null");
+    mu_assert("error, system(\"" MIMEIFY_BIN " /dev/null /dev/null\") == 0", st != 0);
     return 0;
 }
 
@@ -26,6 +38,8 @@ static char *test_mimeify__empty_argv () {
 
 static char *all_tests() {
     mu_run_test(test_mimeify__empty_argv);
+    mu_run_test(test_mimeify__one_argv);
+    mu_run_test(test_mimeify__too_many_argv);
     return 0;
 }
 

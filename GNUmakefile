@@ -19,7 +19,7 @@ patchlevel2.h: patchlevel.h support/hacking/gen_patchlevel .git/index $(wildcard
 
 # Temporary rule to create mimeify before I can figure out how to modify the real makefile
 
-mimeify: mimeify.o utf.o
+mimeify: mimeify.o mimeify-int.o utf.o
 
 .PHONEY: all real-all install real-install test
 .DELETE_ON_ERROR:
