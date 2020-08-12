@@ -56,10 +56,10 @@ static char *test_mimeify_scan_input__devnull_buf () {
     mimeify_status_t buf;
     memset(&buf, 0xff, sizeof buf);
     mu_assert("internal error, fopen(\"/dev/null\") failed", input != NULL);
-    mu_assert("internal error, memset failed", buf.has8bit != 0 && buf.maxwidth != 0);
+    mu_assert("internal error, memset failed", buf.has8bit != 0 && buf.maxbytelen != 0);
     mu_assert("error, mimeify_scan_input(NULL, &buf) != 0", mimeify_scan_input(input, &buf) == 0);
     mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.has8bit != 0", buf.has8bit == 0);
-    mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.maxwidth != 0", buf.maxwidth == 0);
+    mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.maxbytelen != 0", buf.maxbytelen == 0);
     fclose(input);
     return 0;
 }
@@ -85,7 +85,7 @@ static char *test_mimeify_scan_input__one_short_header () {
 	mu_assert("internal error, fdopen failed", input != NULL);
 	mu_assert("error, mimeify_scan_input(NULL, &buf) != 0", mimeify_scan_input(input, &buf) == 0);
 	mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.has8bit != 0", buf.has8bit == 0);
-	mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.maxwidth != 7", buf.maxwidth == 7);
+	mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.maxbytelen != 7", buf.maxbytelen == 7);
 	fclose(input);
     }
     return 0;

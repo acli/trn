@@ -23,24 +23,24 @@ mimeify_status_t *statptr;
 	;
     else {
 	bool has8bit = 0;
-	int maxwidth = 0;
-	int width;
+	int maxbytelen = 0;
+	int bytelen;
 	bool in_header = TRUE;
-	for (width = 0;;) {
+	for (bytelen = 0;;) {
 	    int c = fgetc(input);
 	if (c == EOF) break;
 	    if (c == '\n') {
-		if (width > maxwidth)
-		    maxwidth = width;
-		width = 0;
+		if (bytelen > maxbytelen)
+		    maxbytelen = bytelen;
+		bytelen = 0;
 	    } else
-		width += 1;
+		bytelen += 1;
 	    if (c & 0200)
 		has8bit = TRUE;
 	}
 	if (statptr != NULL) {
 	    statptr->has8bit = has8bit;
-	    statptr->maxwidth = maxwidth;
+	    statptr->maxbytelen = maxbytelen;
 	}
 	st = 0;
     }

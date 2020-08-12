@@ -9,7 +9,7 @@
 
 typedef struct mimeify_status {
     bool has8bit;
-    int maxwidth;
+    int maxbytelen;
 } mimeify_status_t;
 
 int mimeify_scan_input(FILE *, mimeify_status_t *);
