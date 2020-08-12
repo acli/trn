@@ -22,6 +22,10 @@ mimeify_status_t *statptr;
     if (input == NULL)
 	;
     else {
+	if (statptr != NULL) {
+	    statptr->has8bit = 0;
+	    statptr->maxwidth = 0;
+	}
 	st = 0;
     }
     return st;

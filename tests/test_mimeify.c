@@ -51,6 +51,19 @@ static char *test_mimeify_scan_input__devnull_null () {
     return 0;
 }
 
+static char *test_mimeify_scan_input__devnull_buf () {
+    FILE *input = fopen("/dev/null", "r");
+    mimeify_status_t buf;
+    memset(&buf, 0xff, sizeof buf);
+    mu_assert("internal error, fopen(\"/dev/null\") failed", input != NULL);
+    mu_assert("internal error, memset failed", buf.has8bit != 0 && buf.maxwidth != 0);
+    mu_assert("error, mimeify_scan_input(NULL, &buf) != 0", mimeify_scan_input(input, &buf) == 0);
+    mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.has8bit != 0", buf.has8bit == 0);
+    mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.maxwidth != 0", buf.maxwidth == 0);
+    fclose(input);
+    return 0;
+}
+
 /* main loop */
 
 static char *all_tests() {
@@ -60,6 +73,7 @@ static char *all_tests() {
 
     mu_run_test(test_mimeify_scan_input__null_null);
     mu_run_test(test_mimeify_scan_input__devnull_null);
+    mu_run_test(test_mimeify_scan_input__devnull_buf);
     return 0;
 }
 
