@@ -43,6 +43,14 @@ static char *test_mimeify_scan_input__null_null () {
     return 0;
 }
 
+static char *test_mimeify_scan_input__devnull_null () {
+    FILE *input = fopen("/dev/null", "r");
+    mu_assert("internal error, fopen(\"/dev/null\") failed", input != NULL);
+    mu_assert("error, mimeify_scan_input(NULL, NULL) != 0", mimeify_scan_input(input, NULL) == 0);
+    fclose(input);
+    return 0;
+}
+
 /* main loop */
 
 static char *all_tests() {
@@ -51,6 +59,7 @@ static char *all_tests() {
     mu_run_test(test_mimeify__too_many_argv);
 
     mu_run_test(test_mimeify_scan_input__null_null);
+    mu_run_test(test_mimeify_scan_input__devnull_null);
     return 0;
 }
 

@@ -18,10 +18,11 @@ mimeify_scan_input(input, statptr)
 FILE * input;
 mimeify_status_t *statptr;
 {
-    int st = 0;
+    int st = 1;
     if (input == NULL)
-	st = 1;
+	;
     else {
+	st = 0;
     }
     return st;
 }
