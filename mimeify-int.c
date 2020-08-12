@@ -22,9 +22,25 @@ mimeify_status_t *statptr;
     if (input == NULL)
 	;
     else {
+	bool has8bit = 0;
+	int maxwidth = 0;
+	int width;
+	bool in_header = TRUE;
+	for (width = 0;;) {
+	    int c = fgetc(input);
+	if (c == EOF) break;
+	    if (c == '\n') {
+		if (width > maxwidth)
+		    maxwidth = width;
+		width = 0;
+	    } else
+		width += 1;
+	    if (c & 0200)
+		has8bit = TRUE;
+	}
 	if (statptr != NULL) {
-	    statptr->has8bit = 0;
-	    statptr->maxwidth = 0;
+	    statptr->has8bit = has8bit;
+	    statptr->maxwidth = maxwidth;
 	}
 	st = 0;
     }
