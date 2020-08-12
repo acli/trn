@@ -178,8 +178,21 @@ static char *test_mimeify_scan_input__one_short_header_with_utf8 () {
 	    char s[LBUFLEN];
 	if (fgets(s, sizeof s, output) == NULL) break;
 	    fprintf(stderr, "DEBUG: GOT s=(%s)\n", s);
+	    if (strncasecmp(s, "From: =?Q?=C9=90?=\n", 19) == 0)
+		from_turned_a_seen = TRUE;
+	    else if (strncasecmp(s, "Mime-Version: 1.0\n", 18) == 0)
+		mime_version_seen = TRUE;
+	    else if (strncasecmp(s, "Content-Type: text/plain; charset=utf-8\n", 40) == 0)
+		content_type_seen = TRUE;
+	    else if (strncasecmp(s, "Content-Type: text/plain; charset=\"utf-8\"\n", 42) == 0)
+		content_type_seen = TRUE;
+	    else if (strncasecmp(s, "Content-Transfer-Encoding:", 26) == 0)
+		content_transfer_encoding_seen = TRUE;
 	}
 	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), from_turned_a_seen == 0", from_turned_a_seen != 0);
+	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), mime_version_seen == 0", mime_version_seen != 0);
+	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), content_type_seen == 0", content_type_seen != 0);
+	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), content_transfer_encoding_seen == 0", content_transfer_encoding_seen != 0);
 	fclose(input);
     }
     return 0;
