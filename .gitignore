@@ -3,6 +3,7 @@
 
 # Real generated files - for this patched version
 patchlevel2.h
+mimeify
 
 # Real generated files
 *.o

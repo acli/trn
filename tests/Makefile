@@ -11,12 +11,15 @@ everything=../filter.o ../sorder.o ../rcln.o ../sdisp.o ../rt-ov.o ../final.o ..
 all:
 	make test 2>&1|less
 
-test: test_cache test_rt-util test_utf
+test: test_cache test_rt-util test_utf test_mimeify
+	make -C..
 	./test_cache
 	./test_rt-util
 	./test_utf
+	./test_mimeify
 
 test_cache: test_cache.o $(everything)
+test_mimeify: test_mimeify.o
 test_rt-util: test_rt-util.o $(everything)
 test_utf: test_utf.o ../utf.o
 
