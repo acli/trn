@@ -91,6 +91,33 @@ static char *test_mimeify_scan_input__one_short_header () {
     return 0;
 }
 
+static char *test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_body () {
+    int fd[2];
+    pid_t childpid;
+    mimeify_status_t buf;
+    pipe(fd);
+    if ((childpid = fork()) == -1) {
+	perror("fork");
+	exit(1);
+    }
+    if (childpid == 0) {
+	FILE *output = fdopen(fd[1], "w");
+	close(fd[0]);
+	fprintf(output, "From: a\n");
+	fprintf(output, "\né\n");
+	fflush(output);
+	exit(0);
+    } else {
+	FILE *input = fdopen(fd[0], "r");;
+	close(fd[1]);
+	mu_assert("internal error, fdopen failed", input != NULL);
+	mu_assert("error, mimeify_scan_input(NULL, &buf) != 0", mimeify_scan_input(input, &buf) == 0);
+	mu_assert("error, after mimeify_scan_input(NULL, &buf), buf.has8bit != TRUE", buf.has8bit == TRUE);
+	fclose(input);
+    }
+    return 0;
+}
+
 /* main loop */
 
 static char *all_tests() {
@@ -102,6 +129,7 @@ static char *all_tests() {
     mu_run_test(test_mimeify_scan_input__devnull_null);
     mu_run_test(test_mimeify_scan_input__devnull_buf);
     mu_run_test(test_mimeify_scan_input__one_short_header);
+    mu_run_test(test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_body);
     return 0;
 }
 
