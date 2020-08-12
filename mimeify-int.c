@@ -19,8 +19,9 @@
 #define STATE_BODY			'B'
 
 int
-mimeify_scan_input(input, statptr)
+mimeify_scan_input(input, output, statptr)
 FILE * input;
+FILE * output;
 mimeify_status_t *statptr;
 {
     int st = 1;

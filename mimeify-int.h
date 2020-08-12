@@ -12,6 +12,6 @@ typedef struct mimeify_status {
     int maxbytelen;
 } mimeify_status_t;
 
-int mimeify_scan_input(FILE *, mimeify_status_t *);
+int mimeify_scan_input(FILE *, FILE *, mimeify_status_t *);
 
 #endif
