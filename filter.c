@@ -25,7 +25,7 @@
 
 static FILE* filt_wr;
 static FILE* filt_rd;
-static int pipe1[2], pipe2[2];
+static int pipe_1[2], pipe_2[2];
 static int filter_restarting;
 static int need_to_filter = 0;
 static int want_filter = 1;	/* consider making an option later */
@@ -39,7 +39,7 @@ void
 filter_init()
 {
     filt_wr = filt_rd = NULL;
-    pipe1[0] = pipe1[1] = pipe2[0] = pipe2[1] = -1;
+    pipe_1[0] = pipe_1[1] = pipe_2[0] = pipe_2[1] = -1;
     filter_restarting = 0;
 }
 
@@ -75,27 +75,27 @@ filter_restart()
 	printf("\nStarting filter `%s'", filter);
 	fflush(stdout);		/* print it *now* */
     }
-    if (pipe(pipe1) < 0)
+    if (pipe(pipe_1) < 0)
 	perror("creating output pipe");
-    if (pipe(pipe2) < 0)
+    if (pipe(pipe_2) < 0)
 	perror("creating input pipe");
     if ((filter_pid = fork()) < 0)
 	perror("filter_restart");
     else if (filter_pid > 0) {
-	if ((filt_wr = fdopen(pipe1[1], "w")) == NULL) {
+	if ((filt_wr = fdopen(pipe_1[1], "w")) == NULL) {
 	    perror("configuring output pipe");
 	    filter_cleanup();
 	    return;
 	}
-	if ((filt_rd = fdopen(pipe2[0], "r")) == NULL) {
+	if ((filt_rd = fdopen(pipe_2[0], "r")) == NULL) {
 	    perror("configuring input pipe");
 	    filter_cleanup();
 	    return;
 	}
 	setvbuf(filt_wr, NULL, _IOLBF, BUFSIZ);	/* line buffering */
 	setvbuf(filt_rd, NULL, _IOLBF, BUFSIZ);
-	close(pipe1[0]);
-	close(pipe2[1]);
+	close(pipe_1[0]);
+	close(pipe_2[1]);
     }
     else {
 	close(STDIN_FILENO);
@@ -103,18 +103,18 @@ filter_restart()
 
 	sigignore(SIGINT);
 
-	if (dup2(pipe1[0], STDIN_FILENO) < 0) {
+	if (dup2(pipe_1[0], STDIN_FILENO) < 0) {
 	    perror("reopening child input stream");
 	    finalize(1);
 	}
 
-	if (dup2(pipe2[1], STDOUT_FILENO) < 0) {
+	if (dup2(pipe_2[1], STDOUT_FILENO) < 0) {
 	    perror("reopening child output stream");
 	    finalize(1);
 	}
 
-	close(pipe1[1]);
-	close(pipe2[0]);
+	close(pipe_1[1]);
+	close(pipe_2[0]);
 	if (execl(filter, filter, NULL) < 0) {
 	    perror("switching to filter process");
 	    finalize(1);
@@ -281,8 +281,8 @@ filter_cleanup()
 	filt_rd = NULL;
     }
 
-    pipe1[0] = pipe1[1] = 0;
-    pipe2[0] = pipe2[1] = 0;
+    pipe_1[0] = pipe_1[1] = 0;
+    pipe_2[0] = pipe_2[1] = 0;
 }
 
 #endif /* USE_FILTER */
