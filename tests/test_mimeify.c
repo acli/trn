@@ -38,26 +38,26 @@ static char *test_mimeify__too_many_argv () {
 
 /* mimeify_scan_input() */
 
-static char *test_mimeify_scan_input__null_null_null () {
-    mu_assert("error, mimeify_scan_input(NULL, NULL, NULL) == 0", mimeify_scan_input(NULL, NULL, NULL) != 0);
+static char *test_mimeify_scan_input__null_null () {
+    mu_assert("error, mimeify_scan_input(NULL, NULL) == 0", mimeify_scan_input(NULL, NULL) != 0);
     return 0;
 }
 
-static char *test_mimeify_scan_input__devnull_null_null () {
+static char *test_mimeify_scan_input__devnull_null () {
     FILE *input = fopen("/dev/null", "r");
     mu_assert("internal error, fopen(\"/dev/null\") failed", input != NULL);
-    mu_assert("error, mimeify_scan_input(\"/dev/null\", NULL, NULL) != 0", mimeify_scan_input(input, NULL, NULL) == 0);
+    mu_assert("error, mimeify_scan_input(\"/dev/null\", NULL) != 0", mimeify_scan_input(input, NULL) == 0);
     fclose(input);
     return 0;
 }
 
-static char *test_mimeify_scan_input__devnull_null_buf () {
+static char *test_mimeify_scan_input__devnull_buf () {
     FILE *input = fopen("/dev/null", "r");
     mimeify_status_t buf;
     memset(&buf, 0xff, sizeof buf);
     mu_assert("internal error, fopen(\"/dev/null\") failed", input != NULL);
     mu_assert("internal error, memset failed", buf.head.has8bit && buf.head.maxbytelen && buf.body.has8bit && buf.body.maxbytelen);
-    mu_assert("error, mimeify_scan_input(\"/dev/null\", &buf) != 0", mimeify_scan_input(input, NULL, &buf) == 0);
+    mu_assert("error, mimeify_scan_input(\"/dev/null\", &buf) != 0", mimeify_scan_input(input, &buf) == 0);
     mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.head.has8bit != 0", buf.head.has8bit == 0);
     mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.body.has8bit != 0", buf.body.has8bit == 0);
     mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.maxbytelen != 0", buf.head.maxbytelen == 0 && buf.body.maxbytelen == 0);
@@ -84,11 +84,11 @@ static char *test_mimeify_scan_input__one_short_header () {
 	FILE *input = fdopen(fd[0], "r");;
 	close(fd[1]);
 	mu_assert("internal error, fdopen failed", input != NULL);
-	mu_assert("error, mimeify_scan_input(..., NULL, &buf) != 0", mimeify_scan_input(input, NULL, &buf) == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.head.has8bit != 0", buf.head.has8bit == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.body.has8bit != 0", buf.body.has8bit == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.head.maxbytelen != 7", buf.head.maxbytelen == 7);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.body.maxbytelen != 0", buf.body.maxbytelen == 0);
+	mu_assert("error, mimeify_scan_input(..., &buf) != 0", mimeify_scan_input(input, &buf) == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.head.has8bit != 0", buf.head.has8bit == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.body.has8bit != 0", buf.body.has8bit == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.head.maxbytelen != 7", buf.head.maxbytelen == 7);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.body.maxbytelen != 0", buf.body.maxbytelen == 0);
 	fclose(input);
     }
     return 0;
@@ -113,8 +113,8 @@ static char *test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_hea
 	FILE *input = fdopen(fd[0], "r");;
 	close(fd[1]);
 	mu_assert("internal error, fdopen failed", input != NULL);
-	mu_assert("error, mimeify_scan_input(..., NULL, &buf) != 0", mimeify_scan_input(input, NULL, &buf) == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.head.has8bit != TRUE", buf.head.has8bit == TRUE);
+	mu_assert("error, mimeify_scan_input(..., &buf) != 0", mimeify_scan_input(input, &buf) == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.head.has8bit != TRUE", buf.head.has8bit == TRUE);
 	fclose(input);
     }
     return 0;
@@ -140,8 +140,8 @@ static char *test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_bod
 	FILE *input = fdopen(fd[0], "r");;
 	close(fd[1]);
 	mu_assert("internal error, fdopen failed", input != NULL);
-	mu_assert("error, mimeify_scan_input(..., NULL, &buf) != 0", mimeify_scan_input(input, NULL, &buf) == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.body.has8bit != TRUE", buf.body.has8bit == TRUE);
+	mu_assert("error, mimeify_scan_input(..., &buf) != 0", mimeify_scan_input(input, &buf) == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.body.has8bit != TRUE", buf.body.has8bit == TRUE);
 	fclose(input);
     }
     return 0;
@@ -166,11 +166,11 @@ static char *test_mimeify_scan_input__one_short_header_with_continuation () {
 	FILE *input = fdopen(fd[0], "r");;
 	close(fd[1]);
 	mu_assert("internal error, fdopen failed", input != NULL);
-	mu_assert("error, mimeify_scan_input(..., NULL, &buf) != 0", mimeify_scan_input(input, NULL, &buf) == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.head.has8bit != 0", buf.head.has8bit == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.body.has8bit != 0", buf.body.has8bit == 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.head.maxbytelen != 9", buf.head.maxbytelen == 9);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), buf.body.maxbytelen != 0", buf.body.maxbytelen == 0);
+	mu_assert("error, mimeify_scan_input(..., &buf) != 0", mimeify_scan_input(input, &buf) == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.head.has8bit != 0", buf.head.has8bit == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.body.has8bit != 0", buf.body.has8bit == 0);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.head.maxbytelen != 9", buf.head.maxbytelen == 9);
+	mu_assert("error, after mimeify_scan_input(..., &buf), buf.body.maxbytelen != 0", buf.body.maxbytelen == 0);
 	fclose(input);
     }
     return 0;
@@ -183,9 +183,9 @@ static char *all_tests() {
     mu_run_test(test_mimeify__one_argv);
     mu_run_test(test_mimeify__too_many_argv);
 
-    mu_run_test(test_mimeify_scan_input__null_null_null);
-    mu_run_test(test_mimeify_scan_input__devnull_null_null);
-    mu_run_test(test_mimeify_scan_input__devnull_null_buf);
+    mu_run_test(test_mimeify_scan_input__null_null);
+    mu_run_test(test_mimeify_scan_input__devnull_null);
+    mu_run_test(test_mimeify_scan_input__devnull_buf);
     mu_run_test(test_mimeify_scan_input__one_short_header);
     mu_run_test(test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_head);
     mu_run_test(test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_body);

@@ -17,6 +17,7 @@ typedef struct mimeify_status {
     mimeify_inner_status_t body;
 } mimeify_status_t;
 
-int mimeify_scan_input(FILE *, FILE *, mimeify_status_t *);
+int mimeify_scan_input(FILE *, mimeify_status_t *);
+int mimeify_copy_input(FILE *, FILE *, mimeify_status_t *);
 
 #endif

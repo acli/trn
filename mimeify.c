@@ -27,7 +27,15 @@ The result is sent to standard output.\n\
 ");
 	st = 1;
     } else {
-	;
+	mimeify_status_t summary;
+	FILE *input = fopen(argv[1], "r");
+	if (input == NULL) {
+	    perror(argv[1]);
+	    st = 1;
+	} else if (mimeify_scan_input(input, &summary)) {
+	    mimeify_copy_input(input, stdout, &summary);
+	    fclose(input);
+	}
     }
     return st;
 }
