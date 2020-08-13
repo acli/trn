@@ -58,7 +58,8 @@ static char *test_mimeify_scan_input__devnull_null_buf () {
     mu_assert("internal error, fopen(\"/dev/null\") failed", input != NULL);
     mu_assert("internal error, memset failed", buf.head.has8bit && buf.head.maxbytelen && buf.body.has8bit && buf.body.maxbytelen);
     mu_assert("error, mimeify_scan_input(\"/dev/null\", &buf) != 0", mimeify_scan_input(input, NULL, &buf) == 0);
-    mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.has8bit != 0", buf.head.has8bit == 0 && buf.body.has8bit == 0);
+    mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.head.has8bit != 0", buf.head.has8bit == 0);
+    mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.body.has8bit != 0", buf.body.has8bit == 0);
     mu_assert("error, after mimeify_scan_input(\"/dev/null\", &buf), buf.maxbytelen != 0", buf.head.maxbytelen == 0 && buf.body.maxbytelen == 0);
     fclose(input);
     return 0;

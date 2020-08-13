@@ -78,6 +78,8 @@ mimeify_status_t *statptr;
 	    } else {
 		statptr->head.has8bit = has8bit;
 		statptr->head.maxbytelen = maxbytelen;
+		statptr->body.has8bit = FALSE;
+		statptr->body.maxbytelen = 0;
 	    }
 	}
 	st = 0;
