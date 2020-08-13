@@ -28,6 +28,7 @@ mimeify_status_t *statptr;
     if (input == NULL)
 	;
     else {
+	bool isempty = TRUE;
 	bool has8bit = 0;
 	int maxbytelen = 0;
 	int bytelen;
@@ -35,6 +36,7 @@ mimeify_status_t *statptr;
 	for (bytelen = 0;;) {
 	    int c = fgetc(input);
 	if (c == EOF) break;
+	    isempty = FALSE;
 	    if (state == STATE_HEADER_INITIAL) {
 		if (c == '\n')
 		    state = STATE_BODY;

@@ -175,59 +175,6 @@ static char *test_mimeify_scan_input__one_short_header_with_continuation () {
     return 0;
 }
 
-static char *test_mimeify_scan_input__one_short_header_with_utf8 () {
-    int fd[2];
-    pid_t childpid;
-    mimeify_status_t buf;
-    fflush(stdout);
-    pipe(fd);
-    if ((childpid = fork()) == -1) {
-	perror("fork");
-	exit(1);
-    }
-    if (childpid == 0) {
-	FILE *output = fdopen(fd[1], "w");
-	close(fd[0]);
-	fprintf(output, "From: ɐ\n");
-	fflush(output);
-	exit(0);
-    } else {
-	FILE *input = fdopen(fd[0], "r");
-	FILE *output = tmpfile();
-	int real_stdout = dup(1);
-	int from_turned_a_seen = 0;
-	int mime_version_seen = 0;
-	int content_type_seen = 0;
-	int content_transfer_encoding_seen = 0;
-	close(fd[1]);
-	mimeify_scan_input(input, output, &buf);
-	fflush(stdout);
-	dup2(real_stdout, 1);
-	fseek(output, 0, SEEK_SET);
-	for (;;) {
-	    char s[LBUFLEN];
-	if (fgets(s, sizeof s, output) == NULL) break;
-	    fprintf(stderr, "DEBUG: GOT s=(%s)\n", s);
-	    if (strncasecmp(s, "From: =?Q?=C9=90?=\n", 19) == 0)
-		from_turned_a_seen = TRUE;
-	    else if (strncasecmp(s, "Mime-Version: 1.0\n", 18) == 0)
-		mime_version_seen = TRUE;
-	    else if (strncasecmp(s, "Content-Type: text/plain; charset=utf-8\n", 40) == 0)
-		content_type_seen = TRUE;
-	    else if (strncasecmp(s, "Content-Type: text/plain; charset=\"utf-8\"\n", 42) == 0)
-		content_type_seen = TRUE;
-	    else if (strncasecmp(s, "Content-Transfer-Encoding:", 26) == 0)
-		content_transfer_encoding_seen = TRUE;
-	}
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), from_turned_a_seen == 0", from_turned_a_seen != 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), mime_version_seen == 0", mime_version_seen != 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), content_type_seen == 0", content_type_seen != 0);
-	mu_assert("error, after mimeify_scan_input(..., NULL, &buf), content_transfer_encoding_seen == 0", content_transfer_encoding_seen != 0);
-	fclose(input);
-    }
-    return 0;
-}
-
 /* main loop */
 
 static char *all_tests() {
@@ -242,7 +189,6 @@ static char *all_tests() {
     mu_run_test(test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_head);
     mu_run_test(test_mimeify_scan_input__one_short_header_plus_one_8bit_char_in_body);
     mu_run_test(test_mimeify_scan_input__one_short_header_with_continuation);
-    mu_run_test(test_mimeify_scan_input__one_short_header_with_utf8);
     return 0;
 }
 
