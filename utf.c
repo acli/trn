@@ -391,6 +391,7 @@ at_norm_char(s)
 const char *s;
 {
     int it = s != NULL;
+    if (it) { it = *s != 0; }
     if (it) {
 	if (gs.in == CHARSET_UTF8) {
 	    CODE_POINT c = code_point_at(s);

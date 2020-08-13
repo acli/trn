@@ -15,7 +15,7 @@ EXT bool export_nntp_fds INIT(FALSE);
 EXT int len_last_line_got INIT(0);
 EXT MEM_SIZE buflen_last_line_got INIT(0);
 
-#define AT_GREY_SPACE(s) !at_norm_char(s)
+#define AT_GREY_SPACE(s) ((s) && ((!at_norm_char(s)) || ((*s) && (*s) == ' ')))
 #define AT_NORM_CHAR(s)  at_norm_char(s)
 
 /* is the string for makedir a directory name or a filename? */
