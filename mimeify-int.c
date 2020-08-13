@@ -70,8 +70,13 @@ mimeify_status_t *statptr;
 		has8bit = TRUE;
 	}
 	if (statptr != NULL) {
-	    statptr->has8bit = has8bit;
-	    statptr->maxbytelen = maxbytelen;
+	    if (state == STATE_BODY) {
+		statptr->body.has8bit = has8bit;
+		statptr->body.maxbytelen = maxbytelen;
+	    } else {
+		statptr->head.has8bit = has8bit;
+		statptr->head.maxbytelen = maxbytelen;
+	    }
 	}
 	st = 0;
     }
