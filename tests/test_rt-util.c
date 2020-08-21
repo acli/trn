@@ -44,10 +44,24 @@ static char *test_compress_name__PCS () {
     return 0;
 }
 
+static char *test_subject_has_Re__1 () {
+    char *before = "Re: followup";
+    char *after;
+    char *expected = "followup";
+    subject_has_Re(before, &after);
+    printf("Test %d:\n", tests_run);
+    printf("Before   : \"%s\"\n", before);
+    printf("After    : \"%s\"\n", after);
+    printf("Expected : \"%s\"\n", expected);
+    mu_assert("error, \"followup\" != \"followup\"", strcmp(after, expected) == 0);
+    return 0;
+}
+
 
 /* main loop */
 
 static char *all_tests() {
+    mu_run_test(test_subject_has_Re__1);
     mu_run_test(test_compress_name__SAIC);
     mu_run_test(test_compress_name__PCS);
     return 0;
