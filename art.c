@@ -417,7 +417,8 @@ do_article()
 				linenum++;
 			    }
 			    i = put_char_adv(&bufptr, outputok);
-			    bufptr--;
+			    if (outputok)
+				bufptr--;
 #else /* !USE_UTF_HACK */
 			    i = putsubstchar(*bufptr, tc_COLS - outpos, outputok);
 #endif /* USE_UTF_HACK */
@@ -429,7 +430,8 @@ do_article()
 #else
 #ifdef USE_UTF_HACK
 			    outpos += put_char_adv(&bufptr, outputok);
-			    bufptr--;
+			    if (outputok)
+				bufptr--;
 #else /* !USE_UTF_HACK */
 			    if (outputok)
 				putchar(*bufptr);
