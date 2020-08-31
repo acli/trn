@@ -93,5 +93,9 @@ FILE * output;
 mimeify_status_t *statptr;
 {
     int st = 0;
+    if (input == NULL || output == NULL || statptr == NULL) {
+	st = 1;
+    } else {
+    }
     return st;
 }

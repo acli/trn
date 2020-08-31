@@ -33,8 +33,13 @@ The result is sent to standard output.\n\
 	    perror(argv[1]);
 	    st = 1;
 	} else if (mimeify_scan_input(input, &summary)) {
-	    mimeify_copy_input(input, stdout, &summary);
-	    fclose(input);
+	    if (fseek(input, 0, SEEK_SET) == 0) {
+		mimeify_copy_input(input, stdout, &summary);
+		fclose(input);
+	    } else {
+		perror("Input is non-seekable");
+		st = 1;
+	    }
 	}
     }
     return st;
